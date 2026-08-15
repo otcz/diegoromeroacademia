@@ -1,0 +1,28 @@
+:host {
+  display: flex;
+  gap: var(--adr-espacio-3);
+  align-items: center;
+  width: 100%;
+}
+
+.adr-barra {
+  flex: 1;
+  height: 6px;
+  overflow: hidden;
+  background: var(--adr-color-pista-barra);
+  border-radius: var(--adr-radio-pastilla);
+}
+
+.adr-barra__relleno {
+  height: 100%;
+  background: var(--adr-color-exito);
+  border-radius: var(--adr-radio-pastilla);
+  transition: width 0.3s ease;
+}
+
+.adr-barra__texto {
+  font-size: var(--adr-texto-caption);
+  font-weight: 600;
+  color: var(--adr-color-texto-atenuado);
+  font-variant-numeric: tabular-nums;
+}

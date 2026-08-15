@@ -1,0 +1,134 @@
+// Estilos globales. Solo lo que es realmente global: reinicio, tipografia base y
+// utilidades de disposicion. Todo lo demas vive en su componente.
+@use 'tokens';
+@use 'mixins' as m;
+
+// ---------------------------------------------------------------- reinicio
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+* {
+  margin: 0;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  min-height: 100vh;
+  background: var(--adr-color-niebla);
+  color: var(--adr-color-tinta);
+  font-family: var(--adr-fuente-cuerpo);
+  font-size: var(--adr-texto-cuerpo);
+  line-height: var(--adr-interlineado-cuerpo);
+  -webkit-font-smoothing: antialiased;
+}
+
+img,
+picture,
+svg,
+video {
+  display: block;
+  max-width: 100%;
+}
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
+  color: inherit;
+}
+
+// ---------------------------------------------------------------- tipografia
+h1,
+h2,
+h3,
+h4 {
+  font-family: var(--adr-fuente-titular);
+  font-weight: 800;
+  line-height: var(--adr-interlineado-titulo);
+  letter-spacing: var(--adr-espaciado-letra-titulo);
+}
+
+h1 {
+  font-size: var(--adr-texto-display);
+  line-height: var(--adr-interlineado-display);
+  letter-spacing: var(--adr-espaciado-letra-display);
+}
+
+h2 {
+  font-size: var(--adr-texto-seccion);
+}
+
+h3 {
+  font-size: var(--adr-texto-tarjeta);
+  font-weight: 700;
+}
+
+// El azul rey es la unica tinta de accion: los enlaces tambien.
+a {
+  color: var(--adr-color-azul-profundo);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 2px;
+
+  &:hover {
+    color: var(--adr-color-azul-rey);
+  }
+}
+
+// ---------------------------------------------------------------- accesibilidad
+:focus-visible {
+  outline: 2px solid var(--adr-color-azul-rey);
+  outline-offset: 2px;
+}
+
+// Respeta a quien pidio menos movimiento en su sistema operativo.
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+// Texto visible solo para lectores de pantalla.
+.adr-solo-lectores {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+
+// ---------------------------------------------------------------- disposicion
+.adr-contenedor {
+  @include m.contenedor;
+}
+
+.adr-seccion {
+  padding-block: var(--adr-separacion-seccion);
+}
+
+.adr-seccion-oscura {
+  background: var(--adr-color-noche-azul);
+  color: var(--adr-oscuro-texto-fuerte);
+}
+
+@media (width < 768px) {
+  :root {
+    --adr-texto-display: 38px;
+    --adr-texto-seccion: 28px;
+    --adr-contenedor-padding: 24px;
+    --adr-separacion-seccion: 56px;
+  }
+}

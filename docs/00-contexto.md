@@ -134,6 +134,9 @@ configuración, no código. Ver `docs/03-configuracion.md`.
 | Costos de video superiores a lo previsto | Medio | Estimar consumo por alumno antes de elegir proveedor |
 | Vender productos físicos sin stock | Medio | Validación de inventario antes del cobro (no negociable #7) |
 | **Deriva de convenciones entre sesiones de IA** | Alto | Reglas escritas, ArchUnit en el build, cobertura obligatoria |
+| El servidor de demostración no tiene acceso fuera de banda confirmado | Alto | Solo se llega por Tailscale, tras NAT. Si `tailscaled` o la red no levantan tras un reinicio, hace falta ir físicamente. El servidor tiene iLO 4 (`/dev/ipmi0` presente), pero **falta confirmar si su puerto está cableado y con IP** |
+| El servidor no tiene cortafuegos activo | Medio | `ufw` está instalado pero con `ENABLED=no`; el unit figura «active» solo por ser `oneshot`. Lo que protege los servicios es enlazarlos a `127.0.0.1`, no un filtro. Publicar algo en `0.0.0.0` lo sirve a toda la red de la oficina |
+| `/data` del servidor no tiene ningún respaldo | Medio | No hay restic, borg ni equivalente. Solo existe un volcado lógico de la base de otro proyecto, y vive en el mismo sistema de archivos que protegería. Aplica a `/data/academia/postgres` cuando el catálogo se cargue a mano |
 
 ---
 

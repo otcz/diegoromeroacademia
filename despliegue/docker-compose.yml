@@ -56,10 +56,43 @@ services:
     depends_on:
       - academia-api
     ports:
-      # Solo loopback. El tunel de Cloudflare corre en la misma maquina y llega por aqui;
-      # nada queda expuesto en la LAN ni en la IP publica.
+      # Solo loopback, y solo para poder verlo en local por un tunel SSH mientras no hay
+      # dominio:  ssh -L 8091:127.0.0.1:8091 servidor
+      #
+      # El tunel de Cloudflare NO pasa por aqui: alcanza a este contenedor por la red
+      # interna de Docker. Cuando el dominio este publicado, esta linea se puede quitar
+      # y no quedara ni un puerto abierto en el host.
+      #
+      # Importante: el servidor no tiene cortafuegos activo (ufw esta instalado pero con
+      # ENABLED=no). Lo unico que impide que esto quede servido a toda la red de la
+      # oficina es el 127.0.0.1 de esta linea. Nunca cambiarlo por 0.0.0.0.
       - "127.0.0.1:8091:80"
     volumes:
       # Contrasena de la demostracion. Lo genera quien despliega, nunca se versiona.
       # Si falta, nginx no arranca: preferimos un despliegue fallido a una demo abierta.
       - /data/academia/htpasswd:/etc/nginx/.htpasswd:ro
+
+  # Publica la demostracion en internet sin abrir un solo puerto del router: el tunel sale
+  # DESDE el servidor hacia Cloudflare. Evita depender de una IP publica fija y da TLS.
+  #
+  # Va en un perfil aparte para que el resto del entorno se pueda levantar sin token:
+  #   docker compose --profile tunel up -d
+  academia-tunel:
+    image: cloudflare/cloudflared:latest
+    container_name: academia-tunel
+    restart: unless-stopped
+    profiles: ["tunel"]
+    # Red interna de este compose, NO la del host.
+    #
+    # Con network_mode: host el tunel alcanzaria cualquier puerto de loopback de la
+    # maquina, incluidas las bases de datos de los otros dos proyectos que conviven en
+    # ella. Aqui solo ve a sus propios servicios, y el destino se declara por nombre de
+    # contenedor: en Cloudflare el hostname publico apunta a http://academia-web:80,
+    # no a 127.0.0.1:8091.
+    command: tunnel --no-autoupdate run
+    environment:
+      # Token del tunel, creado en Cloudflare Zero Trust. Es un secreto: vive en
+      # despliegue/.env, nunca en el repositorio.
+      TUNNEL_TOKEN: ${TUNNEL_TOKEN}
+    depends_on:
+      - academia-web

@@ -1,0 +1,57 @@
+@use 'mixins' as m;
+
+:host {
+  display: block;
+}
+
+.adr-cristal {
+  padding: var(--adr-espacio-5);
+  border: 1px solid var(--adr-oscuro-borde);
+  border-radius: var(--adr-radio-tarjeta);
+  backdrop-filter: blur(var(--adr-cristal-desenfoque));
+}
+
+.adr-cristal--oscuro {
+  color: var(--adr-oscuro-texto-fuerte);
+  background: var(--adr-cristal-fondo-oscuro);
+}
+
+.adr-cristal--claro {
+  color: var(--adr-color-tinta);
+  background: var(--adr-cristal-fondo-claro);
+  border-color: var(--adr-color-borde-divisor);
+}
+
+// Sin soporte de desenfoque, un fondo al 6% de opacidad deja el texto ilegible sobre la foto.
+// El respaldo macizo no es una degradacion elegante: es la unica version legible.
+@supports not (backdrop-filter: blur(1px)) {
+  .adr-cristal--oscuro {
+    background: var(--adr-cristal-respaldo-oscuro);
+  }
+
+  .adr-cristal--claro {
+    background: var(--adr-cristal-respaldo-claro);
+  }
+}
+
+// Quien pidio menos transparencia en su sistema operativo suele tener una razon de lectura.
+@media (prefers-reduced-transparency: reduce) {
+  .adr-cristal {
+    backdrop-filter: none;
+  }
+
+  .adr-cristal--oscuro {
+    background: var(--adr-cristal-respaldo-oscuro);
+  }
+
+  .adr-cristal--claro {
+    background: var(--adr-cristal-respaldo-claro);
+  }
+}
+
+@include m.en-movil {
+  .adr-cristal {
+    padding: var(--adr-espacio-4);
+    backdrop-filter: blur(var(--adr-cristal-desenfoque-movil));
+  }
+}

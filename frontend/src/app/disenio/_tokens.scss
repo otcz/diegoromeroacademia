@@ -94,6 +94,42 @@
   --adr-sombra-flotante: 0 6px 20px rgb(14 27 46 / 25%);
   --adr-velo-modal: rgb(14 27 46 / 50%);
 
+  // ---------- Velos sobre imagen (ADR 0008) ----------
+  // Hacen legible el texto sobre cualquier foto. El del heroe es la formula de tres paradas
+  // del handoff, RECOLOREADA sobre el Noche azul aprobado: el prototipo usaba rgb(10 19 33),
+  // un quinto azul que no aparece en ninguna tabla de la paleta.
+  --adr-velo-lateral: linear-gradient(
+    100deg,
+    rgb(14 27 46 / 88%) 30%,
+    rgb(14 27 46 / 45%) 65%,
+    rgb(14 27 46 / 10%) 100%
+  );
+  --adr-velo-inferior: linear-gradient(180deg, rgb(14 27 46 / 0%) 45%, rgb(14 27 46 / 55%) 100%);
+
+  // ---------- Cristal esmerilado (ADR 0008) ----------
+  // Solo se consumen desde <adr-panel-cristal>, que encapsula el respaldo @supports y el
+  // apagado bajo prefers-reduced-transparency. Ninguna pantalla escribe backdrop-filter.
+  --adr-cristal-fondo-oscuro: rgb(255 255 255 / 6%);
+  --adr-cristal-fondo-claro: rgb(255 255 255 / 72%);
+  --adr-cristal-desenfoque: 16px;
+  --adr-cristal-desenfoque-movil: 8px;
+  --adr-cristal-respaldo-oscuro: color-mix(in srgb, var(--adr-color-blanco) 10%, var(--adr-color-noche-azul));
+  --adr-cristal-respaldo-claro: var(--adr-color-blanco);
+
+  // ---------- Marcadores de imagen ausente (ADR 0008) ----------
+  // Lo que pinta <adr-marco-imagen> cuando todavia no hay foto. Geometria de la propia marca:
+  // se ve deliberado, no roto. Derivados de la paleta, nunca colores inventados.
+  --adr-degradado-marcador-oscuro: linear-gradient(
+    135deg,
+    color-mix(in srgb, var(--adr-color-azul-profundo) 24%, var(--adr-color-noche-azul)),
+    var(--adr-color-noche-azul) 70%
+  );
+  --adr-degradado-marcador-claro: linear-gradient(
+    135deg,
+    var(--adr-tinte-azul-fondo),
+    var(--adr-color-pista-barra) 70%
+  );
+
   // ---------- Espaciado ----------
   // Escala base 4px derivada del diseno aprobado. No se usan valores fuera de ella.
   --adr-espacio-1: 4px;
@@ -120,8 +156,3 @@
   --adr-modal-lg: 760px;
   --adr-panel-lateral: 420px;
 }
-
-// Punto de quiebre movil. Mobile first: la mayoria del trafico llega desde YouTube
-// en celular (especificacion §14.1).
-$adr-quiebre-movil: 768px;
-$adr-quiebre-escritorio: 1200px;

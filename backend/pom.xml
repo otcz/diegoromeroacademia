@@ -213,6 +213,15 @@
                     <consoleOutput>true</consoleOutput>
                     <failOnViolation>true</failOnViolation>
                     <violationSeverity>warning</violationSeverity>
+                    <!--
+                      Unica exclusion, con motivo (docs/01 §11): el punto de arranque solo
+                      tiene un main estatico, asi que HideUtilityClassConstructor lo toma por
+                      clase de utilidad y exige constructor privado. No se le puede poner:
+                      @SpringBootApplication implica @Configuration, y Spring necesita
+                      instanciar la clase para construir su proxy. Se excluye ese archivo y
+                      ningun otro.
+                    -->
+                    <excludes>**/AcademiaAplicacion.java</excludes>
                 </configuration>
                 <executions>
                     <execution>

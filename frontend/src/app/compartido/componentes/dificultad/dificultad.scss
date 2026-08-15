@@ -1,0 +1,18 @@
+:host {
+  display: inline-flex;
+}
+
+.adr-dificultad {
+  display: inline-flex;
+  gap: 2px;
+  align-items: center;
+}
+
+.adr-dificultad__estrella {
+  color: var(--adr-color-borde-suave);
+}
+
+// El mango como chispa, nunca como relleno de area grande (regla de color 2).
+.adr-dificultad__estrella--llena {
+  color: var(--adr-color-mango);
+}

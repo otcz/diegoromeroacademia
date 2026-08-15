@@ -1,0 +1,46 @@
+@use 'mixins' as m;
+
+.adr-whatsapp {
+  position: fixed;
+  right: var(--adr-espacio-5);
+  bottom: var(--adr-espacio-5);
+  z-index: 90;
+
+  display: inline-flex;
+  gap: var(--adr-espacio-2);
+  align-items: center;
+
+  min-height: var(--adr-altura-control);
+  padding: var(--adr-espacio-3) var(--adr-espacio-5);
+
+  font-size: var(--adr-texto-ui);
+  font-weight: 600;
+  color: var(--adr-color-blanco);
+  text-decoration: none;
+
+  background: var(--adr-color-whatsapp);
+  border-radius: var(--adr-radio-pastilla);
+  box-shadow: var(--adr-sombra-flotante);
+
+  transition: background-color 0.15s ease;
+
+  @include m.foco-visible;
+
+  &:hover {
+    color: var(--adr-color-blanco);
+    background: var(--adr-color-whatsapp-hover);
+  }
+}
+
+// En movil se reduce a solo el icono: el texto robaria espacio de lectura.
+@include m.en-movil {
+  .adr-whatsapp {
+    right: var(--adr-espacio-4);
+    bottom: var(--adr-espacio-4);
+    padding: var(--adr-espacio-3);
+  }
+
+  .adr-whatsapp__texto {
+    display: none;
+  }
+}

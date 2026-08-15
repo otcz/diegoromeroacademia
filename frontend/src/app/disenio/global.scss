@@ -110,6 +110,68 @@ a {
   border: 0;
 }
 
+// ---------------------------------------------------- elementos del sistema
+// Estos no son de ninguna pantalla: son piezas tipograficas y de superficie
+// definidas en docs/04 §1. Viven aqui para que todas las pantallas las hereden
+// identicas en vez de redefinirlas cada una a su manera.
+
+.adr-kicker {
+  @include m.caption;
+
+  margin-bottom: var(--adr-espacio-3);
+
+  &--azul {
+    color: var(--adr-color-azul-rey);
+  }
+
+  &--mango {
+    color: var(--adr-color-mango);
+  }
+
+  &--atenuado {
+    color: var(--adr-color-texto-atenuado);
+  }
+}
+
+.adr-titulo-seccion {
+  max-width: 22ch;
+  margin-bottom: var(--adr-espacio-6);
+  font-family: var(--adr-fuente-titular);
+  font-size: var(--adr-texto-seccion);
+  font-weight: 800;
+  line-height: var(--adr-interlineado-titulo);
+  letter-spacing: var(--adr-espaciado-letra-titulo);
+
+  &--claro {
+    color: var(--adr-color-blanco);
+  }
+}
+
+.adr-texto-secundario {
+  color: var(--adr-color-texto-secundario);
+}
+
+.adr-texto-claro {
+  color: var(--adr-oscuro-texto-suave);
+}
+
+.adr-nota {
+  margin-top: var(--adr-espacio-5);
+  font-size: var(--adr-texto-caption);
+  color: var(--adr-color-texto-atenuado);
+}
+
+.adr-superficie {
+  @include m.tarjeta;
+
+  padding: var(--adr-espacio-5);
+}
+
+// Gesto de marca. Una vez por pantalla como maximo: repetido pierde su efecto.
+.adr-subrayado {
+  @include m.subrayado-mango;
+}
+
 // ---------------------------------------------------------------- disposicion
 .adr-contenedor {
   @include m.contenedor;

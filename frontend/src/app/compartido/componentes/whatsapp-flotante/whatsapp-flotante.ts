@@ -1,0 +1,44 @@
+import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
+import { Icono } from '../icono/icono';
+
+/**
+ * Boton flotante de WhatsApp (docs/04 §3, especificacion §14.3).
+ *
+ * <p>Siempre visible, en todos los tamanios de pantalla. El publico de este proyecto llega
+ * desde YouTube en celular y resuelve por WhatsApp, no por formulario de contacto: quitarlo
+ * de movil seria quitarlo justo donde mas se usa.
+ *
+ * <p>Es el unico elemento de la interfaz que puede ir en verde WhatsApp. Ese color esta
+ * reservado a esta marca y no participa del sistema «Azul rey».
+ */
+@Component({
+  selector: 'adr-whatsapp-flotante',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [Icono],
+  template: `
+    <a
+      class="adr-whatsapp"
+      [href]="enlace()"
+      target="_blank"
+      rel="noopener noreferrer"
+      aria-label="Escribir por WhatsApp"
+    >
+      <adr-icono nombre="whatsapp-logo" [tamanio]="24" />
+      <span class="adr-whatsapp__texto">{{ etiqueta() }}</span>
+    </a>
+  `,
+  styleUrl: './whatsapp-flotante.scss',
+})
+export class WhatsappFlotante {
+  /** Numero en formato internacional sin signos, por ejemplo 573001234567. */
+  readonly numero = input.required<string>();
+
+  /** Mensaje precargado. Baja la friccion: el alumno no tiene que redactar nada. */
+  readonly mensaje = input('Hola, quiero informacion sobre las clases de acordeon');
+
+  readonly etiqueta = input('Escríbenos');
+
+  protected readonly enlace = computed(
+    () => `https://api.whatsapp.com/send?phone=${this.numero()}&text=${encodeURIComponent(this.mensaje())}`,
+  );
+}

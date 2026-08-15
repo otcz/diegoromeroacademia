@@ -10,4 +10,10 @@ import { Routes } from '@angular/router';
  * <p>Las guardas que se agreguen aqui son solo experiencia de usuario. La autorizacion
  * real vive en el backend (docs/06 §2).
  */
-export const rutas: Routes = [];
+export const rutas: Routes = [
+  {
+    path: '',
+    title: 'Academia Diego Romero — Aprende a tocar acordeón desde cero',
+    loadComponent: () => import('./funcionalidades/landing/landing').then((m) => m.Landing),
+  },
+];

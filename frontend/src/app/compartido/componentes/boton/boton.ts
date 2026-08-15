@@ -1,6 +1,7 @@
 import { NgTemplateOutlet } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, input, output } from '@angular/core';
 import { RouterLink } from '@angular/router';
+import { entorno } from '../../../../entornos/entorno';
 import { Icono, TamanioIcono } from '../icono/icono';
 import { NombreIcono } from '../../../disenio/iconos/registro-iconos';
 
@@ -13,6 +14,18 @@ import { NombreIcono } from '../../../disenio/iconos/registro-iconos';
 export type VarianteBoton = 'primario' | 'secundario' | 'fantasma' | 'sobre-oscuro' | 'peligro';
 
 export type TipoBoton = 'button' | 'submit';
+
+/**
+ * Camino de la API, normalizado a ruta.
+ *
+ * <p>`entorno.urlApi` vale `/api` en el servidor pero `http://localhost:8080/api` en
+ * desarrollo, donde el frontend y el backend viven en puertos distintos. Comparar el prefijo
+ * en crudo funcionaba solo en uno de los dos entornos — lo destapo la prueba de clic.
+ *
+ * <p>Pasarla por `URL` deja `/api/` en los dos casos. La base es ficticia y solo sirve para
+ * poder resolver una ruta relativa; nunca se usa para pedir nada.
+ */
+const RUTA_API = `${new URL(entorno.urlApi, 'http://base.invalida').pathname.replace(/\/$/, '')}/`;
 
 /**
  * Boton estandar del catalogo (docs/04 §3).
@@ -90,13 +103,25 @@ export class Boton {
   readonly accion = output<void>();
 
   /**
-   * Un destino que empieza por `/` es una ruta de esta aplicacion.
+   * Una ruta de ESTA aplicacion: empieza por `/` y no cuelga de la API.
    *
-   * <p>Las anclas (`#planes`) y las direcciones externas (`https://`, `mailto:`) NO lo son:
-   * el enrutador no las conoce y convertirlas en `routerLink` las rompe. `nuevaPestania` solo
-   * tiene sentido en esa rama, porque abrir una ruta propia en otra pestania duplica la app.
+   * <p>Las anclas (`#planes`) y las direcciones externas (`https://`, `mailto:`) no lo son:
+   * el enrutador no las conoce y convertirlas en `routerLink` las rompe.
+   *
+   * <p><b>Y `/api/...` tampoco lo es, aunque empiece por barra.</b> Es un endpoint del
+   * servidor. Con la regla anterior —«interno si empieza por `/`»— el boton «Continuar con
+   * Google» se dibujaba con `routerLink`: al pulsarlo, Angular navegaba por dentro SIN pedirle
+   * nada al servidor, no encontraba la ruta y pintaba el 404. Recargando esa misma URL si
+   * funcionaba, porque entonces el navegador si hacia la peticion. Un fallo que solo aparece
+   * al pulsar, nunca al mirar.
+   *
+   * <p>El prefijo se toma de la configuracion y no se escribe aqui: el dia que la API cambie
+   * de base, esto sigue siendo cierto sin que nadie se acuerde de venir.
    */
-  protected readonly esInterno = computed(() => this.enlace()?.startsWith('/') ?? false);
+  protected readonly esInterno = computed(() => {
+    const destino = this.enlace();
+    return destino !== null && destino.startsWith('/') && !destino.startsWith(RUTA_API);
+  });
 
   protected readonly clases = computed(() => {
     const partes = ['adr-boton', `adr-boton--${this.variante()}`];

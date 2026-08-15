@@ -13,11 +13,17 @@ import { beforeEach } from 'vitest';
  * justo la duplicación que la regla 11 evita en los componentes, y el día que haga falta otro
  * proveedor transversal habría que tocar los veinte.
  *
- * <p>La tabla de rutas va VACÍA a propósito. `RouterLink` solo necesita el enrutador para
- * calcular el `href`, no para resolver el destino, así que pasarle las rutas reales
- * dispararía las importaciones diferidas de cada pantalla en cada prueba sin comprobar nada
- * a cambio. Que los destinos existan lo verifica su propia prueba, contra `RUTAS_INTERNAS`.
+ * <p>NO se pasan las rutas reales: dispararían las importaciones diferidas de cada pantalla
+ * en cada prueba sin comprobar nada a cambio. Que los destinos existan lo verifica su propia
+ * prueba, contra `RUTAS_INTERNAS`.
+ *
+ * <p>Pero tampoco va vacía. Con una tabla vacía, un clic que `RouterLink` intercepta lanza una
+ * navegación que no resuelve, y su promesa se rechaza DESPUÉS de que la prueba termine y el
+ * inyector se destruya: Vitest lo reporta como error no gestionado y advierte de que puede
+ * producir falsos positivos. Un comodín que no lleva a ninguna parte deja que la navegación
+ * termine en silencio, que es justo lo que estas pruebas necesitan — les importa si el clic
+ * se interceptó, no a dónde fue.
  */
 beforeEach(() => {
-  TestBed.configureTestingModule({ providers: [provideRouter([])] });
+  TestBed.configureTestingModule({ providers: [provideRouter([{ path: '**', children: [] }])] });
 });

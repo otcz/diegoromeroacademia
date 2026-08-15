@@ -5,26 +5,24 @@ Arquitectura hexagonal modular ([docs/02](../docs/02-arquitectura.md)).
 
 ---
 
-## ⚠ Estado: sin compilar todavía
+## Estado: verificado
 
-**Este andamiaje se escribió en una máquina sin JDK instalado, así que no ha pasado por el
-compilador.** La estructura, las reglas y la configuración están completas y revisadas, pero
-la primera ejecución de `./mvnw verify` puede sacar ajustes —una versión de plugin, una firma
-de API de Spring Security 7—. Es lo esperable, no un fallo del diseño.
+`mvn verify` pasa en verde: **41 pruebas, 0 fallos**, cobertura 100% sobre las clases no
+excluidas, y las cinco puertas de calidad ejecutándose de verdad —JaCoCo, ArchUnit, Checkstyle,
+PMD y SpotBugs—. La imagen de Docker arranca y responde `UP` en `/actuator/health` conectada a
+PostgreSQL.
 
-**Lo primero que hay que hacer** es instalar un JDK 21 y ejecutar:
+Dos ajustes hicieron falta en la primera compilación, ambos documentados en el código:
 
-```bash
-cd backend && ./mvnw verify
-```
-
-Maven **no** hace falta instalarlo: el wrapper (`mvnw`) se descarga solo.
-
-Puntos con más probabilidad de necesitar retoque, por orden:
-
-1. El DSL de `SeguridadHttpConfiguracion` (Spring Security 7 cambió algunas firmas).
-2. Las versiones de los plugins de calidad en `pom.xml`.
-3. Las reglas de `config/checkstyle.xml`, fijadas contra Checkstyle 10.26.1.
+1. **Checkstyle excluye `AcademiaAplicacion.java`.** Como solo tiene un `main` estático,
+   `HideUtilityClassConstructor` la toma por clase de utilidad y exige constructor privado. No
+   se le puede poner: `@SpringBootApplication` implica `@Configuration` y Spring necesita
+   instanciarla para su proxy.
+2. **Cuatro reglas de ArchUnit llevan `allowEmptyShould(true)`.** Todavía no existe ninguna
+   clase `Controlador`, `Adaptador` ni `Puerto`, y ArchUnit falla por defecto cuando una regla
+   no encuentra nada que revisar. **Hay que quitar esos `allowEmptyShould` en cuanto el primer
+   módulo tenga sus clases**: a partir de ahí, que una regla no encuentre nada sí es señal de
+   que algo se movió de sitio.
 
 ---
 
@@ -34,6 +32,15 @@ Puntos con más probabilidad de necesitar retoque, por orden:
 |---|---|---|
 | JDK | 21 | Compilar y ejecutar |
 | Docker | cualquiera reciente | PostgreSQL local y Testcontainers |
+
+Maven **no** hace falta instalarlo: el wrapper (`mvnw`) se descarga solo.
+
+**Sin JDK local** se puede compilar dentro de un contenedor. Importa el `--user`: sin él, el
+contenedor escribe `target/` como root y después no se puede borrar sin privilegios.
+
+```bash
+docker run --rm --user "$(id -u):$(id -g)" -v "$PWD":/app -w /app maven:3.9-eclipse-temurin-21 mvn -B verify
+```
 
 ---
 
@@ -115,11 +122,11 @@ carpetas vacías que nadie sabe si están en uso.
 
 ## Lo primero de la fase 1
 
-1. `./mvnw verify` y corregir lo que salga.
-2. Decidir el registro de migraciones —ver
+1. Decidir el registro de migraciones —ver
    [`db/migracion/LEEME.md`](src/main/resources/db/migracion/LEEME.md), hay una
    recomendación ahí.
-3. Clase base de pruebas de integración con Testcontainers, que aplique las migraciones.
-4. Prueba de arranque del contexto de Spring: hoy nada verifica que el cableado funcione,
-   porque necesita base de datos.
-5. Módulo `identidad`, empezando por la unificación de cuentas (no negociable #1).
+2. Clase base de pruebas de integración con Testcontainers, que aplique las migraciones.
+3. Prueba de arranque del contexto de Spring. El contenedor ya arranca y responde `UP`, así
+   que el cableado funciona; pero eso se comprueba a mano y solo al desplegar. Hace falta un
+   test que lo verifique en cada build, y necesita base de datos.
+4. Módulo `identidad`, empezando por la unificación de cuentas (no negociable #1).

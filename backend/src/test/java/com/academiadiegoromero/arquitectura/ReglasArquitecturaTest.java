@@ -75,27 +75,40 @@ class ReglasArquitecturaTest {
             .matching("com.academiadiegoromero.(*)..")
             .should().beFreeOfCycles();
 
+    // Las cuatro reglas de sufijo llevan allowEmptyShould(true) porque hoy no existe todavia
+    // ninguna clase Controlador, Adaptador ni Puerto: los modulos aun no se han construido.
+    // Sin eso ArchUnit falla al no encontrar nada que revisar, que es su comportamiento por
+    // defecto para que nadie crea que una regla protege cuando en realidad no mira nada.
+    //
+    // QUITAR ESTOS allowEmptyShould en cuanto el primer modulo tenga sus clases: a partir de
+    // ahi, que una de estas reglas no encuentre nada SI es una senal de que algo se movio de
+    // sitio, y conviene que vuelva a fallar.
+
     /** Un controlador traduce HTTP a caso de uso. Si toca el repositorio, hay logica fuera de sitio. */
     @ArchTest
     static final ArchRule LOS_CONTROLADORES_NO_TOCAN_REPOSITORIOS = noClasses()
             .that().haveSimpleNameEndingWith("Controlador")
-            .should().dependOnClassesThat().haveSimpleNameEndingWith("Repositorio");
+            .should().dependOnClassesThat().haveSimpleNameEndingWith("Repositorio")
+            .allowEmptyShould(true);
 
     /** Cada sufijo declara una capa: un adaptador dentro del dominio es un error de diseño. */
     @ArchTest
     static final ArchRule LOS_ADAPTADORES_VIVEN_EN_INFRAESTRUCTURA = classes()
             .that().haveSimpleNameEndingWith("Adaptador")
-            .should().resideInAPackage("..infraestructura..");
+            .should().resideInAPackage("..infraestructura..")
+            .allowEmptyShould(true);
 
     @ArchTest
     static final ArchRule LOS_CONTROLADORES_VIVEN_EN_WEB = classes()
             .that().haveSimpleNameEndingWith("Controlador")
-            .should().resideInAPackage("..infraestructura.web..");
+            .should().resideInAPackage("..infraestructura.web..")
+            .allowEmptyShould(true);
 
     @ArchTest
     static final ArchRule LOS_PUERTOS_VIVEN_EN_EL_DOMINIO = classes()
             .that().haveSimpleNameEndingWith("Puerto")
-            .should().resideInAPackage("..dominio.puerto..");
+            .should().resideInAPackage("..dominio.puerto..")
+            .allowEmptyShould(true);
 
     /**
      * Sin inyeccion por campo.

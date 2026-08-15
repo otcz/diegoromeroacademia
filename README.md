@@ -18,7 +18,9 @@ implementadas.
 |---|---|
 | Documentación y reglas | Completa |
 | Frontend | Verificado: compila, lint limpio, 33 pruebas, 100% de cobertura |
-| Backend | Escrito y estructurado, **pendiente de primera compilación** (ver [backend/README.md](backend/README.md)) |
+| Backend | Verificado: 41 pruebas, 100% de cobertura, las cinco puertas de calidad en verde |
+| Contenedores | Imágenes construidas; la API arranca y responde `UP` conectada a PostgreSQL |
+| Entorno de demostración | Pendiente del túnel de Cloudflare ([ADR 0007](docs/adr/0007-uso-del-servidor-fisico.md)) |
 
 ---
 

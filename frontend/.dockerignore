@@ -1,0 +1,11 @@
+# Lo que no debe entrar al contexto de construccion. Sin esto, Docker copia node_modules
+# entero y la construccion se vuelve lentisima ademas de traer binarios de otra plataforma.
+node_modules
+dist
+.angular
+coverage
+.git
+.vscode
+*.log
+Dockerfile
+.dockerignore

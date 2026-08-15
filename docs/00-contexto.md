@@ -147,3 +147,5 @@ configuración, no código. Ver `docs/03-configuracion.md`.
 | 2026-08-14 | Marco de buenas prácticas establecido (`docs/01` a `docs/07`) |
 | 2026-08-14 | Andamiaje de backend y frontend montado. Corregidas las versiones de framework (ADR 0006) |
 | 2026-08-14 | Frontend verificado: compila, lint limpio, 33 pruebas, 100% de cobertura |
+| 2026-08-14 | Backend verificado en el servidor: 41 pruebas y las cinco puertas de calidad en verde |
+| 2026-08-14 | Imágenes de Docker construidas; la API arranca y responde `UP` contra PostgreSQL |

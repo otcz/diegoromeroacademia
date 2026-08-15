@@ -1,0 +1,54 @@
+:host {
+  display: block;
+}
+
+.adr-cita {
+  display: flex;
+  flex-direction: column;
+  gap: var(--adr-espacio-5);
+  height: 100%;
+  padding: var(--adr-espacio-5);
+  background: var(--adr-color-blanco);
+  border: 1px solid var(--adr-color-borde-divisor);
+  border-radius: var(--adr-radio-tarjeta);
+}
+
+.adr-cita__texto {
+  flex: 1;
+  font-family: var(--adr-fuente-titular);
+  font-size: var(--adr-texto-tarjeta);
+  font-weight: 700;
+  line-height: 1.35;
+  letter-spacing: var(--adr-espaciado-letra-titulo);
+}
+
+.adr-cita__pie {
+  display: flex;
+  gap: var(--adr-espacio-3);
+  align-items: center;
+}
+
+.adr-cita__autor {
+  font-size: var(--adr-texto-ui);
+  font-weight: 600;
+}
+
+// El sello lleva icono y texto, y ademas es un enlace: la procedencia tiene que poder
+// comprobarse, no solo afirmarse.
+.adr-cita__fuente {
+  display: inline-flex;
+  gap: var(--adr-espacio-1);
+  align-items: center;
+  margin-top: 2px;
+  font-size: var(--adr-texto-caption);
+  color: var(--adr-color-texto-atenuado);
+  text-decoration: none;
+
+  &:hover {
+    color: var(--adr-color-azul-profundo);
+  }
+
+  adr-icono {
+    color: var(--adr-color-exito);
+  }
+}

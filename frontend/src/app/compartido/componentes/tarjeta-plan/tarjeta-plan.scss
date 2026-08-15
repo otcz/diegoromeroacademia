@@ -1,0 +1,57 @@
+:host {
+  display: block;
+  height: 100%;
+}
+
+.adr-plan {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: var(--adr-espacio-3);
+  height: 100%;
+  padding: var(--adr-espacio-5);
+
+  background: var(--adr-color-blanco);
+  border: 1px solid var(--adr-color-borde-divisor);
+  border-radius: var(--adr-radio-tarjeta);
+  box-shadow: var(--adr-sombra-tarjeta);
+}
+
+// El plan que se quiere promover. La jerarquia lo dice sin que haga falta leer.
+.adr-plan--recomendado {
+  border: 2px solid var(--adr-color-azul-rey);
+  box-shadow: var(--adr-sombra-destacado);
+}
+
+.adr-plan__distintivo {
+  position: absolute;
+  top: -13px;
+  left: var(--adr-espacio-5);
+}
+
+.adr-plan__nombre {
+  font-family: var(--adr-fuente-titular);
+  font-size: var(--adr-texto-tarjeta);
+  font-weight: 700;
+}
+
+.adr-plan__precio {
+  font-family: var(--adr-fuente-titular);
+  font-size: 36px;
+  font-weight: 700;
+  line-height: 1.1;
+  font-variant-numeric: tabular-nums;
+}
+
+.adr-plan__periodo {
+  font-family: var(--adr-fuente-cuerpo);
+  font-size: var(--adr-texto-ui);
+  font-weight: 400;
+  color: var(--adr-color-texto-atenuado);
+}
+
+// Empuja la accion al fondo: los botones quedan alineados aunque las descripciones
+// tengan largos distintos.
+.adr-plan adr-boton {
+  margin-top: auto;
+}

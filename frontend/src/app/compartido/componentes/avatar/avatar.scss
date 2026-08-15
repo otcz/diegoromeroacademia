@@ -1,0 +1,30 @@
+:host {
+  display: inline-flex;
+}
+
+.adr-avatar {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+
+  color: var(--adr-tinte-azul-texto);
+
+  background: var(--adr-tinte-azul-fondo);
+  border-radius: var(--adr-radio-pastilla);
+}
+
+.adr-avatar__foto {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.adr-avatar__iniciales {
+  font-family: var(--adr-fuente-cuerpo);
+  font-size: var(--adr-texto-caption);
+  font-weight: 600;
+  line-height: 1;
+  letter-spacing: 0.02em;
+}

@@ -19,8 +19,16 @@ indent_size = 4
 [*.{xml,yml,yaml}]
 indent_size = 2
 
+# Comillas simples: es lo que genera y espera el ecosistema de Angular, y lo que aplica
+# Prettier en este proyecto. Regla heredada del .editorconfig que el CLI creo dentro de
+# frontend/ y que se fusiono aqui: aquel declaraba `root = true`, lo que CORTABA la
+# herencia de este archivo y dejaba al frontend sin las reglas del proyecto.
+[*.ts]
+quote_type = single
+
 [*.md]
 trim_trailing_whitespace = false
+max_line_length = off
 
 [*.sql]
 indent_size = 2

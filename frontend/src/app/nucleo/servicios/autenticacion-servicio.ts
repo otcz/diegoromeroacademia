@@ -1,0 +1,76 @@
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { Injectable, inject, signal } from '@angular/core';
+import { Observable, catchError, tap, throwError } from 'rxjs';
+import { entorno } from '../../../entornos/entorno';
+import {
+  CODIGOS_ERROR_ACCESO,
+  ProveedorExterno,
+  RespuestaAcceso,
+  SolicitudAcceso,
+  UsuarioSesion,
+} from '../modelos/autenticacion';
+
+/** Mensajes que ve el alumno, mapeados desde el codigo estable que envia el backend. */
+const MENSAJES_POR_CODIGO: Record<string, string> = {
+  [CODIGOS_ERROR_ACCESO.credencialesInvalidas]: 'El correo o la contraseña no coinciden.',
+  [CODIGOS_ERROR_ACCESO.cuentaBloqueada]:
+    'Tu cuenta está bloqueada temporalmente por varios intentos fallidos. Intenta de nuevo en unos minutos.',
+  [CODIGOS_ERROR_ACCESO.correoNoVerificado]:
+    'Todavía no has verificado tu correo. Revisa tu bandeja de entrada.',
+  [CODIGOS_ERROR_ACCESO.limiteDispositivos]:
+    'Ya hay sesiones abiertas en otros dispositivos. Cierra una desde tu perfil para continuar.',
+};
+
+const MENSAJE_GENERICO = 'No pudimos iniciar sesión. Intenta de nuevo en unos minutos.';
+
+/**
+ * Acceso a la API de autenticacion.
+ *
+ * <p>El componente no habla HTTP: pide a este servicio y reacciona. Asi la pantalla se puede
+ * probar sin red y el manejo de errores vive en un solo sitio.
+ *
+ * <p>El token NO se guarda aqui todavia. Donde se guarda —memoria, cookie httpOnly— es una
+ * decision de seguridad que se toma junto con el backend, y elegirla a la ligera es como se
+ * termina con un token en localStorage al alcance de cualquier script inyectado.
+ */
+@Injectable({ providedIn: 'root' })
+export class AutenticacionServicio {
+  private readonly http = inject(HttpClient);
+  private readonly base = `${entorno.urlApi}/acceso`;
+
+  private readonly usuarioActual = signal<UsuarioSesion | null>(null);
+
+  /** Usuario de la sesion vigente, o nulo si no hay ninguna. Solo lectura hacia afuera. */
+  readonly usuario = this.usuarioActual.asReadonly();
+
+  /**
+   * Inicia sesion con correo y contrasena.
+   *
+   * <p>Traduce el codigo de error del backend a un mensaje para el alumno. Nunca se muestra
+   * el detalle tecnico: puede revelar si un correo existe, que es justo lo que permite
+   * enumerar cuentas.
+   */
+  iniciarSesion(solicitud: SolicitudAcceso): Observable<RespuestaAcceso> {
+    return this.http.post<RespuestaAcceso>(`${this.base}/sesion`, solicitud).pipe(
+      tap((respuesta) => this.usuarioActual.set(respuesta.usuario)),
+      catchError((error: HttpErrorResponse) => throwError(() => new Error(this.traducir(error)))),
+    );
+  }
+
+  /**
+   * Lleva al alumno al proveedor externo.
+   *
+   * <p>El flujo lo inicia el backend, no el frontend: es el unico que conoce el secreto de
+   * cliente y el que valida que el proveedor declare el correo como verificado. Sin esa
+   * validacion, cualquiera podria apropiarse de la cuenta de otro registrando su correo en
+   * el proveedor (docs/06 §1).
+   */
+  urlProveedor(proveedor: ProveedorExterno): string {
+    return `${entorno.urlApi}/acceso/oauth2/${proveedor}`;
+  }
+
+  private traducir(error: HttpErrorResponse): string {
+    const codigo = error.error?.codigoError as string | undefined;
+    return (codigo && MENSAJES_POR_CODIGO[codigo]) || MENSAJE_GENERICO;
+  }
+}

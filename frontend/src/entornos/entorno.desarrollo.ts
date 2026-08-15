@@ -8,4 +8,7 @@ export const entorno = {
   produccion: false,
   urlApi: 'http://localhost:8080/api',
   urlVerificacionCertificado: 'http://localhost:4200/verificar',
+
+  /** En local se puede encender para maquetar la pantalla con los dos proveedores. */
+  loginFacebookHabilitado: false,
 } as const;

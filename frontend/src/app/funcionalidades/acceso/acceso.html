@@ -1,0 +1,105 @@
+<main class="acceso">
+  <!-- ==================================================== PANEL DE MARCA -->
+  <!-- Alterna Noche azul con el blanco del formulario, que es el ritmo que el sistema
+       usa en la landing (regla de color 4). -->
+  <section class="acceso__marca">
+    <a class="acceso__logo" href="/" aria-label="Academia Diego Romero — inicio">
+      <span class="acceso__logo-nombre">Diego Romero</span>
+      <span class="acceso__logo-bajada">Academia</span>
+    </a>
+
+    <div class="acceso__marca-cuerpo">
+      <h2 class="acceso__marca-titulo">
+        Sigue donde<br />
+        <span class="adr-subrayado">lo dejaste.</span>
+      </h2>
+      <ul class="acceso__marca-lista">
+        <li>
+          <adr-icono nombre="lock-open" [tamanio]="20" />
+          <span>Tus niveles aprobados quedan siempre disponibles</span>
+        </li>
+        <li>
+          <adr-icono nombre="certificate" [tamanio]="20" />
+          <span>Tus certificados no se pierden aunque venza el plan</span>
+        </li>
+        <li>
+          <adr-icono nombre="play-circle" [tamanio]="20" />
+          <span>Continúas la clase en el segundo exacto donde la dejaste</span>
+        </li>
+      </ul>
+    </div>
+
+    <p class="acceso__marca-pie">Acordeón · Caja · Guacharaca · Guitarra</p>
+  </section>
+
+  <!-- ====================================================== FORMULARIO -->
+  <section class="acceso__panel">
+    <div class="acceso__caja">
+      <h1 class="acceso__titulo">Entra a tu cuenta</h1>
+      <p class="adr-texto-secundario acceso__intro">
+        Usa el método que prefieras. Si ya entraste antes con otro, llegarás a la misma
+        cuenta.
+      </p>
+
+      @if (estado() === 'error') {
+        <adr-alerta tono="error">{{ mensajeError() }}</adr-alerta>
+      }
+
+      <div class="acceso__proveedores">
+        <adr-boton
+          variante="secundario"
+          icono="google-logo"
+          [anchoCompleto]="true"
+          [enlace]="urlGoogle"
+        >
+          Continuar con Google
+        </adr-boton>
+
+        @if (facebookHabilitado) {
+          <adr-boton
+            variante="secundario"
+            icono="facebook-logo"
+            [anchoCompleto]="true"
+            [enlace]="urlFacebook"
+          >
+            Continuar con Facebook
+          </adr-boton>
+        }
+      </div>
+
+      <div class="acceso__separador"><span>o con tu correo</span></div>
+
+      <form class="acceso__formulario" [formGroup]="formulario" (ngSubmit)="enviar()">
+        <adr-campo
+          etiqueta="Correo electrónico"
+          tipo="email"
+          marcador="tucorreo@ejemplo.com"
+          autocompletado="email"
+          [control]="formulario.controls.correo"
+        />
+
+        <adr-campo
+          etiqueta="Contraseña"
+          tipo="password"
+          autocompletado="current-password"
+          [control]="formulario.controls.contrasena"
+        />
+
+        <a class="acceso__olvide" href="/recuperar-contrasena">¿Olvidaste tu contraseña?</a>
+
+        <adr-boton
+          tipo="submit"
+          variante="primario"
+          [anchoCompleto]="true"
+          [cargando]="estado() === 'enviando'"
+        >
+          {{ estado() === 'enviando' ? 'Entrando…' : 'Entrar' }}
+        </adr-boton>
+      </form>
+
+      <p class="acceso__registro">
+        ¿Todavía no tienes cuenta? <a href="/registro">Regístrate gratis</a>
+      </p>
+    </div>
+  </section>
+</main>

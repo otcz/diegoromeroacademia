@@ -53,3 +53,13 @@ $RECYCLE.BIN/
 *.tmp
 *.bak
 *~
+
+# Buzon de entrega de material grafico.
+#
+# Aqui se sueltan las fotos e ilustraciones tal como llegan del telefono o del disenador,
+# con nombres de camara. NO se versiona: son megabytes de material sin curar y duplicado.
+#
+# El flujo es: se suelta aqui -> se elige, se renombra y se registra su licencia en
+# `activos/originales/LEEME.md` -> `npm run imagenes:tratar` y `imagenes:optimizar` producen
+# lo que publica el sitio, con huella de contenido en el nombre.
+/imagenes/

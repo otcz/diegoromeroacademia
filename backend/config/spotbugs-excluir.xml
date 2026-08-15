@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Exclusiones de SpotBugs. Cada una necesita justificacion escrita: una exclusion sin
+  motivo es una regla desactivada en silencio (docs/01 §11).
+-->
+<FindBugsFilter xmlns="https://github.com/spotbugs/filter/3.0.0"
+                xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                xsi:schemaLocation="https://github.com/spotbugs/filter/3.0.0
+                                    https://raw.githubusercontent.com/spotbugs/spotbugs/master/spotbugs/etc/findbugsfilter.xsd">
+
+    <!-- Los package-info solo llevan documentacion. -->
+    <Match>
+        <Class name="~.*\.package-info"/>
+    </Match>
+
+    <!--
+      EI_EXPOSE_REP en records: SpotBugs marca todo record que expone una coleccion o una
+      fecha como "fuga de representacion". En este proyecto los records son objetos de valor
+      inmutables construidos con colecciones ya copiadas, asi que el aviso es sistematico y
+      falso. Se revisa caso por caso en las clases mutables, no en los records.
+    -->
+    <Match>
+        <Bug pattern="EI_EXPOSE_REP,EI_EXPOSE_REP2"/>
+        <Source name="~.*\.java"/>
+        <Class name="~com\.academiadiegoromero\..*"/>
+    </Match>
+</FindBugsFilter>

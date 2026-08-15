@@ -1,0 +1,77 @@
+<?xml version="1.0"?>
+<ruleset name="Reglas Academia Diego Romero"
+         xmlns="http://pmd.sourceforge.net/ruleset/2.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://pmd.sourceforge.net/ruleset/2.0.0
+                             https://pmd.sourceforge.io/ruleset_2_0_0.xsd">
+
+    <description>
+        Conjunto enfocado, no categorias completas: el ruido hace que los avisos se ignoren,
+        y un aviso ignorado no protege nada. Cada regla aqui corresponde a un punto concreto
+        de docs/01-estandares-codigo.md.
+    </description>
+
+    <!-- ======== Complejidad: el sintoma temprano del codigo espagueti (regla 3) ======== -->
+    <rule ref="category/java/design.xml/CyclomaticComplexity">
+        <properties>
+            <property name="methodReportLevel" value="10"/>
+            <property name="classReportLevel" value="80"/>
+        </properties>
+    </rule>
+    <rule ref="category/java/design.xml/CognitiveComplexity">
+        <properties>
+            <property name="reportLevel" value="15"/>
+        </properties>
+    </rule>
+    <rule ref="category/java/design.xml/NPathComplexity"/>
+    <rule ref="category/java/design.xml/ExcessiveParameterList">
+        <properties>
+            <property name="minimum" value="5"/>
+        </properties>
+    </rule>
+    <rule ref="category/java/design.xml/TooManyMethods">
+        <properties>
+            <property name="maxmethods" value="20"/>
+        </properties>
+    </rule>
+    <rule ref="category/java/design.xml/CouplingBetweenObjects">
+        <properties>
+            <property name="threshold" value="20"/>
+        </properties>
+    </rule>
+    <rule ref="category/java/design.xml/CollapsibleIfStatements"/>
+    <rule ref="category/java/design.xml/SimplifiedTernary"/>
+    <rule ref="category/java/design.xml/UselessOverridingMethod"/>
+
+    <!-- ======== Errores probables ======== -->
+    <rule ref="category/java/errorprone.xml/EmptyCatchBlock"/>
+    <rule ref="category/java/errorprone.xml/CloseResource"/>
+    <rule ref="category/java/errorprone.xml/CompareObjectsWithEquals"/>
+    <rule ref="category/java/errorprone.xml/BrokenNullCheck"/>
+    <rule ref="category/java/errorprone.xml/MisplacedNullCheck"/>
+    <rule ref="category/java/errorprone.xml/UnconditionalIfStatement"/>
+    <rule ref="category/java/errorprone.xml/AvoidBranchingStatementAsLastInLoop"/>
+    <!-- Regla 4: un literal dentro de una condicion es un valor de negocio escondido. -->
+    <rule ref="category/java/errorprone.xml/AvoidLiteralsInIfCondition">
+        <properties>
+            <property name="ignoreMagicNumbers" value="-1,0,1"/>
+        </properties>
+    </rule>
+    <!-- docs/01 §10: el registro va por SLF4J, nunca por consola. -->
+    <rule ref="category/java/bestpractices.xml/SystemPrintln"/>
+
+    <!-- ======== Codigo muerto ======== -->
+    <rule ref="category/java/bestpractices.xml/UnusedPrivateField"/>
+    <rule ref="category/java/bestpractices.xml/UnusedPrivateMethod"/>
+    <rule ref="category/java/bestpractices.xml/UnusedLocalVariable"/>
+    <rule ref="category/java/bestpractices.xml/UnusedFormalParameter"/>
+    <rule ref="category/java/bestpractices.xml/UnusedAssignment"/>
+
+    <!-- ======== Seguridad (regla 16) ======== -->
+    <rule ref="category/java/security.xml"/>
+
+    <!-- ======== Rendimiento a escala (regla 13) ======== -->
+    <rule ref="category/java/performance.xml/AvoidInstantiatingObjectsInLoops"/>
+    <rule ref="category/java/performance.xml/InefficientStringBuffering"/>
+    <rule ref="category/java/performance.xml/StringInstantiation"/>
+</ruleset>

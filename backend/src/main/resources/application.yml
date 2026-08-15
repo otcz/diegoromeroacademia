@@ -1,0 +1,123 @@
+## Configuracion base de la Academia Diego Romero.
+##
+## Regla 5: todo se configura por variables de entorno. Aqui solo viven valores por defecto
+## seguros y no sensibles. Ningun secreto entra a este archivo (docs/03 §5).
+## El inventario completo de parametros esta en docs/03-configuracion.md §3.
+
+spring:
+  application:
+    name: academia-backend
+
+  # Regla 13: concurrencia alta sin complicar el modelo de programacion.
+  threads:
+    virtual:
+      enabled: true
+
+  datasource:
+    # Sin valor por defecto a proposito: si falta, el arranque debe fallar de inmediato.
+    url: ${BD_URL}
+    username: ${BD_USUARIO}
+    password: ${BD_CONTRASENA}
+    hikari:
+      maximum-pool-size: ${BD_POOL_MAXIMO:20}
+      connection-timeout: 10000
+
+  jpa:
+    hibernate:
+      # Las migraciones son SQL manual versionado (especificacion §16.1). Hibernate solo
+      # verifica que el esquema coincida: si no coincide, la aplicacion no arranca, que es
+      # mucho mejor que descubrirlo con una consulta rota en produccion.
+      ddl-auto: validate
+    # Evita que una vista mantenga abierta la sesion de persistencia y dispare consultas
+    # perezosas fuera de la transaccion, causa habitual del problema N+1.
+    open-in-view: false
+    properties:
+      hibernate:
+        jdbc:
+          batch_size: 50
+        order_inserts: true
+        order_updates: true
+
+  cache:
+    type: caffeine
+    caffeine:
+      spec: maximumSize=2000,expireAfterWrite=10m
+
+server:
+  port: ${PUERTO:8080}
+  error:
+    # docs/06 §6: al cliente nunca le llega el detalle interno de un error.
+    include-message: never
+    include-stacktrace: never
+    include-binding-errors: never
+  shutdown: graceful
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+  endpoint:
+    health:
+      show-details: never
+      probes:
+        enabled: true
+
+logging:
+  level:
+    root: INFO
+    com.academiadiegoromero: INFO
+
+academia:
+  api:
+    tamanio-pagina-por-defecto: 20
+    tamanio-pagina-maximo: 100
+    limite-peticiones-por-minuto: 120
+    origenes-permitidos: ${ORIGENES_PERMITIDOS:https://diegoromeroacordeon.com}
+
+  seguridad:
+    expiracion-token-acceso: PT15M
+    expiracion-token-refresco: P30D
+    expiracion-token-recuperacion: PT1H
+    dispositivos-simultaneos-maximos: 2
+    intentos-login-maximos: 5
+    bloqueo-tras-intentos-fallidos: PT15M
+
+  funcionalidades:
+    examenes-habilitados: false        # fase 2
+    certificados-habilitados: false    # fase 2
+    simulador-habilitado: false        # fase 3
+    tienda-habilitada: false           # fase 4
+    login-facebook-habilitado: false   # prioridad media, especificacion §5.1
+
+  ## Los bloques siguientes quedan declarados como contrato de configuracion. Su record
+  ## de propiedades se crea junto con el modulo que los usa, para no dejar codigo
+  ## especulativo en el repositorio (docs/07 §4, definicion de terminado).
+
+  video:
+    expiracion-url-firmada: PT5M
+    marca-agua-habilitada: true
+    dominios-autorizados: ${VIDEO_DOMINIOS_AUTORIZADOS:https://diegoromeroacordeon.com}
+    proveedor: ${VIDEO_PROVEEDOR:}     # decision pendiente #3
+
+  evaluacion:
+    peso-teoria: 0.40                  # especificacion §7.3
+    peso-practica: 0.60                # peso-teoria + peso-practica debe sumar 1.0
+    intentos-maximos: 3
+    tamanio-maximo-video-mb: 200
+    formatos-video-permitidos: mp4,mov
+
+  practica:
+    bpm-minimo: 40
+    bpm-maximo: 200
+    afinaciones-soportadas: FBE,GCF,ADG
+
+  comercio:
+    moneda: COP
+    pais-por-defecto: CO
+    pasarela: ${COMERCIO_PASARELA:}    # decision pendiente #1
+    reintentos-webhook: 5
+
+  whatsapp:
+    numero: ${WHATSAPP_NUMERO:}
+    mensaje-plantilla: ${WHATSAPP_MENSAJE:Hola, quiero informacion sobre las clases de acordeon}

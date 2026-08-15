@@ -120,8 +120,11 @@ a {
 
   margin-bottom: var(--adr-espacio-3);
 
+  // ADR 0009: el azul rey es la tinta de ACCION, y como texto de 12 px sobre niebla da
+  // 4,44:1 — por debajo del minimo. `--adr-tinte-azul-texto` existe justo para esto y da
+  // 6,97:1. El azul rey se reserva a lo que se puede pulsar, que es su regla.
   &--azul {
-    color: var(--adr-color-azul-rey);
+    color: var(--adr-tinte-azul-texto);
   }
 
   &--mango {
@@ -134,8 +137,13 @@ a {
 }
 
 .adr-titulo-seccion {
-  max-width: 22ch;
+  // 24ch + `text-wrap: balance`, el mismo par que ya resolvio el titular del cierre en
+  // `pie-publico.scss`. Aqui esta en la clase COMPARTIDA, asi que arregla de una vez todos
+  // los H2 presentes y futuros: «La ruta completa o una cancion.» era el unico de dos lineas
+  // de la pagina y arrastraba hacia abajo la fila entera.
+  max-width: 24ch;
   margin-bottom: var(--adr-espacio-6);
+  text-wrap: balance;
   font-family: var(--adr-fuente-titular);
   font-size: var(--adr-texto-seccion);
   font-weight: 800;
@@ -192,5 +200,17 @@ a {
     --adr-texto-seccion: 28px;
     --adr-contenedor-padding: 24px;
     --adr-separacion-seccion: 56px;
+  }
+}
+
+// Escalon intermedio para tableta y portatil pequenio. Faltaba: la escala saltaba de 38 px
+// (movil) a 64 px (escritorio), y en toda esta franja el titular del heroe se quedaba en
+// 40 px — que es exactamente `--adr-texto-seccion`, el tamanio de cualquier H2. La promesa
+// principal de la pagina no puede pesar lo mismo que un titulo de seccion.
+//
+// 48 px y no 64: medido, con 64 el titular pasa de dos lineas a tres en toda la franja.
+@media (768px <= width < 1200px) {
+  :root {
+    --adr-texto-display: 48px;
   }
 }

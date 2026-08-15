@@ -18,7 +18,10 @@
   // ---------- Texto ----------
   --adr-color-tinta: #16212e; // texto principal
   --adr-color-texto-secundario: #4a5a6e; // parrafos sobre claro
-  --adr-color-texto-atenuado: #6e7e92; // captions, metadatos
+  // ADR 0009: era #6e7e92, que daba 4,15:1 sobre blanco y 3,90:1 sobre niebla — por debajo
+  // del 4,5:1 que exige docs/04 §5. Con #5f6f86 sube a 5,12 y 4,81, y sigue siendo mas claro
+  // que --adr-color-texto-secundario, asi que el escalon de jerarquia se conserva.
+  --adr-color-texto-atenuado: #5f6f86; // captions, metadatos
 
   // ---------- Accion ----------
   // Regla de color 1: el azul rey es la UNICA tinta de accion.

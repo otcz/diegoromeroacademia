@@ -7,7 +7,7 @@
 export const entorno = {
   produccion: true,
   urlApi: '/api',
-  urlVerificacionCertificado: 'https://diegoromeroacordeon.com/verificar',
+  urlVerificacionCertificado: 'https://diegoromeroacademia.com/verificar',
 
   /**
    * Bandera visible ANTES de iniciar sesion.

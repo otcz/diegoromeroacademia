@@ -15,9 +15,11 @@ Todo lo que hay aquí lo sirve Angular tal cual, en la raíz del sitio. Un archi
 
 ## Huecos que la página espera
 
-Las rutas se declaran en `src/app/disenio/activos.ts`. Hoy están todas en `null` y cada hueco
-lo pinta un degradado del sistema. Poner una foto es dejar el archivo aquí y cambiar el `null`
-por su ruta.
+Las rutas se declaran en `src/app/disenio/activos.ts`. Poner una foto es dejar el archivo aquí
+y cambiar el `null` por su ruta — nada más.
+
+> **Estado al 2026-08-15:** cuatro huecos llevan imágenes TEMPORALES (ilustraciones, no fotos
+> de Diego) y ninguna llega al ancho que necesita. Ver `activos/referencia/LEEME.md`.
 
 | Clave en `activos.ts` | Para qué | Formato |
 |---|---|---|

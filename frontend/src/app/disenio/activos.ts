@@ -36,9 +36,20 @@ export interface ManifiestoActivos {
  * simulador se quedan: son activos de la página, no datos del negocio.
  */
 export const ACTIVOS: ManifiestoActivos = {
-  heroe: null,
+  // TEMPORALES. Son las imágenes que entregó el propietario el 2026-08-15: ilustraciones
+  // y material gráfico, no fotos de Diego. Se colocaron por decisión suya, conociendo sus
+  // límites, y se sustituyen en cuanto haya sesión de fotos. Detalle en
+  // activos/referencia/LEEME.md.
+  //
+  // Ninguna llega al ancho que su hueco necesita, así que se verán suaves — sobre todo el
+  // héroe, que a 567 px cubre un fondo pensado para 2400.
+  heroe: '/imagenes/heroe-vallenato.webp',
+  cursoCompleto: '/imagenes/curso-acordeon-completo.webp',
+  laGotaFria: '/imagenes/curso-la-gota-fria.webp',
+  losCaminosDeLaVida: '/imagenes/curso-los-caminos-de-la-vida.webp',
+
+  // Sigue en null a propósito: ninguna de las imágenes entregadas es una captura del
+  // simulador, y el diagrama de botones que dibuja <adr-marco-imagen> con CSS y tokens
+  // representa el producto mejor que una ilustración de un acordeonista.
   simulador: null,
-  cursoCompleto: null,
-  laGotaFria: null,
-  losCaminosDeLaVida: null,
 };

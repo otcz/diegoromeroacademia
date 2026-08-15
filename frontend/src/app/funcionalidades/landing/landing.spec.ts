@@ -148,12 +148,36 @@ describe('Landing', () => {
     expect(pie.querySelector('.adr-subrayado')).toBeNull();
   });
 
-  it('debe funcionar sin una sola foto, con marcadores del sistema', async () => {
+  it('debe pintar imagen donde hay archivo y marcador donde todavia no lo hay', async () => {
     const fixture = await crear();
 
-    // Heroe, simulador y tres portadas de curso: cinco huecos, cinco marcadores.
-    expect(fixture.nativeElement.querySelectorAll('.adr-marco__marcador').length).toBe(5);
-    expect(fixture.nativeElement.querySelectorAll('img').length).toBe(0);
+    // Cinco huecos: heroe, simulador y tres portadas. Hoy hay cuatro imagenes; el
+    // simulador sigue con su diagrama dibujado porque no existe captura real.
+    expect(fixture.nativeElement.querySelectorAll('img').length).toBe(4);
+    expect(fixture.nativeElement.querySelectorAll('.adr-marco__marcador').length).toBe(1);
+  });
+
+  it('debe cargar con prioridad solo el fondo del heroe, que es el LCP', async () => {
+    const fixture = await crear();
+
+    const imagenes: HTMLImageElement[] = Array.from(
+      fixture.nativeElement.querySelectorAll('img'),
+    );
+    const prioritarias = imagenes.filter((i) => i.getAttribute('loading') === 'eager');
+
+    expect(prioritarias.length).toBe(1);
+    expect(prioritarias[0].getAttribute('src')).toContain('heroe');
+  });
+
+  it('debe servir todas las imagenes en WebP', async () => {
+    const fixture = await crear();
+
+    const fuentes: string[] = Array.from(
+      fixture.nativeElement.querySelectorAll('img'),
+      (i) => (i as HTMLImageElement).getAttribute('src') ?? '',
+    );
+    expect(fuentes.length).toBeGreaterThan(0);
+    expect(fuentes.every((s) => s.endsWith('.webp'))).toBe(true);
   });
 
   it('no debe ofrecer WhatsApp mientras no haya número configurado', async () => {

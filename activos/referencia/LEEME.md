@@ -1,9 +1,21 @@
 # Activos de referencia
 
-Material que **no se usa en la aplicación**. Vive aquí para no perderlo y para dejar
-constancia de por qué se descartó.
+Material original entregado por el propietario. Vive aquí como copia de origen; lo que la
+aplicación sirve son las versiones optimizadas de `frontend/public/imagenes/`.
 
-Los activos que la aplicación sí sirve viven en `frontend/public/imagenes/`.
+> **Actualizado el 2026-08-15.** Estas cuatro imágenes **están en uso, de forma temporal**,
+> por decisión del propietario y conociendo los límites que se detallan abajo. Se
+> sustituyen en cuanto haya sesión de fotos con Diego.
+>
+> | Imagen | Dónde se usa |
+> |---|---|
+> | Collage colombiano | Fondo del héroe |
+> | Acordeón recortado | Portada del curso completo |
+> | Ilustración atardecer | Portada de «La gota fría» |
+> | Ilustración low-poly | Portada de «Los caminos de la vida» |
+>
+> El simulador **no** usa ninguna: sigue dibujando su diagrama de botones con CSS y tokens,
+> porque ninguna es una captura del producto.
 
 ---
 
@@ -19,10 +31,12 @@ Los activos que la aplicación sí sirve viven en `frontend/public/imagenes/`.
 Se entregaron el 15 de agosto de 2026 con nombres de archivo ilegibles (`08b64c6dd39…jpg`) y
 un duplicado exacto, verificado por MD5 y eliminado.
 
-## Por qué ninguno entra a la aplicación
+## Sus límites, que siguen siendo ciertos
 
 **Son demasiado pequeños.** El mayor tiene 567 px de ancho. Un fondo de héroe necesita unos
-2400 px; a este tamaño se verían borrosos en cualquier pantalla moderna.
+2400 px; a este tamaño se ven borrosos en cualquier pantalla moderna. `npm run
+imagenes:optimizar` lo avisa en cada ejecución y **no las amplía a propósito**: escalar
+cambia el número de píxeles, no el detalle.
 
 **Son ilustraciones genéricas.** El handoff aprobado lo prohíbe expresamente
 (`docs/04 §7`): en una marca personal, un acordeonista anónimo comunica lo contrario de lo

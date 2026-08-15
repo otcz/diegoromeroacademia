@@ -1,0 +1,85 @@
+@use 'mixins' as m;
+
+.heroe {
+  position: relative;
+  padding-block: var(--adr-espacio-8) var(--adr-espacio-7);
+  overflow: hidden;
+  color: var(--adr-color-blanco);
+  background: var(--adr-color-noche-azul);
+}
+
+.heroe__rejilla {
+  position: relative;
+  display: grid;
+  gap: var(--adr-espacio-6);
+}
+
+// El texto se ancla donde el velo es mas denso: asi cualquier foto futura cumple contraste.
+.heroe__promesa {
+  max-width: 44ch;
+}
+
+.heroe__titulo {
+  margin-block: var(--adr-espacio-4);
+  font-size: var(--adr-texto-seccion);
+  color: var(--adr-color-blanco);
+}
+
+.heroe__bajada {
+  font-size: 18px;
+  color: var(--adr-oscuro-texto-fuerte);
+}
+
+.heroe__acciones {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--adr-espacio-4);
+  align-items: center;
+  margin-block: var(--adr-espacio-6) var(--adr-espacio-4);
+}
+
+.heroe__enlace {
+  font-weight: 600;
+  color: var(--adr-color-blanco);
+  text-decoration: none;
+
+  &:hover {
+    color: var(--adr-color-mango);
+  }
+}
+
+.heroe__nota {
+  font-size: var(--adr-texto-caption);
+  color: var(--adr-oscuro-texto-suave);
+}
+
+.heroe__panel-titulo {
+  margin-bottom: var(--adr-espacio-4);
+  color: var(--adr-oscuro-texto-suave);
+}
+
+.heroe__panel-pie {
+  margin-top: var(--adr-espacio-4);
+  padding-top: var(--adr-espacio-3);
+  font-size: var(--adr-texto-caption);
+  color: var(--adr-oscuro-texto-suave);
+  border-top: 1px solid var(--adr-oscuro-borde);
+}
+
+@include m.desde-tableta {
+  .heroe {
+    padding-block: 104px 96px;
+  }
+
+  .heroe__rejilla {
+    grid-template-columns: 1fr 400px;
+    gap: var(--adr-espacio-7);
+    align-items: center;
+  }
+
+  .heroe__titulo {
+    font-size: var(--adr-texto-display);
+    line-height: var(--adr-interlineado-display);
+    letter-spacing: var(--adr-espaciado-letra-display);
+  }
+}

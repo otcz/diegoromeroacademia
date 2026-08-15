@@ -1,0 +1,102 @@
+:host {
+  display: block;
+}
+
+.adr-marco {
+  position: relative;
+  display: block;
+  width: 100%;
+  overflow: hidden;
+}
+
+.adr-marco__imagen {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+// Lo que se ve mientras no hay foto: geometria de la propia marca, no un hueco gris.
+.adr-marco__marcador {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.adr-marco--marcador-oscuro .adr-marco__marcador {
+  background: var(--adr-degradado-marcador-oscuro);
+}
+
+.adr-marco--marcador-claro .adr-marco__marcador {
+  background: var(--adr-degradado-marcador-claro);
+}
+
+// ---------------------------------------------------------------------- velos
+.adr-marco__velo {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.adr-marco__velo--lateral {
+  background: var(--adr-velo-lateral);
+}
+
+.adr-marco__velo--inferior {
+  background: var(--adr-velo-inferior);
+}
+
+// ------------------------------------------------------------------ variantes
+.adr-marco--plano {
+  border-radius: var(--adr-radio-tarjeta);
+}
+
+// A sangre: fondo de seccion completa, sin radio ni recorte.
+.adr-marco--fondo {
+  position: absolute;
+  inset: 0;
+  height: 100%;
+  border-radius: 0;
+}
+
+// Simula una ventana de aplicacion, para que una captura se lea como producto real.
+.adr-marco--ventana {
+  border: 1px solid var(--adr-color-borde-divisor);
+  border-radius: var(--adr-radio-tarjeta);
+  box-shadow: var(--adr-sombra-flotante);
+
+  &::before {
+    position: absolute;
+    z-index: 1;
+    top: 0;
+    right: 0;
+    left: 0;
+    height: 32px;
+    content: '';
+    background: var(--adr-color-pista-barra);
+    border-bottom: 1px solid var(--adr-color-borde-divisor);
+  }
+
+  // Los tres puntos del cromo de ventana.
+  &::after {
+    position: absolute;
+    z-index: 2;
+    top: 12px;
+    left: var(--adr-espacio-4);
+    width: 8px;
+    height: 8px;
+    content: '';
+    background: var(--adr-color-borde-suave);
+    border-radius: var(--adr-radio-pastilla);
+    box-shadow:
+      14px 0 0 var(--adr-color-borde-suave),
+      28px 0 0 var(--adr-color-borde-suave);
+  }
+
+  .adr-marco__imagen,
+  .adr-marco__marcador {
+    top: 32px;
+    height: calc(100% - 32px);
+  }
+}

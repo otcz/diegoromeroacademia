@@ -16,13 +16,12 @@ import { entorno } from '../../../../entornos/entorno';
   template: `
     <footer class="adr-seccion adr-seccion-oscura">
       <div class="adr-contenedor">
-        <h2 class="adr-pie__titulo">
-          Tu primera canción está<br />
-          <span class="adr-subrayado">más cerca</span> de lo que crees.
-        </h2>
+        <!-- Sin subrayado mango: el gesto ya se gasto en el H1 del heroe, y docs/04 §1 lo
+             limita a una vez por pantalla. Repetido pierde todo su efecto. -->
+        <h2 class="adr-pie__titulo">{{ titulo() }}</h2>
 
         <div class="adr-pie__acciones">
-          <adr-boton variante="primario" enlace="/registro">Registrarme gratis</adr-boton>
+          <adr-boton variante="primario" enlace="/registro">{{ textoAccion() }}</adr-boton>
           @if (numeroWhatsapp()) {
             <adr-boton
               variante="sobre-oscuro"
@@ -34,6 +33,10 @@ import { entorno } from '../../../../entornos/entorno';
             </adr-boton>
           }
         </div>
+
+        @if (nota()) {
+          <p class="adr-pie__nota">{{ nota() }}</p>
+        }
 
         <div class="adr-pie__enlaces">
           <div>
@@ -67,6 +70,11 @@ import { entorno } from '../../../../entornos/entorno';
 export class PiePublico {
   readonly numeroWhatsapp = input('');
   readonly anio = input(2026);
+
+  /** Llamada final. Fusiona cierre y pie en una sola seccion, en vez de gastar dos. */
+  readonly titulo = input('Empieza hoy por el nivel 1.');
+  readonly textoAccion = input('Registrarme');
+  readonly nota = input('Sin permanencia · Cancela cuando quieras');
 
   protected readonly urlVerificacion = entorno.urlVerificacionCertificado;
 }

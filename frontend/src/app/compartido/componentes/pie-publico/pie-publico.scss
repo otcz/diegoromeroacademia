@@ -18,6 +18,12 @@
   align-items: center;
 }
 
+.adr-pie__nota {
+  margin-top: var(--adr-espacio-4);
+  font-size: var(--adr-texto-caption);
+  color: var(--adr-oscuro-texto-suave);
+}
+
 .adr-pie__enlaces {
   display: grid;
   grid-template-columns: repeat(3, 1fr);

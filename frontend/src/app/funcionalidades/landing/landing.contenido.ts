@@ -1,40 +1,157 @@
+import { EstacionRuta } from '../../compartido/componentes/ruta-niveles/ruta-niveles';
+import { ACTIVOS } from '../../disenio/activos';
+import { NombreIcono } from '../../disenio/iconos/registro-iconos';
+import { RutaActivo } from '../../disenio/activos';
+
 /**
- * Contenido de la landing publica.
+ * Contenido de la landing pública.
  *
- * <p>Vive aparte de la plantilla para que el texto se pueda revisar y traducir sin tocar
- * la maquetacion, y para que quede en un solo sitio cuando llegue el momento de servirlo
- * desde la API.
+ * <p>Vive aparte de las plantillas para que el texto se pueda revisar sin tocar maquetación,
+ * y para que quede en un solo sitio cuando llegue el momento de servirlo desde la API.
  *
- * <p>ATENCION — los precios de aqui son PROVISIONALES. La decision pendiente #2
- * (docs/00-contexto.md §5) es de Diego, y el diseno aprobado ya lo advierte en pantalla.
- * Cuando el modulo `pagos` exista, los planes se leen de `GET /api/planes` y estas
- * constantes desaparecen: un precio escrito en el codigo es exactamente lo que la regla 4
- * prohibe, y aqui solo se tolera porque todavia no hay de donde leerlo.
+ * <p>Cada constante lleva su <b>condición de salida</b>: qué endpoint la sustituye y cuándo
+ * desaparece de aquí. Un dato de negocio escrito en el código es lo que prohíbe la regla 4,
+ * y solo se tolera mientras no haya de dónde leerlo.
  */
+
+// ---------------------------------------------------------------------- héroe
+
+export const HEROE = {
+  kicker: 'Acordeón vallenato · Nivel 1 abierto',
+  tituloAntes: 'Aprende acordeón',
+  tituloSubrayado: 'desde cero.',
+  bajada: 'Cuatro niveles. Un solo camino.',
+  accion: 'Empezar ahora',
+  enlaceSecundario: 'Planes desde $34.900 →',
+  nota: 'Precios visibles, sin registrarte · Cancela cuando quieras',
+  resumenRuta: '96 clases en 4 niveles',
+} as const;
+
+// ----------------------------------------------------------------------- ruta
+
+/**
+ * CONDICIÓN DE SALIDA: desaparece cuando exista `GET /api/cursos/{slug}/niveles`.
+ *
+ * <p>Los nombres son «Nivel 1» a «Nivel 4» a propósito, y `resumen` va en `null`: inventar
+ * un temario que Diego no ha confirmado sería poner en su boca algo que no dijo. En cuanto
+ * confirme los contenidos, se rellenan los resúmenes.
+ */
+export const ESTACIONES: readonly EstacionRuta[] = [
+  { numero: 1, titulo: 'Nivel 1', resumen: null, estado: 'actual' },
+  { numero: 2, titulo: 'Nivel 2', resumen: null, estado: 'bloqueado' },
+  { numero: 3, titulo: 'Nivel 3', resumen: null, estado: 'bloqueado' },
+  { numero: 4, titulo: 'Nivel 4', resumen: null, estado: 'bloqueado' },
+  { numero: 5, titulo: 'Certificado', resumen: null, estado: 'meta' },
+];
+
+// --------------------------------------------------------------------- cifras
 
 export interface Cifra {
   readonly valor: string;
-  readonly etiqueta: string;
+  readonly rotulo: string;
 }
 
-export interface PasoMetodo {
-  readonly numero: string;
+/**
+ * CONDICIÓN DE SALIDA: `GET /api/catalogo/resumen` para niveles y clases; las de YouTube
+ * seguirán siendo manuales hasta que se integre su API.
+ *
+ * <p>Se quitó «362 videos publicados» del diseño anterior: anunciar el catálogo gratuito
+ * justo antes del muro de pago es señalarle al visitante una alternativa que no cuesta nada.
+ */
+export const CIFRAS: readonly Cifra[] = [
+  { valor: '26.000', rotulo: 'Suscriptores' },
+  { valor: '4', rotulo: 'Niveles' },
+  { valor: '96', rotulo: 'Clases' },
+  { valor: '100%', rotulo: 'Exámenes que revisa Diego' },
+];
+
+export const PROCEDENCIA_CIFRAS = 'Cifras públicas del canal @DiegoRomeroAcordeon.';
+
+// ------------------------------------------------------------ dentro de un nivel
+
+export interface PasoNivel {
+  readonly icono: NombreIcono;
   readonly titulo: string;
-  readonly descripcion: string;
+  readonly detalle: string;
 }
 
-export interface TarjetaCatalogo {
+export const PASOS_NIVEL: readonly PasoNivel[] = [
+  { icono: 'play-circle', titulo: 'Ves la clase', detalle: 'Video, partitura y pista.' },
+  { icono: 'download-simple', titulo: 'Practicas', detalle: 'Con la pista de la clase.' },
+  { icono: 'seal-check', titulo: 'Apruebas', detalle: 'Diego revisa tu video, uno por uno.' },
+];
+
+// ------------------------------------------------------------------ simulador
+
+export const SIMULADOR = {
+  kicker: 'Solo aquí',
+  titulo: 'El simulador de pisadas.',
+  detalle: 'Marca el botón y la dirección del fuelle, al ritmo del video.',
+  ventajas: ['BPM ajustable', 'Loop A–B', 'Afinaciones FBE y GCF'],
+} as const;
+
+// ------------------------------------------------------------------- catálogo
+
+export interface CursoLanding {
   readonly clave: string;
   readonly kicker: string;
   readonly titulo: string;
   readonly descripcion: string;
+  readonly portada: RutaActivo;
   readonly precio: string | null;
-  readonly textoAccion: string;
-  readonly destacada: boolean;
-  readonly etiquetaNueva: boolean;
   readonly dificultad: number | null;
   readonly alumnos: number | null;
+  readonly etiqueta: string | null;
+  readonly textoAccion: string;
+  readonly enlace: string;
 }
+
+/** CONDICIÓN DE SALIDA: `GET /api/cursos`. Los precios los servirá el módulo `pagos`. */
+export const CATALOGO: readonly CursoLanding[] = [
+  {
+    clave: 'curso-completo',
+    kicker: 'Incluido en el plan',
+    titulo: 'Curso completo de acordeón',
+    descripcion: '4 niveles · 96 clases',
+    portada: ACTIVOS.cursoCompleto,
+    precio: null,
+    dificultad: null,
+    alumnos: null,
+    etiqueta: null,
+    textoAccion: 'Empezar con el plan',
+    enlace: '/registro',
+  },
+  {
+    clave: 'la-gota-fria',
+    kicker: 'Tutorial suelto · Acceso permanente',
+    titulo: 'La gota fría',
+    descripcion: 'Frase por frase, con pitos y bajos por separado.',
+    portada: ACTIVOS.laGotaFria,
+    precio: '$34.900',
+    dificultad: 3,
+    alumnos: 184,
+    etiqueta: 'Nuevo',
+    textoAccion: 'Comprar',
+    enlace: '/registro',
+  },
+  {
+    clave: 'los-caminos-de-la-vida',
+    kicker: 'Tutorial suelto · Acceso permanente',
+    titulo: 'Los caminos de la vida',
+    descripcion: 'Independencia de manos. Incluye pista.',
+    portada: ACTIVOS.losCaminosDeLaVida,
+    precio: '$34.900',
+    dificultad: 2,
+    alumnos: 281,
+    etiqueta: null,
+    textoAccion: 'Comprar',
+    enlace: '/registro',
+  },
+];
+
+export const NOTA_CATALOGO = 'Lo que compras es tuyo para siempre.';
+
+// --------------------------------------------------------------------- planes
 
 export interface PlanLanding {
   readonly clave: string;
@@ -44,113 +161,81 @@ export interface PlanLanding {
   readonly descripcion: string;
   readonly textoAccion: string;
   readonly recomendado: boolean;
+  readonly enlace: string;
 }
 
-export const CIFRAS: readonly Cifra[] = [
-  { valor: '26.000', etiqueta: 'Suscriptores en YouTube' },
-  { valor: '362', etiqueta: 'Videos publicados' },
-  { valor: '4 niveles', etiqueta: 'Del cero al escenario' },
-  { valor: '100%', etiqueta: 'Exámenes revisados por Diego' },
-];
-
-export const PASOS_METODO: readonly PasoMetodo[] = [
-  {
-    numero: '1',
-    titulo: 'Niveles que se desbloquean',
-    descripcion:
-      'Avanzas por una ruta clara. Cada nivel se abre al aprobar el examen del anterior; ' +
-      'los aprobados quedan para repaso.',
-  },
-  {
-    numero: '2',
-    titulo: 'Exámenes con revisión personal',
-    descripcion:
-      'Teoría automática más un video tuyo tocando, que Diego revisa y comenta. ' +
-      'Retroalimentación real, no un quiz.',
-  },
-  {
-    numero: '3',
-    titulo: 'Certificado verificable',
-    descripcion:
-      'Cada nivel aprobado te da un certificado PDF con código público de verificación. ' +
-      'Tuyo para siempre.',
-  },
-];
-
-export const VENTAJAS_SIMULADOR: readonly string[] = [
-  'Velocidad ajustable (BPM) para practicar lento',
-  'Repetición de fragmento (loop A–B)',
-  'Diagramas por afinación: FBE, GCF y más',
-];
-
-export const CATALOGO: readonly TarjetaCatalogo[] = [
-  {
-    clave: 'curso-completo',
-    kicker: 'Curso por niveles · Incluido en el plan',
-    titulo: 'Curso completo de acordeón vallenato',
-    descripcion:
-      '4 niveles · 96 clases · partituras y pistas. Del primer fuelle a tocar en la parranda.',
-    precio: null,
-    textoAccion: 'Empezar con el plan',
-    destacada: true,
-    etiquetaNueva: false,
-    dificultad: null,
-    alumnos: null,
-  },
-  {
-    clave: 'la-gota-fria',
-    kicker: 'Tutorial suelto · Acceso permanente',
-    titulo: 'La gota fría — paso a paso',
-    descripcion:
-      'El clásico de Emiliano Zuleta frase por frase, con pitos y bajos por separado.',
-    precio: '$34.900',
-    textoAccion: 'Comprar',
-    destacada: false,
-    etiquetaNueva: true,
-    dificultad: 3,
-    alumnos: 184,
-  },
-  {
-    clave: 'los-caminos-de-la-vida',
-    kicker: 'Tutorial suelto · Acceso permanente',
-    titulo: 'Los caminos de la vida — pitos y bajos',
-    descripcion:
-      'Independencia de manos con uno de los vallenatos más queridos. Incluye pista.',
-    precio: '$34.900',
-    textoAccion: 'Comprar',
-    destacada: false,
-    etiquetaNueva: false,
-    dificultad: 2,
-    alumnos: 281,
-  },
-];
-
+/**
+ * CONDICIÓN DE SALIDA: `GET /api/planes`, en cuanto exista el módulo `pagos`.
+ *
+ * <p>Los importes son PROVISIONALES — decisión pendiente #2, y es de Diego. Están escritos
+ * aquí, lo que incumple la regla 4, y solo se tolera porque todavía no hay de dónde leerlos.
+ */
 export const PLANES: readonly PlanLanding[] = [
   {
     clave: 'mensual',
     nombre: 'Mensual',
     precio: '$39.900',
     periodicidad: '/mes',
-    descripcion: 'Todo el catálogo, exámenes y simulador mientras tu plan esté activo.',
+    descripcion: 'Toda la ruta mientras el plan esté activo.',
     textoAccion: 'Elegir mensual',
     recomendado: false,
+    enlace: '/registro',
   },
   {
     clave: 'anual',
     nombre: 'Anual',
     precio: '$349.900',
     periodicidad: '/año',
-    descripcion: 'Lo mismo que el mensual pagando el año completo: ahorras más de dos meses.',
+    descripcion: 'Dos meses gratis.',
     textoAccion: 'Elegir anual',
     recomendado: true,
+    enlace: '/registro',
   },
   {
     clave: 'suelto',
     nombre: 'Curso suelto',
     precio: 'desde $34.900',
     periodicidad: '',
-    descripcion: 'Un tutorial específico, pago único y acceso permanente. Sin suscripción.',
+    descripcion: 'Pago único, acceso permanente.',
     textoAccion: 'Ver catálogo',
     recomendado: false,
+    enlace: '#catalogo',
   },
 ];
+
+export const GARANTIAS: readonly string[] = [
+  'PSE, Nequi y tarjeta',
+  'Cancela cuando quieras',
+  'Pasarela certificada',
+  'Acceso inmediato',
+];
+
+export const NOTA_PRECIOS = 'Precios provisionales en COP.';
+
+// ------------------------------------------------------------- prueba pública
+
+export interface ComentarioCanal {
+  readonly clave: string;
+  readonly cita: string;
+  readonly autor: string;
+  readonly enlace: string;
+}
+
+/**
+ * VACÍO A PROPÓSITO. La sección de testimonios lleva guarda: si no hay comentarios reales
+ * capturados del canal, no se dibuja.
+ *
+ * <p>Mejor ausente que fabricada. Publicar una cita inventada sobre la marca personal de una
+ * persona real es un problema legal y reputacional — y además el visitante descuenta la
+ * prueba social que huele a escrita por la casa.
+ */
+export const COMENTARIOS: readonly ComentarioCanal[] = [];
+
+// --------------------------------------------------------------------- cierre
+
+export const CIERRE = {
+  titulo: 'Empieza hoy por el nivel 1.',
+  accion: 'Registrarme',
+  accionWhatsapp: 'Hablar por WhatsApp',
+  nota: 'Sin permanencia · Cancela cuando quieras',
+} as const;

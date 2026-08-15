@@ -1,0 +1,20 @@
+@use 'mixins' as m;
+
+:host {
+  display: block;
+}
+
+.adr-dato__valor {
+  font-family: var(--adr-fuente-titular);
+  font-size: var(--adr-texto-cifra);
+  font-weight: 700;
+  line-height: 1.1;
+  font-variant-numeric: tabular-nums;
+}
+
+.adr-dato__rotulo {
+  @include m.caption;
+
+  margin-top: var(--adr-espacio-2);
+  color: var(--adr-color-texto-atenuado);
+}

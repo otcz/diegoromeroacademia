@@ -1,0 +1,87 @@
+@use 'mixins' as m;
+
+:host {
+  display: block;
+}
+
+.adr-ruta {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: var(--adr-espacio-5);
+  list-style: none;
+}
+
+// El riel: la linea que cose las estaciones y convierte una lista en un camino.
+// NO lleva tramo relleno en verde: el visitante tiene progreso cero, y el verde solo
+// comunica avance o aprobacion (regla de color 3). Una barra al 0% informa de que no ha
+// hecho nada, que es lo contrario de invitar a empezar.
+.adr-ruta::before {
+  position: absolute;
+  z-index: 0;
+  content: '';
+  background: var(--adr-color-pista-barra);
+  border-radius: var(--adr-radio-pastilla);
+}
+
+.adr-ruta__estacion {
+  position: relative;
+  z-index: 1;
+}
+
+.adr-ruta--sobre-oscuro::before {
+  background: var(--adr-oscuro-borde);
+}
+
+// ---------------------------------------------------- vertical (base, movil)
+// Mobile first: la ruta arranca en vertical y el riel se alinea con el centro de una
+// marca de 40px, que es el tamanio que toma <adr-item-nivel> por debajo de 768px.
+.adr-ruta--auto::before,
+.adr-ruta--vertical::before {
+  top: 20px;
+  bottom: 20px;
+  left: 19px;
+  width: 2px;
+}
+
+// La compacta es vertical siempre, con marca de 28px: centro en 14px.
+.adr-ruta--compacta {
+  gap: var(--adr-espacio-4);
+
+  &::before {
+    top: 14px;
+    bottom: 14px;
+    left: 13px;
+    width: 2px;
+  }
+}
+
+// ------------------------------------------------- horizontal (desde tableta)
+// Nada de carrusel: esconderia tres de las cinco estaciones justo en el dispositivo
+// desde el que llega la mayoria del trafico.
+@mixin ruta-horizontal {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: 1fr;
+  gap: var(--adr-espacio-5);
+
+  // 26px = centro de una marca de 56px, menos la mitad del grosor del riel.
+  &::before {
+    top: 26px;
+    right: 10%;
+    bottom: auto;
+    left: 10%;
+    width: auto;
+    height: 4px;
+  }
+}
+
+.adr-ruta--horizontal {
+  @include ruta-horizontal;
+}
+
+@include m.desde-tableta {
+  .adr-ruta--auto:not(.adr-ruta--compacta) {
+    @include ruta-horizontal;
+  }
+}

@@ -13,11 +13,25 @@ describe('PiePublico', () => {
     return fixture;
   }
 
-  it('debe cerrar con la llamada a la accion y el gesto de marca', async () => {
+  it('debe cerrar con una sola llamada a la accion', async () => {
     const fixture = await crear();
 
-    expect(fixture.nativeElement.textContent).toContain('Tu primera canción está');
-    expect(fixture.nativeElement.querySelectorAll('.adr-subrayado').length).toBe(1);
+    expect(fixture.nativeElement.textContent).toContain('Empieza hoy por el nivel 1');
+    expect(fixture.nativeElement.textContent).toContain('Registrarme');
+    expect(fixture.nativeElement.textContent).toContain('Sin permanencia');
+  });
+
+  it('NO debe repetir el subrayado mango: ya se gasto en el titular del heroe', async () => {
+    const fixture = await crear();
+
+    expect(fixture.nativeElement.querySelectorAll('.adr-subrayado').length).toBe(0);
+  });
+
+  it('debe permitir otro cierre sin tocar el componente', async () => {
+    const fixture = await crear({ titulo: 'Vuelve donde lo dejaste.', nota: '' });
+
+    expect(fixture.nativeElement.textContent).toContain('Vuelve donde lo dejaste');
+    expect(fixture.nativeElement.querySelector('.adr-pie__nota')).toBeNull();
   });
 
   it('debe enlazar los documentos legales y la verificacion de certificado', async () => {

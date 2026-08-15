@@ -1,0 +1,67 @@
+:host {
+  display: block;
+  height: 100%;
+}
+
+.adr-curso {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow: hidden;
+  background: var(--adr-color-blanco);
+  border: 1px solid var(--adr-color-borde-divisor);
+  border-radius: var(--adr-radio-tarjeta-curso);
+  box-shadow: var(--adr-sombra-tarjeta);
+}
+
+.adr-curso__portada {
+  position: relative;
+
+  adr-etiqueta {
+    position: absolute;
+    top: var(--adr-espacio-3);
+    left: var(--adr-espacio-3);
+  }
+}
+
+.adr-curso__cuerpo {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  padding: var(--adr-espacio-5);
+}
+
+.adr-curso__titulo {
+  margin-block: var(--adr-espacio-2) var(--adr-espacio-3);
+  font-family: var(--adr-fuente-titular);
+  font-size: var(--adr-texto-tarjeta);
+  font-weight: 700;
+  line-height: var(--adr-interlineado-titulo);
+}
+
+.adr-curso__meta {
+  display: flex;
+  gap: var(--adr-espacio-2);
+  align-items: center;
+  margin-bottom: var(--adr-espacio-3);
+  font-size: var(--adr-texto-caption);
+  color: var(--adr-color-texto-atenuado);
+}
+
+// margin-top: auto pega el pie al fondo aunque las descripciones tengan largos distintos:
+// es lo que mantiene los botones alineados en una fila de tarjetas.
+.adr-curso__pie {
+  display: flex;
+  gap: var(--adr-espacio-4);
+  align-items: center;
+  justify-content: space-between;
+  margin-top: auto;
+  padding-top: var(--adr-espacio-5);
+}
+
+.adr-curso__precio {
+  font-family: var(--adr-fuente-titular);
+  font-size: 22px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}

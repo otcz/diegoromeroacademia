@@ -1,0 +1,28 @@
+@use 'mixins' as m;
+
+.catalogo__encabezado {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--adr-espacio-4);
+  align-items: baseline;
+  justify-content: space-between;
+}
+
+.catalogo__enlace {
+  font-size: var(--adr-texto-ui);
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.catalogo__rejilla {
+  display: grid;
+  gap: var(--adr-espacio-5);
+}
+
+@include m.desde-tableta {
+  // Asimetrica: tres tarjetas iguales dirian que la suscripcion y un tutorial suelto
+  // valen lo mismo, y no es cierto.
+  .catalogo__rejilla {
+    grid-template-columns: 2fr 1fr 1fr;
+  }
+}

@@ -7,8 +7,7 @@ export type EstadoEstacion = 'completado' | 'actual' | 'bloqueado' | 'meta';
 
 interface AspectoEstado {
   readonly icono: NombreIcono | null;
-  readonly corto: string;
-  readonly largo: string;
+  readonly texto: string;
 }
 
 /**
@@ -18,11 +17,19 @@ interface AspectoEstado {
  * difieren en tinte, no. El alumno tiene que saber qué puede abrir mirando de reojo
  * (docs/04 §5).
  */
+/**
+ * El texto de estado es SIEMPRE breve, de una palabra.
+ *
+ * <p>Antes el estado bloqueado decía «Se abre al aprobar el examen anterior». Tres líneas
+ * contra una hacían que las cinco tarjetas de la ruta tuvieran alturas distintas, y además
+ * repetían tres veces lo que la nota bajo la sección ya dice una vez. La explicación va
+ * donde no se repite; la tarjeta solo declara en qué estado está.
+ */
 const ASPECTO: Record<EstadoEstacion, AspectoEstado> = {
-  completado: { icono: 'check-circle', corto: 'Aprobado', largo: 'Nivel aprobado' },
-  actual: { icono: null, corto: 'Disponible', largo: 'Disponible ahora' },
-  bloqueado: { icono: 'lock', corto: 'Bloqueado', largo: 'Se abre al aprobar el examen anterior' },
-  meta: { icono: 'seal-check', corto: 'Certificado', largo: 'Certificado verificable' },
+  completado: { icono: 'check-circle', texto: 'Aprobado' },
+  actual: { icono: null, texto: 'Disponible' },
+  bloqueado: { icono: 'lock', texto: 'Bloqueado' },
+  meta: { icono: 'seal-check', texto: 'Certificado' },
 };
 
 /**
@@ -82,9 +89,7 @@ export class ItemNivel {
 
   protected readonly tamanioIcono = computed<TamanioIcono>(() => (this.compacta() ? 16 : 24));
 
-  protected readonly textoEstado = computed(() =>
-    this.compacta() ? ASPECTO[this.estado()].corto : ASPECTO[this.estado()].largo,
-  );
+  protected readonly textoEstado = computed(() => ASPECTO[this.estado()].texto);
 
   protected readonly clases = computed(() => {
     const partes = ['adr-nivel', `adr-nivel--${this.estado()}`];

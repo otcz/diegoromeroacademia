@@ -18,7 +18,10 @@ import { GARANTIAS, NOTA_PRECIOS, PLANES } from '../landing.contenido';
   template: `
     <section id="planes" class="adr-seccion planes">
       <div class="adr-contenedor">
-        <p class="adr-kicker adr-kicker--azul">Planes · Precios visibles</p>
+        <!-- El diferenciador va DELANTE: enseñar los precios sin pedir registro es la
+             diferencia deliberada frente al competidor que los esconde, y no se sacrifica
+             por caber. «Suscripción» y no «plan»: un nombre por objeto. -->
+        <p class="adr-kicker adr-kicker--azul">Precios visibles · Suscripción o pago único</p>
         <h2 class="adr-titulo-seccion">Elige cómo avanzar.</h2>
 
         <div class="planes__rejilla">

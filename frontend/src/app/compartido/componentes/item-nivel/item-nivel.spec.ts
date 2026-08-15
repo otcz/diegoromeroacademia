@@ -34,10 +34,12 @@ describe('ItemNivel', () => {
     expect(actual.nativeElement.querySelector('.adr-nivel__numero').textContent).toContain('1');
   });
 
-  it('debe acompaniar cada estado de un texto, no solo de un icono', async () => {
-    expect((await crear('bloqueado')).nativeElement.textContent).toContain('Se abre al aprobar');
+  it('debe acompaniar cada estado de un texto breve, no solo de un icono', async () => {
+    // De una palabra: tres lineas contra una desalineaban las cinco tarjetas de la ruta,
+    // y ademas repetian lo que la nota bajo la seccion ya dice una vez.
+    expect((await crear('bloqueado')).nativeElement.textContent).toContain('Bloqueado');
     expect((await crear('actual')).nativeElement.textContent).toContain('Disponible');
-    expect((await crear('completado')).nativeElement.textContent).toContain('aprobado');
+    expect((await crear('completado')).nativeElement.textContent).toContain('Aprobado');
     expect((await crear('meta')).nativeElement.textContent).toContain('Certificado');
   });
 
@@ -62,12 +64,15 @@ describe('ItemNivel', () => {
     expect(compacta.nativeElement.querySelector('.adr-nivel__resumen')).toBeNull();
   });
 
-  it('debe acortar el texto de estado en modo compacto, donde no cabe una frase', async () => {
+  it('debe usar el mismo texto breve en compacto y en completo', async () => {
+    const completa = await crear('bloqueado');
     const compacta = await crear('bloqueado', { compacta: true });
 
-    const estado: string = compacta.nativeElement.querySelector('.adr-nivel__estado').textContent;
-    expect(estado.trim()).toBe('Bloqueado');
-    expect(estado).not.toContain('Se abre al aprobar');
+    const leer = (f: typeof completa) =>
+      f.nativeElement.querySelector('.adr-nivel__estado').textContent.trim();
+
+    expect(leer(completa)).toBe('Bloqueado');
+    expect(leer(compacta)).toBe('Bloqueado');
   });
 
   it('debe marcar la variante sobre oscuro, que cambia todos los colores de texto', async () => {

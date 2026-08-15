@@ -3,11 +3,21 @@ import { MarcoImagen } from '../../../compartido/componentes/marco-imagen/marco-
 import { ACTIVOS } from '../../../disenio/activos';
 import { SIMULADOR } from '../landing.contenido';
 
-/** Botones del diagrama. Tres encendidos: un acorde, no una fila decorativa. */
+/**
+ * Botones del diagrama.
+ *
+ * <p>Cuatro hileras de ocho, no tres de cinco: el acordeón diatónico tiene tres hileras de
+ * pitos en la mano derecha y una de bajos. Es más fiel al instrumento Y llena el marco, que
+ * con quince botones se veía medio vacío y hacía parecer inacabado el único diferenciador
+ * de la plataforma.
+ *
+ * <p>Tres encendidos: un acorde, no una fila decorativa.
+ */
 const BOTONES = [
-  [false, true, false, false, false],
-  [false, false, true, false, false],
-  [false, false, false, true, false],
+  [false, true, false, false, false, false, false, false],
+  [false, false, true, false, false, false, false, false],
+  [false, false, false, true, false, false, false, false],
+  [false, false, false, false, false, false, false, false],
 ];
 
 /**

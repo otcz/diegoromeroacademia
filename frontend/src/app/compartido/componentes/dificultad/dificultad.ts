@@ -18,7 +18,12 @@ const NIVEL_MAXIMO = 5;
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [Icono],
   template: `
-    <span class="adr-dificultad" [attr.aria-label]="descripcion()">
+    <!-- El rol no es adorno: ARIA no permite nombrar un elemento de rol generico, y sin el
+         la etiqueta accesible puede ignorarse. Aqui importa mas que en otros sitios porque
+         las cinco estrellas comparten el MISMO trazado y solo cambia el color — el rotulo es
+         el unico portador de la cifra, y docs/04 §5 prohibe que el color lo sea. Es ademas
+         la convencion de la casa: el avatar ya lo hace asi, con su test. -->
+    <span class="adr-dificultad" role="img" [attr.aria-label]="descripcion()">
       @for (posicion of posiciones; track posicion) {
         <adr-icono
           nombre="star"

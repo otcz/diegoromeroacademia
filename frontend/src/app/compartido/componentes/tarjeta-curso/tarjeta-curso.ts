@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
 import { Boton } from '../boton/boton';
 import { Dificultad } from '../dificultad/dificultad';
 import { Etiqueta } from '../etiqueta/etiqueta';
@@ -16,6 +16,16 @@ import { RutaActivo } from '../../../disenio/activos';
  * «Nuevo» quedaría ilegible sobre una foto clara. El velo se aplica aunque todavía no haya
  * foto, para que el día que llegue no haya que revisar el contraste otra vez.
  *
+ * <p><b>La etiqueta va ABAJO, no arriba.</b> Durante un tiempo estuvo en la esquina superior
+ * izquierda mientras `--adr-velo-inferior` es transparente en el 45% superior: el comentario
+ * afirmaba una protección que no existía, y con `la-gota-fria` — que es una portada clara —
+ * el chip quedaba en riesgo real de incumplir AA.
+ *
+ * <p>La portada NO lleva su relación de aspecto en el marco: la lleva el envoltorio. El
+ * `aspect-ratio` del marco se aplica al div interno, y la encapsulación impide alcanzarlo
+ * desde fuera, así que la altura escalaba con el ancho de columna — 347 px en la tarjeta
+ * ancha contra 176 en las estrechas, que es lo que abría el hueco muerto sobre el precio.
+ *
  * <p>Sin precio, la acción ocupa todo el ancho: es el curso incluido en el plan y no compite
  * con nada. Con precio, el importe manda a la izquierda y la acción acompaña.
  */
@@ -24,9 +34,9 @@ import { RutaActivo } from '../../../disenio/activos';
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [Boton, Dificultad, Etiqueta, MarcoImagen],
   template: `
-    <article class="adr-curso">
+    <article [class]="clases()">
       <div class="adr-curso__portada">
-        <adr-marco-imagen [fuente]="portada()" relacion="3/2" velo="inferior" tono="claro" />
+        <adr-marco-imagen [fuente]="portada()" variante="fondo" velo="inferior" tono="claro" />
         @if (etiqueta(); as texto) {
           <adr-etiqueta tinte="mango">{{ texto }}</adr-etiqueta>
         }
@@ -79,4 +89,20 @@ export class TarjetaCurso {
 
   /** Texto de la etiqueta mango: «Nuevo». Nulo para no dibujarla. */
   readonly etiqueta = input<string | null>(null);
+
+  /**
+   * Pieza principal del catálogo. Recibe el mismo tratamiento ya aprobado para el plan
+   * recomendado: borde azul rey de 2 px y sombra destacada.
+   *
+   * <p>Es una ENTRADA y no `:first-child` a propósito. Apoyada en la posición, la jerarquía
+   * desaparecía justo donde más falta hace: en móvil, donde la rejilla es de una columna y
+   * las tres tarjetas se ven idénticas. Y entre 768 y ~940 px la columna `2fr` llegaba a
+   * medir menos que las `1fr`, con lo que la suscripción se veía MÁS PEQUEÑA que los
+   * tutoriales — lo contrario de lo que la sección quiere decir.
+   */
+  readonly destacado = input(false);
+
+  protected readonly clases = computed(
+    () => `adr-curso${this.destacado() ? ' adr-curso--destacado' : ''}`,
+  );
 }

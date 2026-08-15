@@ -7,6 +7,15 @@ export type VarianteMarco = 'plano' | 'fondo' | 'ventana';
 export type TonoMarcador = 'oscuro' | 'claro';
 
 /**
+ * Cuánto pesa la imagen frente al degradado del sistema.
+ *
+ * <p>`textura` la deja al 30% y deja ver el degradado debajo. Sirve cuando la imagen aporta
+ * carácter pero no da la talla como fotografía: a esa opacidad no se percibe ni el pixelado
+ * ni un recorte forzado, y lo que queda es color y motivo.
+ */
+export type IntensidadImagen = 'plena' | 'textura';
+
+/**
  * Marco de imagen con degradación elegante (ADR 0008).
  *
  * <p>Es el mecanismo que permite que la página funcione hoy sin una sola foto y las absorba
@@ -54,9 +63,19 @@ export class MarcoImagen {
   /** Ruta del archivo, o `null` mientras no exista. Con `null` se pinta el marcador. */
   readonly fuente = input<RutaActivo>(null);
 
+  /**
+   * Relacion de aspecto del hueco.
+   *
+   * <p>La ignora `variante="fondo"`: esa variante fija `inset: 0; height: 100%` y toma su
+   * altura del contenedor. Pasarsela alli es una perilla que no hace nada y engania a quien
+   * lea la plantilla creyendo que controla algo.
+   */
   readonly relacion = input<RelacionAspecto>('16/9');
   readonly velo = input<VeloMarco>('ninguno');
   readonly variante = input<VarianteMarco>('plano');
+
+  /** `textura` mezcla la imagen con el degradado en vez de sustituirlo. */
+  readonly intensidad = input<IntensidadImagen>('plena');
 
   /** Tono del marcador. Debe contrastar con el fondo de la sección que lo contiene. */
   readonly tono = input<TonoMarcador>('claro');
@@ -73,9 +92,22 @@ export class MarcoImagen {
    */
   readonly prioritaria = input(false);
 
-  protected readonly clases = computed(
-    () => `adr-marco adr-marco--${this.variante()} adr-marco--marcador-${this.tono()}`,
-  );
+  /**
+   * El degradado del sistema solo se pinta cuando NO hay foto.
+   *
+   * <p>Antes la clase de marcador se anadia siempre, asi que el degradado quedaba DEBAJO de
+   * cada foto — opaco, y por tanto tapando lo que hubiera detras del marco. En el heroe eso
+   * anulaba por completo las tres capas de fondo de la seccion: se declaraban, se aplicaban
+   * en el CSS y pintaban cero pixeles. `elementFromPoint` sobre el heroe devolvia el marco.
+   *
+   * <p>Con foto el degradado no aporta nada — queda oculto salvo en `intensidad="textura"`,
+   * donde encima invertia la composicion que la seccion habia escrito. Sin foto se mantiene
+   * intacto, que es el contrato del ADR 0008: un hueco vacio se ve deliberado, no roto.
+   */
+  protected readonly clases = computed(() => {
+    const marcador = this.fuente() === null ? ` adr-marco--marcador-${this.tono()}` : '';
+    return `adr-marco adr-marco--${this.variante()}${marcador} adr-marco--${this.intensidad()}`;
+  });
 
   protected readonly clasesVelo = computed(() => `adr-marco__velo adr-marco__velo--${this.velo()}`);
 }

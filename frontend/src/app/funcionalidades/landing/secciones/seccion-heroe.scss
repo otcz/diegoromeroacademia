@@ -1,15 +1,75 @@
 @use 'mixins' as m;
 
+// El heroe era un rectangulo de color plano: sin profundidad, sin atmosfera y con la foto
+// de fondo al 30% en `soft-light`, que sobre oscuro no aporta casi nada. Se veia como un
+// bloque, no como una portada.
+//
+// Ahora son cuatro capas, todas derivadas de tokens con color-mix (regla 15):
+//   1. Resplandor azul rey arriba a la derecha — da fondo al panel de cristal y ata la
+//      pieza al color de accion del sistema.
+//   2. Lavado mango abajo a la izquierda — el calor del vallenato, bajo el titular. Es
+//      acento de ambiente, no superficie de accion: la regla 2 prohibe el mango en botones,
+//      no en un degradado de fondo.
+//   3. La foto de fondo, que sigue aportando motivo.
+//   4. Retícula de puntos: la botonadura del acordeon. Es la misma geometria que dibuja el
+//      simulador, asi que el diferenciador aparece ya en el primer pliegue sin decir nada.
 .heroe {
   position: relative;
+  isolation: isolate;
   padding-block: var(--adr-espacio-8) var(--adr-espacio-7);
   overflow: hidden;
   color: var(--adr-color-blanco);
-  background: var(--adr-color-noche-azul);
+  background:
+    radial-gradient(
+      118% 88% at 82% 12%,
+      color-mix(in srgb, var(--adr-color-azul-rey) 32%, transparent) 0%,
+      transparent 62%
+    ),
+    radial-gradient(
+      86% 70% at 4% 98%,
+      color-mix(in srgb, var(--adr-color-mango) 14%, transparent) 0%,
+      transparent 58%
+    ),
+    var(--adr-color-noche-azul);
+}
+
+// La botonadura. `mask-image` la desvanece hacia el centro para que nunca compita con el
+// texto: densa en la esquina, ausente donde se lee.
+// z-index 1 y no 0: el marco de la foto es un elemento posicionado con `z-index: auto`, y en
+// orden de arbol queda ENTRE los dos pseudoelementos. Con todos a la misma cota, el apagado
+// inferior se pintaba debajo de la foto y no llegaba a coser el heroe con la cinta de cifras.
+// Escalera final: radiales de la seccion → foto → apagado → puntos → contenido.
+.heroe::after {
+  position: absolute;
+  z-index: 1;
+  inset: 0;
+  content: '';
+  background-image: radial-gradient(
+    circle,
+    color-mix(in srgb, var(--adr-color-blanco) 16%, transparent) 1.4px,
+    transparent 1.5px
+  );
+  background-size: 26px 26px;
+  mask-image: radial-gradient(75% 65% at 88% 6%, #000 0%, transparent 70%);
+  pointer-events: none;
+}
+
+// Corta el borde duro contra la cinta de cifras: el heroe se apaga en vez de terminar.
+.heroe::before {
+  position: absolute;
+  z-index: 1;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  height: 140px;
+  content: '';
+  background: linear-gradient(180deg, transparent, var(--adr-color-noche-azul));
+  pointer-events: none;
 }
 
 .heroe__rejilla {
   position: relative;
+  z-index: 2;
   display: grid;
   gap: var(--adr-espacio-6);
 }
@@ -25,9 +85,42 @@
   color: var(--adr-color-blanco);
 }
 
+// La entradilla sube de 18 a 20 px, que es el escalon `--adr-texto-tarjeta` del sistema.
+// Con el titular a 64 px, un salto a 18 dejaba un vacio de jerarquia: lo primero que se lee
+// despues de la promesa parecia letra pequenia.
 .heroe__bajada {
-  font-size: 18px;
+  max-width: 46ch;
+  font-size: var(--adr-texto-tarjeta);
+  line-height: var(--adr-interlineado-cuerpo);
   color: var(--adr-oscuro-texto-fuerte);
+}
+
+// Los cuatro instrumentos del conjunto. Llenan el vacio que quedaba bajo la promesa y
+// dicen que la academia es del conjunto entero, no solo del acordeon.
+.heroe__conjunto {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--adr-espacio-2);
+  margin-top: var(--adr-espacio-6);
+  padding-top: var(--adr-espacio-5);
+  list-style: none;
+  border-top: 1px solid var(--adr-oscuro-borde);
+}
+
+.heroe__instrumento {
+  padding: var(--adr-espacio-2) var(--adr-espacio-4);
+  font-size: var(--adr-texto-caption);
+  font-weight: 600;
+  color: var(--adr-oscuro-texto-suave);
+  border: 1px solid var(--adr-oscuro-borde);
+  border-radius: var(--adr-radio-pastilla);
+}
+
+// El acordeon va marcado: es el foco declarado de la pagina y de donde sale el simulador.
+// Borde y tinta, NO relleno mango: el mango es acento y nunca superficie de accion.
+.heroe__instrumento--principal {
+  color: var(--adr-color-blanco);
+  border-color: var(--adr-color-mango);
 }
 
 .heroe__acciones {
@@ -53,6 +146,30 @@
   color: var(--adr-oscuro-texto-suave);
 }
 
+// El panel se leia como una caja plana sobre el fondo oscuro. Con el resplandor azul detras
+// y un filo claro arriba, el cristal empieza a comportarse como cristal: recibe luz por el
+// borde superior y proyecta sombra. El desenfoque lo pone <adr-panel-cristal>; esto es solo
+// la luz que lo revela.
+.heroe__panel {
+  position: relative;
+  box-shadow: var(--adr-sombra-flotante);
+}
+
+.heroe__panel::before {
+  position: absolute;
+  top: 0;
+  right: var(--adr-espacio-6);
+  left: var(--adr-espacio-6);
+  height: 1px;
+  content: '';
+  background: linear-gradient(
+    90deg,
+    transparent,
+    color-mix(in srgb, var(--adr-color-blanco) 45%, transparent),
+    transparent
+  );
+}
+
 .heroe__panel-titulo {
   margin-bottom: var(--adr-espacio-4);
   color: var(--adr-oscuro-texto-suave);
@@ -66,20 +183,51 @@
   border-top: 1px solid var(--adr-oscuro-borde);
 }
 
+// De 768 a 1199 px el heroe se queda en UNA columna.
+//
+// Antes entraba aqui en dos, y a 768 px quedan 672 px utiles: el panel fijo se llevaba 400 y
+// la columna del texto caia a 275. Con el titular ya subido a 64 px, el H1 salia en cuatro
+// lineas y el panel de cristal quedaba amputado 18 px contra el `overflow: hidden`. Eso es la
+// distorsion que se veia. El coste es que en tableta el heroe pasa de ~740 a ~952 px de alto;
+// con este padding, 545 px del panel siguen sobre el pliegue en un iPad vertical, que es lo
+// que importa: el panel es lo que convierte «apuntate» en «empieza por el nivel 1».
 @include m.desde-tableta {
-  .heroe {
-    padding-block: 104px 96px;
+  // El panel no crece a lo ancho de la pantalla: la ruta compacta se lee mal estirada.
+  .heroe__panel {
+    max-width: 400px;
   }
 
-  .heroe__rejilla {
-    grid-template-columns: 1fr 400px;
-    gap: var(--adr-espacio-7);
-    align-items: center;
-  }
-
+  // El titular sube al escalon de display AQUI y no en escritorio. `--adr-texto-display` no
+  // se consumia nunca por debajo de 1200 px: medido, el H1 caia a 40 px entre 768 y 1199,
+  // que es exactamente el tamanio de cualquier H2 de la pagina. La promesa principal no
+  // puede pesar lo mismo que un titulo de seccion.
   .heroe__titulo {
     font-size: var(--adr-texto-display);
     line-height: var(--adr-interlineado-display);
     letter-spacing: var(--adr-espaciado-letra-display);
+  }
+}
+
+@include m.en-escritorio {
+  // 104 y 96 no existen en la escala de espaciado, que termina en `--adr-espacio-9` (88px) y
+  // dice «no se usan valores fuera de ella». Con 88/88 el relleno baja del 28% al 25,5% del
+  // alto del heroe y el hueco contra la cinta de cifras se conserva en 40 px.
+  .heroe {
+    padding-block: var(--adr-espacio-9) var(--adr-espacio-9);
+  }
+
+  // minmax(0, 1fr) y no 1fr: `1fr` es `minmax(auto, 1fr)`, y ese `auto` impone un suelo de
+  // min-content que la fraccion no puede bajar. Es la causa raiz del desborde horizontal.
+  .heroe__rejilla {
+    grid-template-columns: minmax(0, 1fr) 400px;
+    gap: var(--adr-espacio-7);
+    align-items: center;
+  }
+
+  // 44ch computa 469 px, y «Aprende acordeón» a 64 px necesita 535: con el limite puesto, el
+  // titular se partia en TRES lineas tambien a 1280 y 1440 px. Aqui el ancho ya lo pone la
+  // columna de la rejilla, asi que el tope sobra y hace dano.
+  .heroe__promesa {
+    max-width: none;
   }
 }

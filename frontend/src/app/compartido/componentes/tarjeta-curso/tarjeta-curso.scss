@@ -14,14 +14,33 @@
   box-shadow: var(--adr-sombra-tarjeta);
 }
 
+// La relacion de aspecto vive AQUI y no en el marco: el marco la aplica a su div interno y
+// la encapsulacion impide alcanzarlo desde fuera, asi que la portada crecia con el ancho de
+// columna (347 px en la ancha contra 176 en las estrechas) y `margin-top: auto` volcaba la
+// diferencia en un hueco muerto sobre el precio. Con `variante="fondo"`, el marco llena este
+// contenedor y la altura la decide esta regla.
 .adr-curso__portada {
   position: relative;
+  aspect-ratio: 3 / 2;
+  // Tope de altura: sin el, la portada de la tarjeta ancha llegaba a 349 px contra 175 de
+  // las estrechas, fijaba la altura de la fila entera y `margin-top: auto` volcaba la
+  // diferencia en un hueco muerto sobre el precio. El recorte lo absorbe `object-fit: cover`.
+  max-height: 300px;
 
+  // Abajo, no arriba: `--adr-velo-inferior` es transparente en el 45% superior, asi que en la
+  // esquina de arriba la etiqueta mango no tenia NINGUNA proteccion sobre una portada clara.
   adr-etiqueta {
     position: absolute;
-    top: var(--adr-espacio-3);
+    bottom: var(--adr-espacio-3);
     left: var(--adr-espacio-3);
   }
+}
+
+// Mismo tratamiento que `.adr-plan--recomendado`, literal: una sola senial de jerarquia en
+// todo el sistema. Funciona a los seis anchos, movil incluido.
+.adr-curso--destacado {
+  border: 2px solid var(--adr-color-azul-rey);
+  box-shadow: var(--adr-sombra-destacado);
 }
 
 .adr-curso__cuerpo {
@@ -41,6 +60,7 @@
 
 .adr-curso__meta {
   display: flex;
+  flex-wrap: wrap;
   gap: var(--adr-espacio-2);
   align-items: center;
   margin-bottom: var(--adr-espacio-3);
@@ -50,8 +70,13 @@
 
 // margin-top: auto pega el pie al fondo aunque las descripciones tengan largos distintos:
 // es lo que mantiene los botones alineados en una fila de tarjetas.
+// `flex-wrap` es obligatorio junto al `minmax(0, ...)` de las rejillas: sin el, en cuanto la
+// columna puede encogerse por debajo de su min-content, el boton «Comprar» — que lleva
+// `white-space: nowrap` — se amputa 89 px contra el `overflow: hidden` de `.adr-curso`. Se
+// cambiaria una barra de scroll visible por la mutilacion invisible de la ruta de compra.
 .adr-curso__pie {
   display: flex;
+  flex-wrap: wrap;
   gap: var(--adr-espacio-4);
   align-items: center;
   justify-content: space-between;

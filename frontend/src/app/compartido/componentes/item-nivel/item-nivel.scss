@@ -2,6 +2,7 @@
 
 :host {
   display: block;
+  height: 100%;
 }
 
 .adr-nivel {
@@ -9,6 +10,7 @@
   flex-direction: column;
   gap: var(--adr-espacio-4);
   align-items: center;
+  height: 100%;
   text-align: center;
 }
 
@@ -58,7 +60,12 @@
 }
 
 // -------------------------------------------------------------------- tarjeta
+// flex:1 estira la tarjeta hasta el fondo de su celda: las cinco quedan a la misma altura
+// aunque un titulo ocupe dos lineas y otro una.
 .adr-nivel__cuerpo {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
   width: 100%;
   padding: var(--adr-espacio-5);
   background: var(--adr-color-blanco);
@@ -78,10 +85,13 @@
   color: var(--adr-color-texto-secundario);
 }
 
+// Pegado al fondo: los cinco estados quedan en la misma linea horizontal, aunque los
+// titulos de arriba ocupen distinto numero de lineas.
 .adr-nivel__estado {
   @include m.caption;
 
-  margin-top: var(--adr-espacio-3);
+  margin-top: auto;
+  padding-top: var(--adr-espacio-3);
   color: var(--adr-color-texto-atenuado);
 }
 

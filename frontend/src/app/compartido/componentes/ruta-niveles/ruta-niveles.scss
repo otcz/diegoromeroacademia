@@ -62,7 +62,9 @@
 @mixin ruta-horizontal {
   display: grid;
   grid-auto-flow: column;
-  grid-auto-columns: 1fr;
+  // minmax(0, 1fr): con `1fr` desnudo el suelo de min-content de cada estacion impedia
+  // encoger, y `li.adr-ruta__estacion` era el elemento que desbordaba la pagina a 768 px.
+  grid-auto-columns: minmax(0, 1fr);
   gap: var(--adr-espacio-5);
 
   // 26px = centro de una marca de 56px, menos la mitad del grosor del riel.
@@ -80,7 +82,11 @@
   @include ruta-horizontal;
 }
 
-@include m.desde-tableta {
+// Desde ESCRITORIO, no desde tableta. Entre 768 y 1199 px las cinco estaciones caian a
+// 112 px cada una y «Nivel 1» se partia en dos lineas, que es el defecto que el arreglo de
+// alturas iguales acababa de resolver. Vertical no esconde ninguna estacion: no es un
+// carrusel, solo ocupa mas alto.
+@include m.en-escritorio {
   .adr-ruta--auto:not(.adr-ruta--compacta) {
     @include ruta-horizontal;
   }

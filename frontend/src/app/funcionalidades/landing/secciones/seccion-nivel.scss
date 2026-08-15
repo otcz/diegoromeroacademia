@@ -34,7 +34,31 @@
   font-weight: 700;
 }
 
+// La foto cierra la seccion en vez de abrirla: primero se lee el flujo en tres pasos y
+// despues se ve el instrumento. Al reves, la imagen se come el texto.
+.nivel__prueba {
+  margin-top: var(--adr-espacio-7);
+}
+
+.nivel__pie {
+  margin-top: var(--adr-espacio-3);
+  font-size: var(--adr-texto-caption);
+  // `--adr-color-texto-suave` NO existe en _tokens.scss: el token que si existe es
+  // `--adr-oscuro-texto-suave`, y es para fondo oscuro. Con el nombre inventado, la variable
+  // no resolvia y el pie se pintaba en tinta plena en vez de atenuado.
+  color: var(--adr-color-texto-atenuado);
+  text-align: center;
+}
+
 @include m.desde-tableta {
+  // A ancho completo la foto medía 1104x767 y ocupaba la pantalla entera: la sección dejaba
+  // de leerse como pausa entre bloques y competía con el héroe. Acotada, sigue siendo prueba
+  // del instrumento sin robarle el turno al texto.
+  .nivel__prueba {
+    max-width: 860px;
+    margin-inline: auto;
+  }
+
   .nivel__encabezado {
     text-align: center;
   }
@@ -44,8 +68,10 @@
   }
 
   // Sin cajas: solo divisores. Es lo que la hace leer como paso y no como tarjetas.
+  // minmax(0, ...) por consistencia con el resto: aqui hoy es inocuo, pero es el mismo bug
+  // latente que desbordaba la pagina en las otras cuatro rejillas.
   .nivel__pasos {
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: 0;
   }
 

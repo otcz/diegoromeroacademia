@@ -1,0 +1,92 @@
+@use 'mixins' as m;
+
+// Fondo blanco a proposito: catalogo hereda el del body y planes declara niebla, asi que sin
+// esto son 176 px de gris identico seguidos y las dos secciones se leen como una sola.
+.acceso {
+  background: var(--adr-color-blanco);
+}
+
+.acceso__encabezado {
+  margin-bottom: var(--adr-espacio-6);
+}
+
+.acceso__rejilla {
+  display: grid;
+  // minmax(0, 1fr) y no 1fr: `1fr` es `minmax(auto, 1fr)` y ese `auto` pone un suelo de
+  // min-content que la fraccion no puede bajar. Es lo que desbordaba la pagina a 768 px.
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--adr-espacio-4);
+}
+
+.acceso__tarjeta {
+  @include m.tarjeta;
+
+  padding: var(--adr-espacio-5);
+}
+
+.acceso__marca {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  margin-bottom: var(--adr-espacio-4);
+  color: var(--adr-color-azul-rey);
+  background: var(--adr-tinte-azul-fondo);
+  border-radius: var(--adr-radio-pastilla);
+}
+
+.acceso__nombre {
+  margin-bottom: var(--adr-espacio-3);
+  font-family: var(--adr-fuente-titular);
+  font-size: var(--adr-texto-tarjeta);
+  font-weight: 700;
+}
+
+.acceso__incluye {
+  color: var(--adr-color-texto-secundario);
+}
+
+// La mitad que faltaba. Va en tinta plena y no atenuada: es la consecuencia, y atenuarla
+// seria repetir el defecto que esta seccion viene a corregir.
+.acceso__despues {
+  margin-top: var(--adr-espacio-2);
+  font-weight: 600;
+}
+
+.acceso__garantia {
+  display: flex;
+  gap: var(--adr-espacio-4);
+  align-items: center;
+  margin-top: var(--adr-espacio-5);
+  padding: var(--adr-espacio-5);
+  color: var(--adr-color-texto-secundario);
+  background: var(--adr-tinte-azul-fondo);
+  border-radius: var(--adr-radio-tarjeta);
+}
+
+.acceso__marca--franja {
+  margin-bottom: 0;
+  background: var(--adr-color-blanco);
+}
+
+@include m.desde-tableta {
+  .acceso__encabezado {
+    text-align: center;
+  }
+
+  // `text-align: center` centra el texto DENTRO de la caja, pero `.adr-titulo-seccion` lleva
+  // `max-width: 24ch`, asi que la caja se queda anclada a la izquierda y el titulo colgaba
+  // 242 px del centro mientras el kicker si quedaba centrado. Es el mismo patron que usa
+  // `seccion-nivel`. El nombre lleva `-seccion` para no chocar en un grep con el
+  // `.acceso__titulo` del H1 de la pantalla de inicio de sesion, que es otra cosa.
+  .acceso__titulo-seccion {
+    margin-inline: auto;
+  }
+
+  .acceso__rejilla {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--adr-espacio-5);
+  }
+}

@@ -1,8 +1,11 @@
 @use 'mixins' as m;
 
 .adr-pie__titulo {
-  max-width: 18ch;
+  // `balance` reparte las lineas en vez de dejar una palabra suelta abajo. Sin esto,
+  // «Empieza hoy por el nivel 1.» dejaba el «1.» solo en la segunda linea.
+  max-width: 24ch;
   margin-bottom: var(--adr-espacio-6);
+  text-wrap: balance;
   font-family: var(--adr-fuente-titular);
   font-size: 42px;
   font-weight: 800;
@@ -26,7 +29,7 @@
 
 .adr-pie__enlaces {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: var(--adr-espacio-5);
   margin-top: var(--adr-espacio-7);
   padding-top: var(--adr-espacio-5);
@@ -42,6 +45,14 @@
       color: var(--adr-color-blanco);
     }
   }
+}
+
+// Mismo sitio que un enlace pero sin serlo: atenuado para que se lea como «todavia no»
+// y no como un control que no responde al pulsarlo.
+.adr-pie__pendiente {
+  margin-bottom: var(--adr-espacio-2);
+  color: var(--adr-oscuro-texto-suave);
+  opacity: 0.7;
 }
 
 .adr-pie__marca {
@@ -62,6 +73,6 @@
   }
 
   .adr-pie__enlaces {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
   }
 }

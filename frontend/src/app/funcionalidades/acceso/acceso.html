@@ -85,7 +85,10 @@
           [control]="formulario.controls.contrasena"
         />
 
-        <a class="acceso__olvide" href="/recuperar-contrasena">¿Olvidaste tu contraseña?</a>
+        <!-- Sin enlace: `/recuperar-contrasena` no existe y el comodín del enrutador la
+             mandaba a la pantalla de error. Un control visible que no responde al pulsarlo
+             enseña que la aplicación no reacciona, justo donde hay que generar confianza. -->
+        <p class="acceso__olvide acceso__pendiente">¿Olvidaste tu contraseña? — próximamente</p>
 
         <adr-boton
           tipo="submit"
@@ -98,7 +101,11 @@
       </form>
 
       <p class="acceso__registro">
-        ¿Todavía no tienes cuenta? <a href="/registro">Regístrate gratis</a>
+        <!-- Decía «Crea una desde el formulario de arriba», y era FALSO: este formulario solo
+             inicia sesión — su único botón dice «Entrar» y llama a `iniciarSesion()`. Además
+             el backend todavía no expone ningún controlador, así que hoy no hay forma de
+             crear una cuenta. Decirlo es mejor que un formulario que falla tras el esfuerzo. -->
+        Crear cuenta — próximamente. Por ahora solo entran las cuentas ya creadas.
       </p>
     </div>
   </section>

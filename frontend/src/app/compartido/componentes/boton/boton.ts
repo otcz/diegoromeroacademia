@@ -1,5 +1,6 @@
 import { NgTemplateOutlet } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, input, output } from '@angular/core';
+import { RouterLink } from '@angular/router';
 import { Icono, TamanioIcono } from '../icono/icono';
 import { NombreIcono } from '../../../disenio/iconos/registro-iconos';
 
@@ -22,11 +23,17 @@ export type TipoBoton = 'button' | 'submit';
  * <p>Si se le pasa `enlace`, se dibuja como `<a>`; si no, como `<button>`. La distincion no
  * es estetica: navegar es lo que hace un enlace, y un lector de pantalla lo anuncia distinto.
  * Un boton que navega deja al usuario sin saber que va a cambiar de pagina.
+ *
+ * <p><b>Un destino interno usa `routerLink`, no `href`.</b> Con `href`, cada clic dentro de la
+ * propia aplicacion recarga el paquete entero: se pierde el estado, se vuelve a descargar todo
+ * y el visitante ve un parpadeo en blanco. La distincion se decide por la FORMA del destino
+ * — empieza por `/` — y no por una entrada nueva, para que ninguna pantalla pueda equivocarse
+ * al pedirla.
  */
 @Component({
   selector: 'adr-boton',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [Icono, NgTemplateOutlet],
+  imports: [Icono, NgTemplateOutlet, RouterLink],
   template: `
     <!-- El contenido se declara una sola vez y se reutiliza en las dos ramas: dos
          <ng-content> en la misma plantilla no proyectan lo que uno espera. -->
@@ -38,14 +45,20 @@ export type TipoBoton = 'button' | 'submit';
     </ng-template>
 
     @if (enlace(); as destino) {
-      <a
-        [href]="destino"
-        [class]="clases()"
-        [attr.target]="nuevaPestania() ? '_blank' : null"
-        [attr.rel]="nuevaPestania() ? 'noopener noreferrer' : null"
-      >
-        <ng-container [ngTemplateOutlet]="contenido" />
-      </a>
+      @if (esInterno()) {
+        <a [routerLink]="destino" [class]="clases()">
+          <ng-container [ngTemplateOutlet]="contenido" />
+        </a>
+      } @else {
+        <a
+          [href]="destino"
+          [class]="clases()"
+          [attr.target]="nuevaPestania() ? '_blank' : null"
+          [attr.rel]="nuevaPestania() ? 'noopener noreferrer' : null"
+        >
+          <ng-container [ngTemplateOutlet]="contenido" />
+        </a>
+      }
     } @else {
       <button
         [type]="tipo()"
@@ -75,6 +88,15 @@ export class Boton {
   readonly nuevaPestania = input(false);
 
   readonly accion = output<void>();
+
+  /**
+   * Un destino que empieza por `/` es una ruta de esta aplicacion.
+   *
+   * <p>Las anclas (`#planes`) y las direcciones externas (`https://`, `mailto:`) NO lo son:
+   * el enrutador no las conoce y convertirlas en `routerLink` las rompe. `nuevaPestania` solo
+   * tiene sentido en esa rama, porque abrir una ruta propia en otra pestania duplica la app.
+   */
+  protected readonly esInterno = computed(() => this.enlace()?.startsWith('/') ?? false);
 
   protected readonly clases = computed(() => {
     const partes = ['adr-boton', `adr-boton--${this.variante()}`];

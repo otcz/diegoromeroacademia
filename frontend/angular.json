@@ -101,7 +101,8 @@
               "src/app/app.config.ts",
               "src/app/**/*.routes.ts",
               "src/app/nucleo/modelos/**",
-              "src/app/disenio/iconos/**"
+              "src/app/disenio/iconos/**",
+              "src/pruebas/**"
             ],
             "coverageThresholds": {
               "statements": 80,
@@ -111,6 +112,9 @@
             },
             "coverageInclude": [
               "src/app/**/*.ts"
+            ],
+            "setupFiles": [
+              "src/pruebas/configuracion-global.ts"
             ]
           }
         },

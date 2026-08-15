@@ -28,6 +28,8 @@ export interface ManifiestoActivos {
   readonly laGotaFria: RutaActivo;
   /** Portada del tutorial suelto. 3:2, mínimo 800 px. */
   readonly losCaminosDeLaVida: RutaActivo;
+  /** Detalle de una mano sobre la botonadura, en la sección «dentro de un nivel». 3:2. */
+  readonly practicaBotonadura: RutaActivo;
 }
 
 /**
@@ -43,10 +45,24 @@ export const ACTIVOS: ManifiestoActivos = {
   //
   // Ninguna llega al ancho que su hueco necesita, así que se verán suaves — sobre todo el
   // héroe, que a 567 px cubre un fondo pensado para 2400.
-  heroe: '/imagenes/heroe-vallenato.webp',
-  cursoCompleto: '/imagenes/curso-acordeon-completo.webp',
-  laGotaFria: '/imagenes/curso-la-gota-fria.webp',
-  losCaminosDeLaVida: '/imagenes/curso-los-caminos-de-la-vida.webp',
+  // Las rutas llevan HUELLA DE CONTENIDO (`.3f4f1a29.`) y las genera `imagenes:optimizar`,
+  // que las imprime al terminar para copiarlas aquí. No se escriben a mano.
+  //
+  // Sin la huella, cambiar una foto conservando el nombre deja a las cachés sirviendo la
+  // vieja: al sustituir el acordeón alpino por el Hohner Corona, Cloudflare siguió dando la
+  // anterior desde el borde y la página parecía no haber cambiado. La cabecera de origen no
+  // basta — el proveedor la reescribe con su propio TTL. El nombre sí manda, en toda caché.
+  heroe: '/imagenes/heroe-vallenato.3f4f1a29.webp',
+  cursoCompleto: '/imagenes/curso-acordeon-completo.8c2ae897.webp',
+  laGotaFria: '/imagenes/curso-la-gota-fria.787a5cad.webp',
+  losCaminosDeLaVida: '/imagenes/curso-los-caminos-de-la-vida.6870d3db.webp',
+
+  // Foto de banco (licencia Pexels, uso comercial sin atribución), tratada por
+  // `imagenes:tratar` con la misma receta que el resto: recorte 3:2, velo azul rey en
+  // sombras y mango en luces. Es la única de las tres descargadas que muestra un acordeón
+  // DIATÓNICO de botones — el vallenato. Las otras dos eran un cromático europeo y uno de
+  // piano, y se descartaron: en una academia de vallenato el instrumento equivocado se nota.
+  practicaBotonadura: '/imagenes/practica-botonadura.a0cb191f.webp',
 
   // Sigue en null a propósito: ninguna de las imágenes entregadas es una captura del
   // simulador, y el diagrama de botones que dibuja <adr-marco-imagen> con CSS y tokens

@@ -1,4 +1,4 @@
-@use 'tokens' as t;
+@use 'variables' as v;
 
 // Mezclas compartidas del sistema visual. Se usan desde los componentes del catalogo
 // para que las decisiones de forma vivan en un solo sitio.
@@ -57,13 +57,13 @@
 }
 
 @mixin en-movil {
-  @media (width < #{t.$adr-quiebre-movil}) {
+  @media (width < #{v.$adr-quiebre-movil}) {
     @content;
   }
 }
 
 @mixin en-escritorio {
-  @media (width >= #{t.$adr-quiebre-escritorio}) {
+  @media (width >= #{v.$adr-quiebre-escritorio}) {
     @content;
   }
 }

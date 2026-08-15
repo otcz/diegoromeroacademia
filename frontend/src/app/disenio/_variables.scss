@@ -1,0 +1,13 @@
+// Variables de Sass. NO emiten CSS.
+//
+// Existen aparte de _tokens.scss por una razon concreta: _tokens.scss contiene un bloque
+// `:root {}`, y en Angular cada hoja de componente es una unidad de compilacion propia. Si
+// _mixins.scss usara _tokens.scss, TODO componente que incluya un mixin arrastraria los
+// sesenta tokens a su propio CSS — sesenta declaraciones repetidas por componente.
+//
+// Aqui va lo que los mixins necesitan y no dibuja nada.
+
+// Punto de quiebre movil. Mobile first: la mayoria del trafico llega desde YouTube en
+// celular (especificacion §14.1).
+$adr-quiebre-movil: 768px;
+$adr-quiebre-escritorio: 1200px;

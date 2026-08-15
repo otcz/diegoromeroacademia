@@ -38,7 +38,7 @@ import { entorno } from '../../../../entornos/entorno';
         <div class="adr-pie__enlaces">
           <div>
             <p class="adr-pie__marca">Academia Diego Romero</p>
-            <p class="adr-texto-claro">diegoromeroacordeon.com</p>
+            <p class="adr-texto-claro">diegoromeroacademia.com</p>
           </div>
           <div>
             <a href="/terminos">Términos y condiciones</a>

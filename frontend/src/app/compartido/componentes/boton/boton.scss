@@ -25,6 +25,10 @@
   white-space: nowrap;
   cursor: pointer;
 
+  // Obligatorio desde que el boton puede dibujarse como <a>: si no, hereda el subrayado
+  // de enlace de global.scss y se ve como un enlace disfrazado de boton.
+  text-decoration: none;
+
   background: transparent;
   border: 1.5px solid transparent;
   border-radius: var(--adr-radio-pastilla);

@@ -82,6 +82,7 @@ de la API y en el frontend. Sin sinónimos.
 | 5 | Iconografía Phosphor duotone | 2026-08-14 | [0005](adr/0005-iconografia-phosphor.md) |
 | 6 | Sistema visual «Azul rey» aprobado | 2026-08-14 | Handoff de diseño |
 | 7 | Marca personal en vez de marca institucional | 2026-08-09 | Especificación §2.1 |
+| 7b | **`diegoromeroacademia.com` es el dominio del proyecto** | 2026-08-15 | Decisión de Diego + Tomás |
 | 8 | Fase 1 solo con acordeón | 2026-08-09 | Especificación §3.3 |
 | 9 | Migraciones SQL manuales, sin Flyway ni Liquibase | 2026-08-09 | Especificación §16.1 |
 
@@ -101,6 +102,7 @@ indica qué no se puede terminar hasta resolverla.
 | 5 | Política de reembolsos | Diego | Términos y condiciones |
 | 6 | ¿Facturación electrónica DIAN? | Diego + contador | Fase 1 — cierre de compra |
 | 7 | Verificación de marca en la SIC, clase 41 | Tomás | Identidad visual definitiva |
+| 10 | Cerrar el registro de `diegoromeroacademia.com` en Hostinger — está en «Configuración pendiente» y el DNS mundial responde NXDOMAIN | Tomás | Publicar el entorno de demostración |
 | 8 | Alcance geográfico del envío de productos físicos | Diego | Fase 4 — cálculo de envío |
 | 9 | Aprobar el uso del servidor físico como entorno de demostración — [ADR 0007](adr/0007-uso-del-servidor-fisico.md), en estado *propuesto* | Tomás | Que Diego pueda revisar pantallas antes de terminar la fase 1 |
 

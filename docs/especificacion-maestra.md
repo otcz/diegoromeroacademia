@@ -46,6 +46,18 @@ Decisión: se conserva la marca personal en lugar de una marca institucional, po
 | `diegoromeroacordeon.com` | **Principal.** Aquí vive la plataforma. Coincidencia exacta con el @ del canal. | Adquirido |
 | `diegoromeroacademia.com` | Redirección 301 al principal. Reservado para cuando el catálogo sea plenamente multi-instrumento. | Adquirido |
 
+> **⚠ Corregido el 2026-08-15.** Esta tabla ya no describe la realidad, y se conserva tal
+> cual porque el historial de la decisión importa:
+>
+> - **`diegoromeroacordeon.com` nunca se adquirió.** No aparece en el panel del registrador y
+>   el DNS mundial responde `NXDOMAIN`. Sigue libre para quien lo compre.
+> - **`diegoromeroacademia.com` pasa a ser el dominio del proyecto**, no una redirección.
+>   Su registro está pendiente de cerrar en el registrador.
+>
+> Consecuencia asumida: la dirección ya no coincide con el `@DiegoRomeroAcordeon` del canal,
+> que era el argumento original de §2.2. Quien vea el canal y escriba el dominio de memoria
+> se equivocará. Ver `docs/00-contexto.md §4`, decisión 7b.
+
 **Pendientes de marca:**
 
 - Verificar en la SIC (Superintendencia de Industria y Comercio) la clase 41 — servicios de educación y formación — antes de invertir en identidad visual.

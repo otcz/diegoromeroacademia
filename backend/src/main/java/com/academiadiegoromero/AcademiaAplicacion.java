@@ -1,8 +1,10 @@
 package com.academiadiegoromero;
 
 import com.academiadiegoromero.configuracion.propiedades.ApiPropiedades;
+import com.academiadiegoromero.configuracion.propiedades.CredencialesGooglePropiedades;
 import com.academiadiegoromero.configuracion.propiedades.FuncionalidadesPropiedades;
 import com.academiadiegoromero.configuracion.propiedades.SeguridadPropiedades;
+import com.academiadiegoromero.identidad.infraestructura.web.IdentidadPropiedades;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -19,7 +21,9 @@ import org.springframework.cache.annotation.EnableCaching;
 @EnableConfigurationProperties({
         ApiPropiedades.class,
         SeguridadPropiedades.class,
-        FuncionalidadesPropiedades.class
+        FuncionalidadesPropiedades.class,
+        CredencialesGooglePropiedades.class,
+        IdentidadPropiedades.class
 })
 public class AcademiaAplicacion {
 

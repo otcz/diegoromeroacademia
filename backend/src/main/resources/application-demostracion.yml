@@ -1,0 +1,39 @@
+## Perfil del entorno de DEMOSTRACION en el servidor de laboratorio (ADR 0007).
+##
+## No es produccion. Sirve para que Diego revise pantallas y apruebe diseno.
+## Aqui NO se cargan datos personales reales ni credenciales de pasarela de produccion.
+
+spring:
+  jpa:
+    hibernate:
+      ddl-auto: validate
+
+server:
+  error:
+    # Mas detalle que en produccion: el objetivo es diagnosticar rapido lo que se rompa
+    # mientras se construye, y no hay datos reales que proteger.
+    include-message: always
+    include-stacktrace: never
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+  endpoint:
+    health:
+      show-details: never
+
+logging:
+  level:
+    root: INFO
+    com.academiadiegoromero: DEBUG
+
+academia:
+  # Todas las fases encendidas: si Diego no puede ver una pantalla, no puede aprobarla.
+  funcionalidades:
+    examenes-habilitados: true
+    certificados-habilitados: true
+    simulador-habilitado: true
+    tienda-habilitada: true
+    login-facebook-habilitado: false

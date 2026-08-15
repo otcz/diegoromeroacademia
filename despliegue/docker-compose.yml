@@ -1,0 +1,65 @@
+# Entorno de DEMOSTRACION en el servidor de laboratorio (ADR 0007).
+#
+# No es produccion. Produccion va en Cloud Run: aqui no se ponen datos personales reales
+# ni credenciales de pasarela de produccion.
+#
+# Convive con los contenedores de otros dos proyectos en la misma maquina, asi que todo
+# lleva prefijo propio y puertos propios:
+#   8080 lo ocupa el explorador de Hermes · 8090 guardian-web · 5432 hermes-pg
+# Por eso la Academia publica solo el 8091, y solo en loopback: quien la expone a internet
+# es el tunel, no Docker.
+
+name: academia
+
+services:
+  academia-pg:
+    image: postgres:17-alpine
+    container_name: academia-pg
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${BD_NOMBRE:-academia}
+      POSTGRES_USER: ${BD_USUARIO:-academia}
+      POSTGRES_PASSWORD: ${BD_CONTRASENA:?falta BD_CONTRASENA en despliegue/.env}
+    volumes:
+      - /data/academia/postgres:/var/lib/postgresql/data
+    # Sin `ports`: la base no se asoma ni siquiera a loopback. Solo la alcanza el backend
+    # por la red interna de Docker.
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${BD_USUARIO:-academia} -d ${BD_NOMBRE:-academia}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  academia-api:
+    build:
+      context: ../backend
+    image: academia-api:local
+    container_name: academia-api
+    restart: unless-stopped
+    depends_on:
+      academia-pg:
+        condition: service_healthy
+    environment:
+      SPRING_PROFILES_ACTIVE: demostracion
+      BD_URL: jdbc:postgresql://academia-pg:5432/${BD_NOMBRE:-academia}
+      BD_USUARIO: ${BD_USUARIO:-academia}
+      BD_CONTRASENA: ${BD_CONTRASENA:?falta BD_CONTRASENA en despliegue/.env}
+      ORIGENES_PERMITIDOS: ${URL_PUBLICA:?falta URL_PUBLICA en despliegue/.env}
+    # Sin `ports`: solo lo alcanza nginx por la red interna.
+
+  academia-web:
+    build:
+      context: ../frontend
+    image: academia-web:local
+    container_name: academia-web
+    restart: unless-stopped
+    depends_on:
+      - academia-api
+    ports:
+      # Solo loopback. El tunel de Cloudflare corre en la misma maquina y llega por aqui;
+      # nada queda expuesto en la LAN ni en la IP publica.
+      - "127.0.0.1:8091:80"
+    volumes:
+      # Contrasena de la demostracion. Lo genera quien despliega, nunca se versiona.
+      # Si falta, nginx no arranca: preferimos un despliegue fallido a una demo abierta.
+      - /data/academia/htpasswd:/etc/nginx/.htpasswd:ro

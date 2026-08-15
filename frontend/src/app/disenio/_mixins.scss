@@ -62,6 +62,14 @@
   }
 }
 
+/// Desde tableta hacia arriba. Es el complemento exacto de `en-movil`: usados en pareja
+/// no dejan ningun ancho sin cubrir, que es el error tipico de mezclar min- y max-width.
+@mixin desde-tableta {
+  @media (width >= #{v.$adr-quiebre-movil}) {
+    @content;
+  }
+}
+
 @mixin en-escritorio {
   @media (width >= #{v.$adr-quiebre-escritorio}) {
     @content;

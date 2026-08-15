@@ -15,6 +15,21 @@ server:
     include-message: always
     include-stacktrace: never
 
+  servlet:
+    session:
+      cookie:
+        # La cookie de sesion identifica al alumno: si viaja en claro, quien escuche la red
+        # entra como el. `secure` la limita a HTTPS, que es como se sirve el dominio.
+        #
+        # Va en este perfil y no en el base a proposito: en local se entra por
+        # http://localhost y con `secure` la sesion no se guardaria nunca.
+        secure: true
+        http-only: true
+        # `lax` y no `strict`: el ingreso vuelve de Google por una redireccion de otro sitio,
+        # y con `strict` el navegador no manda la cookie en ese salto — se pierde el estado
+        # de OAuth y el ingreso falla justo al final.
+        same-site: lax
+
 management:
   endpoints:
     web:

@@ -1,30 +1,36 @@
 package com.academiadiegoromero.configuracion.seguridad;
 
-import com.academiadiegoromero.configuracion.propiedades.ApiPropiedades;
 import com.academiadiegoromero.identidad.infraestructura.web.ManejadorIngresoExitoso;
-import java.util.List;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod;
+import org.springframework.core.annotation.Order;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.web.cors.CorsConfiguration;
-import org.springframework.web.cors.CorsConfigurationSource;
-import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 /**
- * Cadena de seguridad HTTP (docs/06 §2).
+ * Cadena de filtros SOLO para el tramo de ingreso con proveedor externo.
  *
- * <p><b>Las rutas de OAuth no son las de serie.</b> Spring publica por defecto
- * {@code /oauth2/authorization/{id}} y {@code /login/oauth2/code/{id}}, pero nginx solo
- * enruta al backend lo que empieza por {@code /api/}: todo lo demas devuelve el index del
- * frontend. Con las rutas por defecto, Google devolveria el codigo de autorizacion a la
- * aplicacion de Angular, que no sabe que hacer con el, y el ingreso fallaria en silencio.
+ * <p><b>Por que hay dos cadenas y no una.</b> {@code SeguridadHttpConfiguracion} declara la
+ * API como SIN ESTADO: sin sesion, sin CSRF, autenticada por token en la cabecera. Esa
+ * decision es correcta para el resto de la API y no se toca.
  *
- * <p>Por eso ambas se mueven bajo {@code /api/acceso/oauth2/...}, que es ademas lo que ya
- * espera el frontend en {@code autenticacion-servicio.ts}. El URI de redireccion registrado
- * en Google debe coincidir EXACTAMENTE con el de aqui.
+ * <p>Pero el baile de OAuth 2.0 no puede ser sin estado: el parametro {@code state} que
+ * protege el intercambio del codigo se guarda entre la ida a Google y la vuelta, y sin sesion
+ * no hay donde. Con {@code STATELESS} el ingreso falla siempre, y falla con un error del
+ * proveedor que no explica nada.
+ *
+ * <p>La solucion no es relajar la API entera, sino acotar: esta cadena se aplica unicamente a
+ * {@code /api/acceso/**} y va PRIMERA; todo lo demas sigue cayendo en la cadena sin estado.
+ * Asi la excepcion vive donde se necesita y no se propaga al resto del sistema.
+ *
+ * <p><b>Las rutas de OAuth no son las de serie.</b> Spring publica
+ * {@code /oauth2/authorization/{id}} y {@code /login/oauth2/code/{id}}, pero nginx solo enruta
+ * al backend lo que empieza por {@code /api/}: con las rutas por defecto, Google devolveria el
+ * codigo de autorizacion a la aplicacion de Angular, que no sabe que hacer con el, y el
+ * ingreso fallaria en silencio. El URI registrado en la consola de Google debe coincidir
+ * EXACTAMENTE con {@link #BASE_REDIRECCION}.
  */
 @Configuration
 class ConfiguracionSeguridad {
@@ -35,68 +41,45 @@ class ConfiguracionSeguridad {
     /** A donde vuelve el proveedor con el codigo. Debe estar registrado en su consola. */
     static final String BASE_REDIRECCION = "/api/acceso/oauth2/callback/*";
 
+    /**
+     * Va antes que la cadena general para poder quedarse con su tramo.
+     *
+     * <p>El CORS se toma del bean que ya declara {@code SeguridadHttpConfiguracion}: hay una
+     * sola lista blanca de origenes en todo el sistema, y duplicarla es como empiezan a
+     * divergir.
+     */
     @Bean
-    SecurityFilterChain cadena(
+    @Order(1)
+    SecurityFilterChain cadenaDeIngresoExterno(
             HttpSecurity http,
             ManejadorIngresoExitoso ingresoExitoso,
-            ManejadorIngresoFallido ingresoFallido,
-            CorsConfigurationSource cors)
+            ManejadorIngresoFallido ingresoFallido)
             throws Exception {
 
         return http
-                .cors(c -> c.configurationSource(cors))
+                .securityMatcher("/api/acceso/**")
+                .cors(Customizer.withDefaults())
 
-                // El flujo de OAuth llega por redireccion desde Google, sin nuestro token de
-                // CSRF, asi que sus rutas quedan fuera. El resto de la API SI lo exige.
-                .csrf(c -> c.ignoringRequestMatchers(BASE_AUTORIZACION + "/**"))
+                // El proveedor devuelve al usuario por redireccion, sin nuestro token de
+                // CSRF. Lo que protege este tramo es el `state` de OAuth, que Spring valida.
+                .csrf(csrf -> csrf.disable())
+
+                // IF_REQUIRED y no STATELESS: sin sesion no hay donde guardar el `state`.
                 .sessionManagement(s -> s.sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED))
-                .authorizeHttpRequests(ConfiguracionSeguridad::declararRutasPublicas)
+
+                .authorizeHttpRequests(rutas -> rutas.anyRequest().permitAll())
+
                 .oauth2Login(o -> o
                         .authorizationEndpoint(e -> e.baseUri(BASE_AUTORIZACION))
                         .redirectionEndpoint(e -> e.baseUri(BASE_REDIRECCION))
                         .successHandler(ingresoExitoso)
                         .failureHandler(ingresoFallido))
+
                 .logout(l -> l
                         .logoutUrl("/api/acceso/salir")
                         .invalidateHttpSession(true)
                         .deleteCookies("JSESSIONID"))
+
                 .build();
-    }
-
-    /**
-     * Lo unico abierto sin sesion. Todo lo demas exige autenticacion por defecto.
-     *
-     * <p>La lista es corta a proposito: es mas seguro cerrar por omision y abrir a mano lo
-     * imprescindible que al reves, porque un endpoint nuevo nace protegido.
-     */
-    private static void declararRutasPublicas(
-            org.springframework.security.config.annotation.web.configurers
-                            .AuthorizeHttpRequestsConfigurer<HttpSecurity>
-                            .AuthorizationManagerRequestMatcherRegistry
-                    rutas) {
-        rutas.requestMatchers(BASE_AUTORIZACION + "/**").permitAll()
-                // El sondeo de salud lo consulta Docker; no puede exigir sesion.
-                .requestMatchers("/actuator/health/**").permitAll()
-                .requestMatchers(HttpMethod.GET, "/api/catalogo/**").permitAll()
-                .anyRequest().authenticated();
-    }
-
-    /**
-     * Origenes permitidos, desde configuracion y nunca con comodin.
-     *
-     * <p>`allowCredentials` va en true porque la sesion viaja en cookie, y el estandar prohibe
-     * combinar eso con un origen `*`. Con la lista explicita queda bien cerrado.
-     */
-    @Bean
-    CorsConfigurationSource fuenteCors(ApiPropiedades propiedades) {
-        CorsConfiguration configuracion = new CorsConfiguration();
-        configuracion.setAllowedOrigins(propiedades.origenesPermitidos());
-        configuracion.setAllowedMethods(List.of("GET", "POST", "PUT", "PATCH", "DELETE"));
-        configuracion.setAllowedHeaders(List.of("*"));
-        configuracion.setAllowCredentials(true);
-
-        UrlBasedCorsConfigurationSource fuente = new UrlBasedCorsConfigurationSource();
-        fuente.registerCorsConfiguration("/api/**", configuracion);
-        return fuente;
     }
 }

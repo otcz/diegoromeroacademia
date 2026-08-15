@@ -65,6 +65,16 @@ spring:
 
 server:
   port: ${PUERTO:8080}
+
+  # Detras de nginx, la aplicacion recibe HTTP plano aunque el navegador haya usado HTTPS.
+  # Sin esto, Spring construye sus URL absolutas con el esquema que VE, no con el que vio el
+  # visitante, y el redirect_uri que se manda a Google sale como http:// — que no coincide
+  # con el https:// registrado en su consola y produce `redirect_uri_mismatch`.
+  #
+  # `framework` hace que se honren las cabeceras X-Forwarded-* que nginx ya envia. Es seguro
+  # aqui porque el unico que puede alcanzar al backend es nginx, por la red interna de Docker:
+  # el contenedor no publica ningun puerto.
+  forward-headers-strategy: framework
   error:
     # docs/06 §6: al cliente nunca le llega el detalle interno de un error.
     include-message: never

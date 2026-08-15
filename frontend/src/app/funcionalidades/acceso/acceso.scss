@@ -1,0 +1,175 @@
+@use 'mixins' as m;
+
+.acceso {
+  display: grid;
+  grid-template-columns: 5fr 7fr;
+  min-height: 100vh;
+}
+
+// ------------------------------------------------------------ panel de marca
+.acceso__marca {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: var(--adr-espacio-7);
+  color: var(--adr-oscuro-texto-fuerte);
+  background:
+    radial-gradient(120% 90% at 15% 0%, rgb(29 107 243 / 22%), transparent 60%),
+    var(--adr-color-noche-azul);
+}
+
+.acceso__logo {
+  display: flex;
+  flex-direction: column;
+  color: var(--adr-color-blanco);
+  text-decoration: none;
+}
+
+.acceso__logo-nombre {
+  font-family: var(--adr-fuente-titular);
+  font-size: 22px;
+  font-weight: 800;
+  letter-spacing: var(--adr-espaciado-letra-titulo);
+}
+
+.acceso__logo-bajada {
+  @include m.caption;
+
+  color: var(--adr-oscuro-texto-suave);
+}
+
+.acceso__marca-titulo {
+  margin-bottom: var(--adr-espacio-6);
+  font-family: var(--adr-fuente-titular);
+  font-size: var(--adr-texto-seccion);
+  font-weight: 800;
+  line-height: var(--adr-interlineado-titulo);
+  color: var(--adr-color-blanco);
+  letter-spacing: var(--adr-espaciado-letra-titulo);
+}
+
+.acceso__marca-lista {
+  list-style: none;
+
+  li {
+    display: flex;
+    gap: var(--adr-espacio-3);
+    align-items: center;
+    margin-bottom: var(--adr-espacio-4);
+    font-size: var(--adr-texto-ui);
+  }
+
+  adr-icono {
+    color: var(--adr-color-mango);
+  }
+}
+
+.acceso__marca-pie {
+  @include m.caption;
+
+  color: var(--adr-oscuro-texto-suave);
+}
+
+// --------------------------------------------------------------- formulario
+.acceso__panel {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--adr-espacio-7) var(--adr-espacio-5);
+  background: var(--adr-color-niebla);
+}
+
+.acceso__caja {
+  width: 100%;
+  max-width: 420px;
+}
+
+.acceso__titulo {
+  font-family: var(--adr-fuente-titular);
+  font-size: 32px;
+  font-weight: 800;
+  letter-spacing: var(--adr-espaciado-letra-titulo);
+}
+
+.acceso__intro {
+  margin-block: var(--adr-espacio-3) var(--adr-espacio-5);
+}
+
+adr-alerta {
+  margin-bottom: var(--adr-espacio-5);
+}
+
+.acceso__proveedores {
+  display: flex;
+  flex-direction: column;
+  gap: var(--adr-espacio-3);
+}
+
+// Separador con la palabra centrada sobre la linea.
+.acceso__separador {
+  display: flex;
+  gap: var(--adr-espacio-4);
+  align-items: center;
+  margin-block: var(--adr-espacio-5);
+
+  &::before,
+  &::after {
+    flex: 1;
+    height: 1px;
+    content: '';
+    background: var(--adr-color-borde-divisor);
+  }
+
+  span {
+    @include m.caption;
+
+    color: var(--adr-color-texto-atenuado);
+  }
+}
+
+.acceso__formulario {
+  display: flex;
+  flex-direction: column;
+  gap: var(--adr-espacio-4);
+}
+
+.acceso__olvide {
+  align-self: flex-end;
+  font-size: var(--adr-texto-caption);
+  font-weight: 600;
+}
+
+.acceso__registro {
+  margin-top: var(--adr-espacio-5);
+  font-size: var(--adr-texto-ui);
+  color: var(--adr-color-texto-secundario);
+  text-align: center;
+
+  a {
+    font-weight: 600;
+  }
+}
+
+// --------------------------------------------------------------- responsive
+@include m.en-movil {
+  .acceso {
+    grid-template-columns: 1fr;
+    min-height: auto;
+  }
+
+  // En celular el panel de marca se reduce a una cabecera: la pantalla debe abrir
+  // con el formulario a la vista, no obligar a desplazarse para llegar a el.
+  .acceso__marca {
+    gap: var(--adr-espacio-5);
+    padding: var(--adr-espacio-5);
+  }
+
+  .acceso__marca-cuerpo,
+  .acceso__marca-pie {
+    display: none;
+  }
+
+  .acceso__panel {
+    padding: var(--adr-espacio-6) var(--adr-espacio-5);
+  }
+}

@@ -1,0 +1,73 @@
+:host {
+  display: block;
+}
+
+.adr-campo__rotulo {
+  display: block;
+  margin-bottom: var(--adr-espacio-2);
+  font-size: var(--adr-texto-ui);
+  font-weight: 600;
+  color: var(--adr-color-tinta);
+}
+
+.adr-campo__control {
+  width: 100%;
+  min-height: var(--adr-altura-control);
+  padding: var(--adr-espacio-3) var(--adr-espacio-4);
+
+  font-size: var(--adr-texto-cuerpo);
+  color: var(--adr-color-tinta);
+
+  background: var(--adr-color-blanco);
+  border: 1px solid var(--adr-color-borde-suave);
+  border-radius: 12px;
+
+  transition:
+    border-color 0.15s ease,
+    box-shadow 0.15s ease;
+
+  &::placeholder {
+    color: var(--adr-color-texto-atenuado);
+  }
+
+  &:hover:not(:disabled) {
+    border-color: var(--adr-color-texto-atenuado);
+  }
+
+  &:focus {
+    border-color: var(--adr-color-azul-rey);
+    outline: none;
+    box-shadow: 0 0 0 3px rgb(29 107 243 / 15%);
+  }
+
+  &:disabled {
+    cursor: not-allowed;
+    background: var(--adr-color-niebla);
+    opacity: 0.7;
+  }
+}
+
+// El borde rojo no basta: el mensaje de abajo lleva el significado, porque el color
+// nunca es el unico portador de informacion (docs/04 §5).
+.adr-campo__control--invalido {
+  border-color: var(--adr-color-peligro);
+
+  &:focus {
+    border-color: var(--adr-color-peligro);
+    box-shadow: 0 0 0 3px rgb(193 68 63 / 15%);
+  }
+}
+
+.adr-campo__error,
+.adr-campo__ayuda {
+  margin-top: var(--adr-espacio-2);
+  font-size: var(--adr-texto-caption);
+}
+
+.adr-campo__error {
+  color: var(--adr-color-peligro);
+}
+
+.adr-campo__ayuda {
+  color: var(--adr-color-texto-atenuado);
+}

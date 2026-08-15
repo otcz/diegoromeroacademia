@@ -43,6 +43,26 @@ spring:
     caffeine:
       spec: maximumSize=2000,expireAfterWrite=10m
 
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            # El ID es publico; el SECRETO nunca entra a este archivo ni al repositorio
+            # (no negociable #8). Vive en despliegue/.env y en Secret Manager en produccion.
+            # Sin valor por defecto a proposito: si falta, el arranque falla de inmediato en
+            # vez de dejar un boton de Google que rompe al pulsarlo.
+            client-id: ${GOOGLE_CLIENT_ID}
+            client-secret: ${GOOGLE_CLIENT_SECRET}
+            scope: openid, email, profile
+
+            # DEBE coincidir EXACTAMENTE con el URI registrado en la consola de Google.
+            # No se usa el valor por defecto de Spring (/login/oauth2/code/...) porque nginx
+            # solo enruta al backend lo que empieza por /api/: con la ruta de serie, Google
+            # devolveria el codigo a la aplicacion de Angular y el ingreso fallaria en
+            # silencio. Ver ConfiguracionSeguridad.
+            redirect-uri: "{baseUrl}/api/acceso/oauth2/callback/{registrationId}"
+
 server:
   port: ${PUERTO:8080}
   error:
@@ -73,7 +93,15 @@ academia:
     tamanio-pagina-por-defecto: 20
     tamanio-pagina-maximo: 100
     limite-peticiones-por-minuto: 120
-    origenes-permitidos: ${ORIGENES_PERMITIDOS:https://diegoromeroacordeon.com}
+    # diegoromeroacademia.com, NO diegoromeroacordeon.com: ese segundo dominio nunca llego a
+    # registrarse (NXDOMAIN) y quedo de la especificacion. Ver decision pendiente #10.
+    origenes-permitidos: ${ORIGENES_PERMITIDOS:https://diegoromeroacademia.com}
+
+  identidad:
+    # A donde vuelve el navegador cuando Google confirma. Relativo: sirve igual en local y en
+    # el servidor, porque el frontend y la API comparten origen detras de nginx.
+    destino-tras-ingresar: ${IDENTIDAD_DESTINO_OK:/}
+    destino-tras-fallar: ${IDENTIDAD_DESTINO_ERROR:/acceso}
 
   seguridad:
     expiracion-token-acceso: PT15M

@@ -258,5 +258,14 @@ La regla 13 se traduce en decisiones concretas, no en una aspiración:
 ### Presupuesto de bundle
 
 El build de producción falla si el bundle inicial supera **1 MB** y avisa a los 500 kB.
-Hoy va en ~218 kB. Con la mayoría del tráfico llegando desde YouTube en celular
-(especificación §14.1), cada 100 kB de más son segundos de espera en una conexión móvil.
+Con la mayoría del tráfico llegando desde YouTube en celular (especificación §14.1), cada
+100 kB de más son segundos de espera en una conexión móvil.
+
+**Estilos por componente: aviso a 6 kB, error a 10 kB.** El valor por defecto de Angular
+(4 kB / 8 kB) está calibrado para componentes pequeños. Los del catálogo se mueven entre
+1 y 4 kB y lo cumplen de sobra; los de pantalla completa —landing, acceso— rondan los 5-7 kB
+de forma legítima. Se subió el umbral porque un aviso que salta siempre deja de leerse, y
+entonces ya no protege de nada.
+
+Si un componente del catálogo se acerca a los 6 kB, el problema no es el presupuesto: es que
+está haciendo demasiado y hay que partirlo (docs/01 §8).

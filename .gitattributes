@@ -1,0 +1,26 @@
+# Finales de linea uniformes en todo el repositorio.
+#
+# Sin esto, Git en Windows convierte a CRLF y contradice al .editorconfig, lo que produce
+# diffs enteros de archivos que nadie toco y hace ilegible el historial cuando el equipo
+# mezcla sistemas operativos o cuando el CI corre en Linux.
+* text=auto eol=lf
+
+# Excepciones que el sistema operativo exige en CRLF.
+*.cmd text eol=crlf
+*.bat text eol=crlf
+*.ps1 text eol=crlf
+
+# El wrapper de Maven debe conservar LF aunque se edite en Windows.
+mvnw text eol=lf
+
+# Binarios: Git no debe tocarlos.
+*.zip binary
+*.ico binary
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.webp binary
+*.pdf binary
+*.woff binary
+*.woff2 binary

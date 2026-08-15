@@ -1,0 +1,55 @@
+# --- Secretos: nunca deben entrar al repositorio (docs/03 §5) ---
+.env
+.env.*
+!.env.ejemplo
+*.pem
+*.key
+*.p12
+*credenciales*
+*-secret*.json
+service-account*.json
+
+# --- Java / Maven ---
+target/
+*.class
+*.jar
+*.war
+!.mvn/wrapper/maven-wrapper.jar
+.mvn/timing.properties
+dependency-reduced-pom.xml
+
+# --- Node / Angular ---
+node_modules/
+dist/
+.angular/
+npm-debug.log*
+yarn-error.log*
+*.tsbuildinfo
+
+# --- Reportes de calidad ---
+coverage/
+jacoco.exec
+.pit/
+*.log
+
+# --- IDE ---
+.idea/
+*.iml
+.vscode/*
+!.vscode/extensions.json
+.settings/
+.project
+.classpath
+.factorypath
+
+# --- Sistema operativo ---
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+.DS_Store
+
+# --- Temporales ---
+*.tmp
+*.bak
+*~

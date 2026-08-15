@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400..800&family=Instrument+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap">
+  <script src="image-slot.js"></script>
+  <style>
+    body { margin: 0; background: #F6F8FB; font-family: 'Instrument Sans', sans-serif; color: #16212E; text-wrap: pretty; }
+    a { color: #1552C4; }
+    a:hover { color: #1D6BF3; }
+    ::selection { background: #E3EDFE; }
+  </style>
+</helmet>
+<div data-screen-label="Landing pública — Azul rey" style="min-height:100vh">
+
+  <nav style="display:flex;justify-content:space-between;align-items:center;gap:24px;max-width:1200px;margin:0 auto;padding:18px 48px">
+    <div style="display:flex;align-items:baseline;gap:10px">
+      <span style="font-family:'Bricolage Grotesque',sans-serif;font-weight:800;font-size:22px;letter-spacing:-0.02em">Diego Romero</span>
+      <span style="font-size:11px;letter-spacing:0.14em;text-transform:uppercase;font-weight:600;color:#6E7E92">Academia</span>
+    </div>
+    <div style="display:flex;gap:26px;align-items:center;font-size:15px;font-weight:500">
+      <a href="#cursos" style="text-decoration:none;color:#16212E">Cursos</a>
+      <a href="#simulador" style="text-decoration:none;color:#16212E">Simulador</a>
+      <a href="#planes" style="text-decoration:none;color:#16212E">Planes</a>
+      <button style="font-family:'Instrument Sans',sans-serif;font-weight:600;font-size:15px;background:transparent;color:#16212E;border:1.5px solid #C0CBD9;border-radius:999px;padding:11px 22px;cursor:pointer;white-space:nowrap" style-hover="border-color:#16212E">Entrar</button>
+      <button style="font-family:'Instrument Sans',sans-serif;font-weight:600;font-size:15px;background:#1D6BF3;color:#fff;border:none;border-radius:999px;padding:12px 24px;cursor:pointer;white-space:nowrap" style-hover="background:#1552C4">Registrarme</button>
+    </div>
+  </nav>
+
+  <header style="position:relative;background:#0E1B2E;overflow:hidden">
+    <div style="position:absolute;inset:0"><image-slot id="hero-azul" shape="rect" placeholder="Foto: Diego tocando el acordeón"></image-slot></div>
+    <div style="position:absolute;inset:0;background:linear-gradient(100deg, rgba(10,19,33,0.88) 30%, rgba(10,19,33,0.45) 65%, rgba(10,19,33,0.1) 100%);pointer-events:none"></div>
+    <div style="position:relative;max-width:1200px;margin:0 auto;padding:104px 48px 96px;pointer-events:none">
+      <p style="margin:0;font-size:13px;letter-spacing:0.16em;text-transform:uppercase;font-weight:600;color:#FFB01F">Academia Diego Romero · Vallenato</p>
+      <h1 style="margin:20px 0 0;font-family:'Bricolage Grotesque',sans-serif;font-weight:800;font-size:64px;line-height:1.04;letter-spacing:-0.02em;color:#fff;max-width:15ch">Aprende a tocar acordeón <span style="background:linear-gradient(180deg, transparent 76%, rgba(255,176,31,0.95) 76%)">desde cero.</span></h1>
+      <p style="margin:24px 0 0;font-size:18px;line-height:1.65;color:rgba(255,255,255,0.85);max-width:46ch">Cursos por niveles con Diego Romero: clases en video, exámenes que él mismo revisa, certificado verificable y el único simulador de pisadas sincronizado con la clase.</p>
+      <div style="display:flex;gap:14px;margin-top:32px;flex-wrap:wrap;align-items:center">
+        <button style="pointer-events:auto;font-family:'Instrument Sans',sans-serif;font-weight:600;font-size:16px;background:#1D6BF3;color:#fff;border:none;border-radius:999px;padding:15px 30px;cursor:pointer;white-space:nowrap" style-hover="background:#1552C4">Empezar ahora</button>
+        <a href="#planes" style="pointer-events:auto;font-weight:600;font-size:16px;color:#fff;text-decoration:none;white-space:nowrap">Ver planes y precios →</a>
+      </div>
+      <p style="margin:22px 0 0;font-size:13px;color:rgba(255,255,255,0.6)">Precios visibles, sin registrarte · Cancela cuando quieras</p>
+    </div>
+  </header>
+
+  <div style="max-width:1200px;margin:0 auto;padding:0 48px">
+
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:24px;padding:36px 0;border-bottom:1px solid #DCE3EC">
+      <div><p style="margin:0;font-family:'Bricolage Grotesque',sans-serif;font-weight:800;font-size:30px">26.000</p><p style="margin:3px 0 0;font-size:12px;letter-spacing:0.1em;text-transform:uppercase;font-weight:600;color:#6E7E92">Suscriptores en YouTube</p></div>
+      <div><p style="margin:0;font-family:'Bricolage Grotesque',sans-serif;font-weight:800;font-size:30px">362</p><p style="margin:3px 0 0;font-size:12px;letter-spacing:0.1em;text-transform:uppercase;font-weight:600;color:#6E7E92">Videos publicados</p></div>
+      <div><p style="margin:0;font-family:'Bricolage Grotesque',sans-serif;font-weight:800;font-size:30px">4 niveles</p><p style="margin:3px 0 0;font-size:12px;letter-spacing:0.1em;text-transform:uppercase;font-weight:600;color:#6E7E92">Del cero al escenario</p></div>
+      <div><p style="margin:0;font-family:'Bricolage Grotesque',sans-serif;font-weight:800;font-size:30px">100%</p><p style="margin:3px 0 0;font-size:12px;letter-spacing:0.1em;text-transform:uppercase;font-weight:600;color:#6E7E92">Exámenes revisados por Diego</p></div>
+    </div>
+
+    <section style="padding:88px 0 0">
+      <p style="margin:0 0 10px;font-size:13px;letter-spacing:0.14em;text-transform:uppercase;font-weight:600;color:#1552C4">El método</p>
+      <h2 style="margin:0;font-family:'Bricolage Grotesque',sans-serif;font-weight:800;font-size:40px;line-height:1.1;letter-spacing:-0.015em;max-width:22ch">Como una academia de verdad, no una lista de videos</h2>
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:24px;margin-top:44px">
+        <div style="background:#fff;border-radius:16px;padding:28px;box-shadow:0 2px 12px rgba(14,27,46,0.06)">
+          <p style="margin:0;font-family:'Bricolage Grotesque',sans-serif;font-weight:800;font-size:40px;color:#1D6BF3">1</p>
+          <h3 style="margin:12px 0 0;font-family:'Bricolage Grotesque',sans-serif;font-weight:700;font-size:20px">Niveles que se desbloquean</h3>
+          <p style="margin:10px 0 0;font-size:15px;line-height:1.65;color:#4A5A6E">Avanzas por una ruta clara. Cada nivel se abre al aprobar el examen del anterior; los aprobados quedan para repaso.</p>
+        </div>
+        <div style="background:#fff;border-radius:16px;padding:28px;box-shadow:0 2px 12px rgba(14,27,46,0.06)">
+          <p style="margin:0;font-family:'Bricolage Grotesque',sans-serif;font-weight:800;font-size:40px;color:#1D6BF3">2</p>
+          <h3 style="margin:12px 0 0;font-family:'Bricolage Grotesque',sans-serif;font-weight:700;font-size:20px">Exámenes con revisión personal</h3>
+          <p style="margin:10px 0 0;font-size:15px;line-height:1.65;color:#4A5A6E">Teoría automática más un video tuyo tocando, que Diego revisa y comenta. Retroalimentación real, no un quiz.</p>
+        </div>
+        <div style="background:#fff;border-radius:16px;padding:28px;box-shadow:0 2px 12px rgba(14,27,46,0.06)">
+          <p style="margin:0;font-family:'Bricolage Grotesque',sans-serif;font-weight:800;font-size:40px;color:#1D6BF3">3</p>
+          <h3 style="margin:12px 0 0;font-family:'Bricolage Grotesque',sans-serif;font-weight:700;font-size:20px">Certificado verificable</h3>
+          <p style="margin:10px 0 0;font-size:15px;line-height:1.65;color:#4A5A6E">Cada nivel aprobado te da un certificado PDF con código público de verificación. Tuyo para siempre.</p>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <section id="simulador" style="background:#0E1B2E;margin-top:88px">
+    <div style="max-width:1200px;margin:0 auto;padding:80px 48px;display:grid;grid-template-columns:1fr 1.15fr;gap:64px;align-items:center">
+      <div style="border-radius:16px;overflow:hidden;aspect-ratio:16/11;background:#E4EAF2"><image-slot id="sim-azul" shape="rect" placeholder="Captura del simulador de pisadas"></image-slot></div>
+      <div>
+        <p style="margin:0;font-size:13px;letter-spacing:0.16em;text-transform:uppercase;font-weight:600;color:#FFB01F">Solo aquí</p>
+        <h2 style="margin:16px 0 0;font-family:'Bricolage Grotesque',sans-serif;font-weight:800;font-size:40px;line-height:1.08;letter-spacing:-0.015em;color:#fff;max-width:19ch">El simulador de pisadas, sincronizado con el video</h2>
+        <p style="margin:20px 0 0;font-size:16px;line-height:1.7;color:rgba(255,255,255,0.8);max-width:52ch">Mientras corre la clase, el diagrama de tu acordeón resalta en tiempo real los botones que debes presionar — con la dirección del fuelle, porque un mismo botón suena distinto al abrir y al cerrar.</p>
+        <div style="display:flex;flex-direction:column;gap:12px;margin-top:24px;font-size:15px;color:rgba(255,255,255,0.9)">
+          <p style="margin:0">✓&nbsp; Velocidad ajustable (BPM) para practicar lento</p>
+          <p style="margin:0">✓&nbsp; Repetición de fragmento (loop A–B)</p>
+          <p style="margin:0">✓&nbsp; Diagramas por afinación: FBE, GCF y más</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div style="max-width:1200px;margin:0 auto;padding:0 48px">
+
+    <section id="cursos" style="padding:88px 0 0">
+      <div style="display:flex;justify-content:space-between;align-items:baseline;gap:24px">
+        <div>
+          <p style="margin:0 0 10px;font-size:13px;letter-spacing:0.14em;text-transform:uppercase;font-weight:600;color:#1552C4">Catálogo</p>
+          <h2 style="margin:0;font-family:'Bricolage Grotesque',sans-serif;font-weight:800;font-size:40px;letter-spacing:-0.015em">Cursos y tutoriales</h2>
+        </div>
+        <a href="#" style="font-size:15px;font-weight:600;text-decoration:none">Ver todo el catálogo →</a>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:24px;margin-top:40px">
+        <div style="background:#fff;border-radius:16px;box-shadow:0 2px 12px rgba(14,27,46,0.08);overflow:hidden;display:flex;flex-direction:column">
+          <div style="height:170px"><image-slot id="foto-curso-completo" shape="rect" placeholder="Foto del curso completo"></image-slot></div>
+          <div style="padding:20px 22px 22px;display:flex;flex-direction:column;flex:1">
+            <p style="margin:0;font-size:11px;letter-spacing:0.1em;text-transform:uppercase;font-weight:600;color:#6E7E92">Curso por niveles · Incluido en el plan</p>
+            <h3 style="margin:8px 0 0;font-family:'Bricolage Grotesque',sans-serif;font-weight:700;font-size:20px;line-height:1.2">Curso completo de acordeón vallenato</h3>
+            <p style="margin:10px 0 0;font-size:14px;line-height:1.6;color:#4A5A6E;flex:1">4 niveles · 96 clases · partituras y pistas. Del primer fuelle a tocar en la parranda.</p>
+            <button style="margin-top:18px;font-family:'Instrument Sans',sans-serif;font-weight:600;font-size:15px;background:#1D6BF3;color:#fff;border:none;border-radius:999px;padding:13px 24px;cursor:pointer;width:100%" style-hover="background:#1552C4">Empezar con el plan</button>
+          </div>
+        </div>
+        <div style="background:#fff;border-radius:16px;box-shadow:0 2px 12px rgba(14,27,46,0.08);overflow:hidden;display:flex;flex-direction:column">
+          <div style="height:170px;position:relative">
+            <image-slot id="foto-gota-fria" shape="rect" placeholder="Foto del tutorial"></image-slot>
+            <span style="position:absolute;top:12px;left:12px;font-size:12px;font-weight:600;background:#FFF3D6;color:#8a5f04;padding:5px 12px;border-radius:999px">Nuevo</span>
+          </div>
+          <div style="padding:20px 22px 22px;display:flex;flex-direction:column;flex:1">
+            <p style="margin:0;font-size:11px;letter-spacing:0.1em;text-transform:uppercase;font-weight:600;color:#6E7E92">Tutorial suelto · Acceso permanente</p>
+            <h3 style="margin:8px 0 0;font-family:'Bricolage Grotesque',sans-serif;font-weight:700;font-size:20px;line-height:1.2">La gota fría — paso a paso</h3>
+            <p style="margin:8px 0 0;font-size:13px;color:#4A5A6E">Dificultad <span style="color:#FFB01F">★★★☆☆</span> · 184 alumnos</p>
+            <p style="margin:10px 0 0;font-size:14px;line-height:1.6;color:#4A5A6E;flex:1">El clásico de Emiliano Zuleta frase por frase, con pitos y bajos por separado.</p>
+            <div style="margin-top:18px;display:flex;justify-content:space-between;align-items:center;gap:12px">
+              <p style="margin:0;font-family:'Bricolage Grotesque',sans-serif;font-weight:800;font-size:22px">$34.900</p>
+              <button style="font-family:'Instrument Sans',sans-serif;font-weight:600;font-size:15px;background:transparent;color:#16212E;border:1.5px solid #16212E;border-radius:999px;padding:11px 22px;cursor:pointer;white-space:nowrap" style-hover="background:#16212E;color:#fff">Comprar</button>
+            </div>
+          </div>
+        </div>
+        <div style="background:#fff;border-radius:16px;box-shadow:0 2px 12px rgba(14,27,46,0.08);overflow:hidden;display:flex;flex-direction:column">
+          <div style="height:170px"><image-slot id="foto-caminos" shape="rect" placeholder="Foto del tutorial"></image-slot></div>
+          <div style="padding:20px 22px 22px;display:flex;flex-direction:column;flex:1">
+            <p style="margin:0;font-size:11px;letter-spacing:0.1em;text-transform:uppercase;font-weight:600;color:#6E7E92">Tutorial suelto · Acceso permanente</p>
+            <h3 style="margin:8px 0 0;font-family:'Bricolage Grotesque',sans-serif;font-weight:700;font-size:20px;line-height:1.2">Los caminos de la vida — pitos y bajos</h3>
+            <p style="margin:8px 0 0;font-size:13px;color:#4A5A6E">Dificultad <span style="color:#FFB01F">★★☆☆☆</span> · 281 alumnos</p>
+            <p style="margin:10px 0 0;font-size:14px;line-height:1.6;color:#4A5A6E;flex:1">Independencia de manos con uno de los vallenatos más queridos. Incluye pista.</p>
+            <div style="margin-top:18px;display:flex;justify-content:space-between;align-items:center;gap:12px">
+              <p style="margin:0;font-family:'Bricolage Grotesque',sans-serif;font-weight:800;font-size:22px">$34.900</p>
+              <button style="font-family:'Instrument Sans',sans-serif;font-weight:600;font-size:15px;background:transparent;color:#16212E;border:1.5px solid #16212E;border-radius:999px;padding:11px 22px;cursor:pointer;white-space:nowrap" style-hover="background:#16212E;color:#fff">Comprar</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <p style="margin:18px 0 0;font-size:13px;color:#6E7E92">Compraste un tutorial: es tuyo para siempre. La suscripción da acceso a todo mientras esté vigente.</p>
+    </section>
+
+    <section id="planes" style="padding:88px 0 0">
+      <p style="margin:0 0 10px;font-size:13px;letter-spacing:0.14em;text-transform:uppercase;font-weight:600;color:#1552C4">Planes — precios visibles</p>
+      <h2 style="margin:0;font-family:'Bricolage Grotesque',sans-serif;font-weight:800;font-size:40px;letter-spacing:-0.015em">Elige cómo aprender</h2>
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:24px;margin-top:44px;align-items:stretch">
+        <div style="background:#fff;border-radius:16px;padding:28px;box-shadow:0 2px 12px rgba(14,27,46,0.06);display:flex;flex-direction:column">
+          <p style="margin:0;font-size:12px;letter-spacing:0.12em;text-transform:uppercase;font-weight:600;color:#6E7E92">Mensual</p>
+          <p style="margin:14px 0 0;font-family:'Bricolage Grotesque',sans-serif;font-weight:800;font-size:36px">$39.900<span style="font-size:15px;font-weight:400;color:#6E7E92"> /mes</span></p>
+          <p style="margin:14px 0 0;font-size:14px;line-height:1.65;color:#4A5A6E;flex:1">Todo el catálogo, exámenes y simulador mientras tu plan esté activo.</p>
+          <button style="margin-top:20px;font-family:'Instrument Sans',sans-serif;font-weight:600;font-size:15px;background:transparent;color:#16212E;border:1.5px solid #16212E;border-radius:999px;padding:13px 24px;cursor:pointer;width:100%" style-hover="background:#16212E;color:#fff">Elegir mensual</button>
+        </div>
+        <div style="background:#fff;border-radius:16px;padding:28px;box-shadow:0 8px 28px rgba(29,107,243,0.18);border:2px solid #1D6BF3;display:flex;flex-direction:column;position:relative">
+          <span style="position:absolute;top:-13px;left:22px;font-size:12px;font-weight:600;background:#FFB01F;color:#16212E;padding:5px 14px;border-radius:999px">Recomendado</span>
+          <p style="margin:0;font-size:12px;letter-spacing:0.12em;text-transform:uppercase;font-weight:600;color:#1552C4">Anual</p>
+          <p style="margin:14px 0 0;font-family:'Bricolage Grotesque',sans-serif;font-weight:800;font-size:36px">$349.900<span style="font-size:15px;font-weight:400;color:#6E7E92"> /año</span></p>
+          <p style="margin:14px 0 0;font-size:14px;line-height:1.65;color:#4A5A6E;flex:1">Lo mismo que el mensual pagando el año completo: ahorras más de dos meses.</p>
+          <button style="margin-top:20px;font-family:'Instrument Sans',sans-serif;font-weight:600;font-size:15px;background:#1D6BF3;color:#fff;border:none;border-radius:999px;padding:14px 24px;cursor:pointer;width:100%" style-hover="background:#1552C4">Elegir anual</button>
+        </div>
+        <div style="background:#fff;border-radius:16px;padding:28px;box-shadow:0 2px 12px rgba(14,27,46,0.06);display:flex;flex-direction:column">
+          <p style="margin:0;font-size:12px;letter-spacing:0.12em;text-transform:uppercase;font-weight:600;color:#6E7E92">Curso suelto</p>
+          <p style="margin:14px 0 0;font-family:'Bricolage Grotesque',sans-serif;font-weight:800;font-size:36px">desde $34.900</p>
+          <p style="margin:14px 0 0;font-size:14px;line-height:1.65;color:#4A5A6E;flex:1">Un tutorial específico, pago único y acceso permanente. Sin suscripción.</p>
+          <button style="margin-top:20px;font-family:'Instrument Sans',sans-serif;font-weight:600;font-size:15px;background:transparent;color:#16212E;border:1.5px solid #16212E;border-radius:999px;padding:13px 24px;cursor:pointer;width:100%" style-hover="background:#16212E;color:#fff">Ver catálogo</button>
+        </div>
+      </div>
+      <sc-if value="{{ notaPrecios }}" hint-placeholder-val="{{ true }}">
+        <p style="margin:18px 0 0;font-size:13px;color:#6E7E92">Precios provisionales en COP, pendientes de definición. Pago con PSE, Nequi y tarjetas.</p>
+      </sc-if>
+    </section>
+
+    <section style="padding:88px 0;max-width:800px">
+      <p style="margin:0 0 10px;font-size:13px;letter-spacing:0.14em;text-transform:uppercase;font-weight:600;color:#1552C4">Alumnos</p>
+      <blockquote style="margin:0;font-family:'Bricolage Grotesque',sans-serif;font-weight:700;font-size:26px;line-height:1.4">«Llevaba años viendo videos sueltos sin avanzar. Aquí en tres meses aprobé el nivel 1 y Diego me corrigió el fuelle en el examen.»</blockquote>
+      <p style="margin:16px 0 0;font-size:13px;letter-spacing:0.1em;text-transform:uppercase;font-weight:600;color:#6E7E92">Alumno del nivel 2 · Acordeón</p>
+    </section>
+  </div>
+
+  <footer style="background:#0E1B2E">
+    <div style="max-width:1200px;margin:0 auto;padding:72px 48px 56px">
+      <div style="display:flex;justify-content:space-between;gap:48px;align-items:flex-start;flex-wrap:wrap">
+        <div>
+          <h2 style="margin:0;font-family:'Bricolage Grotesque',sans-serif;font-weight:800;font-size:42px;line-height:1.08;letter-spacing:-0.015em;color:#fff;max-width:17ch">Tu primera canción está <span style="background:linear-gradient(180deg, transparent 76%, rgba(255,176,31,0.95) 76%)">más cerca</span> de lo que crees.</h2>
+          <div style="display:flex;gap:14px;margin-top:28px;flex-wrap:wrap">
+            <button style="font-family:'Instrument Sans',sans-serif;font-weight:600;font-size:16px;background:#1D6BF3;color:#fff;border:none;border-radius:999px;padding:15px 30px;cursor:pointer;white-space:nowrap" style-hover="background:#1552C4">Registrarme gratis</button>
+            <button style="font-family:'Instrument Sans',sans-serif;font-weight:600;font-size:16px;background:transparent;color:#fff;border:1.5px solid rgba(255,255,255,0.4);border-radius:999px;padding:14px 30px;cursor:pointer;white-space:nowrap" style-hover="border-color:#fff">Hablar por WhatsApp</button>
+          </div>
+        </div>
+        <div style="font-size:14px;line-height:2.2;color:rgba(255,255,255,0.65)">
+          <p style="margin:0;font-weight:600;color:#fff">Academia Diego Romero</p>
+          <p style="margin:0">diegoromeroacordeon.com</p>
+          <p style="margin:0"><a href="#" style="color:rgba(255,255,255,0.65)">Términos y condiciones</a> · <a href="#" style="color:rgba(255,255,255,0.65)">Reembolsos</a></p>
+          <p style="margin:0"><a href="#" style="color:rgba(255,255,255,0.65)">Verificar certificado</a></p>
+          <p style="margin:0">YouTube @DiegoRomeroAcordeon · Facebook · Instagram</p>
+        </div>
+      </div>
+      <p style="margin:48px 0 0;padding-top:24px;border-top:1px solid rgba(255,255,255,0.12);font-size:12px;color:rgba(255,255,255,0.4)">© 2026 Academia Diego Romero. Todos los derechos reservados.</p>
+    </div>
+  </footer>
+
+  <sc-if value="{{ whatsapp }}" hint-placeholder-val="{{ true }}">
+    <a href="https://api.whatsapp.com/send/?text=Hola%2C+quiero+aprender+acorde%C3%B3n" target="_blank" rel="noopener" style="position:fixed;right:24px;bottom:24px;display:inline-flex;align-items:center;gap:10px;background:#25D366;color:#fff;text-decoration:none;font-weight:600;font-size:15px;padding:14px 22px;border-radius:999px;box-shadow:0 6px 20px rgba(14,27,46,0.25)" style-hover="background:#1DA851"><svg width="20" height="20" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path opacity="0.3" d="M128,32A96,96,0,0,0,45.4,176.6L36,213.7a8,8,0,0,0,9.7,9.7l37.1-9.4A96,96,0,1,0,128,32Z"/><path d="M128,24A104,104,0,0,0,36.8,178L28.4,211.2a16,16,0,0,0,19.5,19.5L81.1,222A104,104,0,1,0,128,24Zm0,192a88,88,0,0,1-44.9-12.3,8,8,0,0,0-6.1-.8l-36.5,9.2,9.2-36.5a8,8,0,0,0-.8-6.1A88,88,0,1,1,128,216Zm50.5-66.6-23.1-11.5a8,8,0,0,0-8,.5l-11.4,7.6a44.2,44.2,0,0,1-26.5-26.5l7.6-11.4a8,8,0,0,0,.5-8L106.1,77.5A8,8,0,0,0,99,73H80a8,8,0,0,0-8,8,104.1,104.1,0,0,0,104,104,8,8,0,0,0,8-8V158A8,8,0,0,0,178.5,149.4Z"/></svg>Escríbenos</a>
+  </sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;whatsappFlotante&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Landing&quot;},&quot;notaPreciosProvisionales&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Landing&quot;}}">
+class Component extends DCLogic {
+  renderVals() {
+    return {
+      whatsapp: this.props.whatsappFlotante ?? true,
+      notaPrecios: this.props.notaPreciosProvisionales ?? true
+    };
+  }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,30 @@
+# PostgreSQL para desarrollo local.
+#
+# Las pruebas NO usan este contenedor: levantan el suyo con Testcontainers, efimero y
+# aislado (docs/05 §5). Este es solo para correr la aplicacion en local.
+#
+#   docker compose up -d
+#   docker compose down          (conserva los datos)
+#   docker compose down -v       (borra los datos)
+
+services:
+  postgres:
+    image: postgres:17-alpine
+    container_name: academia-postgres
+    environment:
+      POSTGRES_DB: academia
+      POSTGRES_USER: academia
+      # Credencial local y desechable. No sirve en ningun otro entorno.
+      POSTGRES_PASSWORD: academia_local
+    ports:
+      - "5432:5432"
+    volumes:
+      - datos-postgres:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U academia -d academia"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  datos-postgres:

@@ -1,0 +1,69 @@
+@use 'tokens' as t;
+
+// Mezclas compartidas del sistema visual. Se usan desde los componentes del catalogo
+// para que las decisiones de forma vivan en un solo sitio.
+
+/// Contenedor centrado con el ancho y los margenes del diseno aprobado.
+@mixin contenedor {
+  width: 100%;
+  max-width: var(--adr-contenedor-max);
+  margin-inline: auto;
+  padding-inline: var(--adr-contenedor-padding);
+
+  @include en-movil {
+    padding-inline: var(--adr-espacio-5);
+  }
+}
+
+/// Anillo de foco visible. docs/04 §5: nunca se elimina el outline sin reemplazarlo,
+/// porque quien navega con teclado deja de saber donde esta.
+@mixin foco-visible {
+  &:focus-visible {
+    outline: 2px solid var(--adr-color-azul-rey);
+    outline-offset: 2px;
+  }
+}
+
+/// Superficie de tarjeta estandar.
+@mixin tarjeta {
+  background: var(--adr-color-blanco);
+  border: 1px solid var(--adr-color-borde-divisor);
+  border-radius: var(--adr-radio-tarjeta);
+  box-shadow: var(--adr-sombra-tarjeta);
+}
+
+/// Texto en mayusculas de caption o kicker.
+@mixin caption {
+  font-family: var(--adr-fuente-cuerpo);
+  font-size: var(--adr-texto-caption);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: var(--adr-espaciado-letra-caption);
+}
+
+/// Titular con la tipografia de marca.
+@mixin titular($tamanio: var(--adr-texto-seccion)) {
+  font-family: var(--adr-fuente-titular);
+  font-size: $tamanio;
+  font-weight: 800;
+  line-height: var(--adr-interlineado-titulo);
+  letter-spacing: var(--adr-espaciado-letra-titulo);
+}
+
+/// Gesto de marca: subrayado mango sobre la palabra clave de un titular.
+/// Una vez por pantalla como maximo; repetido pierde todo su efecto.
+@mixin subrayado-mango {
+  background: linear-gradient(180deg, transparent 76%, rgb(255 176 31 / 95%) 76%);
+}
+
+@mixin en-movil {
+  @media (width < #{t.$adr-quiebre-movil}) {
+    @content;
+  }
+}
+
+@mixin en-escritorio {
+  @media (width >= #{t.$adr-quiebre-escritorio}) {
+    @content;
+  }
+}

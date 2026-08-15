@@ -1,0 +1,111 @@
+@use 'mixins' as m;
+
+.adr-modal__velo {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--adr-espacio-5);
+
+  background: var(--adr-velo-modal);
+}
+
+.adr-modal__caja {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-height: calc(100vh - var(--adr-espacio-8));
+
+  background: var(--adr-color-blanco);
+  border-radius: var(--adr-radio-tarjeta);
+  box-shadow: var(--adr-sombra-flotante);
+
+  &--sm {
+    max-width: var(--adr-modal-sm);
+  }
+
+  &--md {
+    max-width: var(--adr-modal-md);
+  }
+
+  &--lg {
+    max-width: var(--adr-modal-lg);
+  }
+}
+
+.adr-modal__encabezado {
+  display: flex;
+  gap: var(--adr-espacio-4);
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--adr-espacio-5);
+  border-bottom: 1px solid var(--adr-color-borde-divisor);
+}
+
+.adr-modal__titulo {
+  font-family: var(--adr-fuente-titular);
+  font-size: var(--adr-texto-tarjeta);
+  font-weight: 700;
+  letter-spacing: var(--adr-espaciado-letra-titulo);
+}
+
+.adr-modal__cerrar {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  // 40px es el minimo comodo para un control de esquina sin desbalancear el encabezado.
+  width: 40px;
+  height: 40px;
+
+  color: var(--adr-color-texto-atenuado);
+  cursor: pointer;
+
+  background: transparent;
+  border: 0;
+  border-radius: var(--adr-radio-pastilla);
+
+  @include m.foco-visible;
+
+  &:hover {
+    color: var(--adr-color-tinta);
+    background: var(--adr-color-niebla);
+  }
+}
+
+// Unica zona con desplazamiento: el encabezado y el pie quedan siempre visibles.
+.adr-modal__cuerpo {
+  flex: 1;
+  padding: var(--adr-espacio-5);
+  overflow-y: auto;
+}
+
+// Acciones alineadas a la derecha, primaria siempre al final.
+.adr-modal__pie {
+  display: flex;
+  gap: var(--adr-espacio-3);
+  justify-content: flex-end;
+  padding: var(--adr-espacio-5);
+  border-top: 1px solid var(--adr-color-borde-divisor);
+
+  &:empty {
+    display: none;
+  }
+}
+
+// En movil el modal se ancla abajo y ocupa el ancho completo (docs/04 §6).
+@include m.en-movil {
+  .adr-modal__velo {
+    align-items: flex-end;
+    padding: 0;
+  }
+
+  .adr-modal__caja {
+    max-width: none;
+    max-height: 90vh;
+    border-radius: var(--adr-radio-tarjeta) var(--adr-radio-tarjeta) 0 0;
+  }
+}

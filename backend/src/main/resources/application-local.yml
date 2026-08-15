@@ -1,0 +1,41 @@
+## Perfil de desarrollo local.
+##
+## Apunta al PostgreSQL de docker-compose.yml (raiz del repositorio). Las credenciales de
+## aqui son locales y desechables: no sirven en ningun otro entorno.
+
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/academia
+    username: academia
+    password: academia_local
+
+server:
+  error:
+    # En local si conviene ver el detalle: acorta el diagnostico.
+    include-message: always
+    include-stacktrace: on_param
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics,configprops,env
+  endpoint:
+    health:
+      show-details: always
+
+logging:
+  level:
+    com.academiadiegoromero: DEBUG
+    org.hibernate.SQL: DEBUG
+
+academia:
+  api:
+    origenes-permitidos: http://localhost:4200
+
+  # En local se pueden encender las fases en construccion sin tocar produccion.
+  funcionalidades:
+    examenes-habilitados: true
+    certificados-habilitados: true
+    simulador-habilitado: true
+    tienda-habilitada: true

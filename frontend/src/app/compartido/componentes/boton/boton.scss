@@ -1,0 +1,98 @@
+@use 'mixins' as m;
+
+:host {
+  display: inline-flex;
+}
+
+:host(.bloque),
+.adr-boton--ancho-completo {
+  width: 100%;
+}
+
+.adr-boton {
+  display: inline-flex;
+  gap: var(--adr-espacio-2);
+  align-items: center;
+  justify-content: center;
+
+  // 48px es tambien el minimo tactil accesible: una sola medida cubre ambas cosas.
+  min-height: var(--adr-altura-control);
+  padding: 13px var(--adr-espacio-5);
+
+  font-family: var(--adr-fuente-cuerpo);
+  font-size: var(--adr-texto-ui);
+  font-weight: 600;
+  white-space: nowrap;
+  cursor: pointer;
+
+  background: transparent;
+  border: 1.5px solid transparent;
+  border-radius: var(--adr-radio-pastilla);
+
+  transition:
+    background-color 0.15s ease,
+    border-color 0.15s ease,
+    color 0.15s ease;
+
+  @include m.foco-visible;
+
+  &:disabled {
+    cursor: not-allowed;
+    opacity: 0.5;
+  }
+
+  &--ancho-completo {
+    width: 100%;
+  }
+}
+
+// El azul rey es la unica tinta de accion.
+.adr-boton--primario {
+  color: var(--adr-color-blanco);
+  background: var(--adr-color-azul-rey);
+
+  &:hover:not(:disabled) {
+    background: var(--adr-color-azul-profundo);
+  }
+}
+
+.adr-boton--secundario {
+  color: var(--adr-color-tinta);
+  border-color: var(--adr-color-tinta);
+
+  &:hover:not(:disabled) {
+    color: var(--adr-color-blanco);
+    background: var(--adr-color-tinta);
+  }
+}
+
+.adr-boton--fantasma {
+  color: var(--adr-color-azul-profundo);
+
+  &:hover:not(:disabled) {
+    background: var(--adr-tinte-azul-fondo);
+  }
+}
+
+.adr-boton--sobre-oscuro {
+  color: var(--adr-color-blanco);
+  border-color: var(--adr-oscuro-borde-fuerte);
+
+  &:hover:not(:disabled) {
+    border-color: var(--adr-color-blanco);
+  }
+}
+
+// Solo para acciones destructivas confirmadas. No aparece en pantallas de alumno.
+.adr-boton--peligro {
+  color: var(--adr-color-blanco);
+  background: var(--adr-color-peligro);
+
+  &:hover:not(:disabled) {
+    background: var(--adr-color-peligro-hover);
+  }
+}
+
+.adr-boton--cargando .adr-boton__texto {
+  opacity: 0.7;
+}

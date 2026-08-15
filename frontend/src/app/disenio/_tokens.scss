@@ -1,0 +1,125 @@
+// ============================================================================
+// Sistema visual «Azul rey» — tokens
+//
+// Fuente: handoff de diseno aprobado (docs/handoff-disenio) y docs/04 §1.
+// Estos valores son FINALES. Regla 15: ningun componente escribe un color, radio o
+// sombra literal; todo se consume desde aqui. Un #1D6BF3 escrito a mano en un .scss
+// es un defecto de revision, porque es lo que hace que la interfaz derive.
+//
+// Proponer un valor nuevo requiere un ADR.
+// ============================================================================
+
+:root {
+  // ---------- Superficies ----------
+  --adr-color-niebla: #f6f8fb; // fondo de pagina
+  --adr-color-blanco: #ffffff; // tarjetas
+  --adr-color-noche-azul: #0e1b2e; // heroe, simulador, pie
+
+  // ---------- Texto ----------
+  --adr-color-tinta: #16212e; // texto principal
+  --adr-color-texto-secundario: #4a5a6e; // parrafos sobre claro
+  --adr-color-texto-atenuado: #6e7e92; // captions, metadatos
+
+  // ---------- Accion ----------
+  // Regla de color 1: el azul rey es la UNICA tinta de accion.
+  // Si algo se puede clicar, es azul.
+  --adr-color-azul-rey: #1d6bf3;
+  --adr-color-azul-profundo: #1552c4; // hover, enlaces de texto
+
+  // ---------- Acento y estado ----------
+  // Regla de color 2: el mango NUNCA va en un boton. Solo subrayados, estrellas
+  // de dificultad y etiquetas «Nuevo» / «Recomendado».
+  --adr-color-mango: #ffb01f;
+  // Regla de color 3: el verde solo comunica progreso o aprobacion.
+  --adr-color-exito: #1f9d66;
+  --adr-color-whatsapp: #25d366;
+  --adr-color-whatsapp-hover: #1da851;
+
+  // DERIVADO, no viene del handoff aprobado: el sistema «Azul rey» no define un rojo
+  // porque la landing no tiene acciones destructivas. Hace falta para confirmaciones del
+  // panel de administracion (borrar, suspender). Pendiente de validacion de diseno.
+  --adr-color-peligro: #c1443f;
+  --adr-color-peligro-hover: #a3352f;
+
+  // ---------- Bordes ----------
+  --adr-color-borde-divisor: #dce3ec;
+  --adr-color-borde-suave: #c0cbd9;
+
+  // ---------- Tintes de etiqueta ----------
+  --adr-tinte-azul-fondo: #e3edfe;
+  --adr-tinte-azul-texto: #134bb8;
+  --adr-tinte-mango-fondo: #fff3d6;
+  --adr-tinte-mango-texto: #8a5f04;
+  --adr-tinte-verde-fondo: #dff0e8;
+  --adr-tinte-verde-texto: #17603f;
+  --adr-color-pista-barra: #e4eaf2;
+
+  // ---------- Sobre fondo oscuro ----------
+  --adr-oscuro-texto-fuerte: rgb(255 255 255 / 85%);
+  --adr-oscuro-texto-suave: rgb(255 255 255 / 65%);
+  --adr-oscuro-borde: rgb(255 255 255 / 12%);
+  --adr-oscuro-borde-fuerte: rgb(255 255 255 / 40%);
+
+  // ---------- Tipografia ----------
+  --adr-fuente-titular: 'Bricolage Grotesque', system-ui, -apple-system, sans-serif;
+  --adr-fuente-cuerpo: 'Instrument Sans', system-ui, -apple-system, sans-serif;
+
+  --adr-texto-display: 64px;
+  --adr-texto-seccion: 40px;
+  --adr-texto-cifra: 32px;
+  --adr-texto-tarjeta: 20px;
+  --adr-texto-cuerpo: 16px;
+  --adr-texto-ui: 15px;
+  --adr-texto-caption: 12px;
+
+  --adr-interlineado-display: 1.02;
+  --adr-interlineado-titulo: 1.2;
+  --adr-interlineado-cuerpo: 1.6;
+
+  --adr-espaciado-letra-display: -0.02em;
+  --adr-espaciado-letra-titulo: -0.015em;
+  --adr-espaciado-letra-caption: 0.12em;
+
+  // ---------- Forma ----------
+  --adr-radio-tarjeta: 16px;
+  --adr-radio-tarjeta-curso: 14px;
+  --adr-radio-pastilla: 999px;
+
+  // ---------- Sombra ----------
+  --adr-sombra-tarjeta: 0 2px 12px rgb(14 27 46 / 6%);
+  --adr-sombra-tarjeta-alta: 0 2px 12px rgb(14 27 46 / 8%);
+  --adr-sombra-destacado: 0 8px 28px rgb(29 107 243 / 18%);
+  --adr-sombra-flotante: 0 6px 20px rgb(14 27 46 / 25%);
+  --adr-velo-modal: rgb(14 27 46 / 50%);
+
+  // ---------- Espaciado ----------
+  // Escala base 4px derivada del diseno aprobado. No se usan valores fuera de ella.
+  --adr-espacio-1: 4px;
+  --adr-espacio-2: 8px;
+  --adr-espacio-3: 12px;
+  --adr-espacio-4: 16px;
+  --adr-espacio-5: 24px;
+  --adr-espacio-6: 32px;
+  --adr-espacio-7: 48px;
+  --adr-espacio-8: 64px;
+  --adr-espacio-9: 88px;
+
+  // ---------- Disposicion ----------
+  --adr-contenedor-max: 1200px;
+  --adr-contenedor-padding: 48px;
+  --adr-separacion-seccion: 88px;
+
+  // Altura minima de todo objetivo tactil (docs/04 §5). Coincide con la altura de boton.
+  --adr-altura-control: 48px;
+
+  // ---------- Anchos de modal (docs/04 §4). Nada intermedio. ----------
+  --adr-modal-sm: 420px;
+  --adr-modal-md: 560px;
+  --adr-modal-lg: 760px;
+  --adr-panel-lateral: 420px;
+}
+
+// Punto de quiebre movil. Mobile first: la mayoria del trafico llega desde YouTube
+// en celular (especificacion §14.1).
+$adr-quiebre-movil: 768px;
+$adr-quiebre-escritorio: 1200px;

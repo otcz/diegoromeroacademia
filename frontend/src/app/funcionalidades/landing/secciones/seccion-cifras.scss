@@ -1,0 +1,41 @@
+@use 'mixins' as m;
+
+.cifras {
+  position: relative;
+  z-index: 2;
+}
+
+.cifras__tarjeta {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--adr-espacio-5);
+
+  // Solape sobre el heroe. -24px esta en la escala; -40 y -44 no.
+  margin-top: calc(-1 * var(--adr-espacio-5));
+  padding: var(--adr-espacio-5);
+
+  background: var(--adr-color-blanco);
+  border: 1px solid var(--adr-color-borde-divisor);
+  border-radius: var(--adr-radio-tarjeta);
+  box-shadow: var(--adr-sombra-tarjeta-alta);
+}
+
+.cifras__procedencia {
+  margin-top: var(--adr-espacio-3);
+  font-size: var(--adr-texto-caption);
+  color: var(--adr-color-texto-atenuado);
+}
+
+@include m.desde-tableta {
+  .cifras__tarjeta {
+    grid-template-columns: repeat(4, 1fr);
+    margin-top: calc(-1 * var(--adr-espacio-7));
+    padding-inline: var(--adr-espacio-6);
+  }
+
+  // Divisores entre columnas, no alrededor: la primera no lleva.
+  .cifras__tarjeta adr-dato + adr-dato {
+    padding-left: var(--adr-espacio-5);
+    border-left: 1px solid var(--adr-color-borde-divisor);
+  }
+}

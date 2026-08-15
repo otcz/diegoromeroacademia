@@ -1,0 +1,35 @@
+@use 'mixins' as m;
+
+.planes {
+  background: var(--adr-color-niebla);
+}
+
+.planes__rejilla {
+  display: grid;
+  gap: var(--adr-espacio-5);
+  align-items: stretch;
+}
+
+.planes__garantias {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--adr-espacio-2);
+  margin-top: var(--adr-espacio-6);
+  list-style: none;
+}
+
+.planes__garantia {
+  padding: var(--adr-espacio-2) var(--adr-espacio-4);
+  font-size: var(--adr-texto-caption);
+  font-weight: 600;
+  color: var(--adr-color-texto-secundario);
+  background: var(--adr-color-blanco);
+  border: 1px solid var(--adr-color-borde-divisor);
+  border-radius: var(--adr-radio-pastilla);
+}
+
+@include m.desde-tableta {
+  .planes__rejilla {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}

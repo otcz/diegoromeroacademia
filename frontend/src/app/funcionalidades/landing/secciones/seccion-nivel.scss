@@ -1,0 +1,62 @@
+@use 'mixins' as m;
+
+.nivel__encabezado {
+  margin-bottom: var(--adr-espacio-6);
+}
+
+.nivel__pasos {
+  display: grid;
+  gap: var(--adr-espacio-5);
+}
+
+.nivel__paso {
+  display: flex;
+  gap: var(--adr-espacio-4);
+  align-items: flex-start;
+}
+
+.nivel__marca {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  width: 56px;
+  height: 56px;
+  color: var(--adr-color-azul-rey);
+  background: var(--adr-tinte-azul-fondo);
+  border-radius: var(--adr-radio-pastilla);
+}
+
+.nivel__paso-titulo {
+  margin-bottom: var(--adr-espacio-2);
+  font-family: var(--adr-fuente-titular);
+  font-size: var(--adr-texto-tarjeta);
+  font-weight: 700;
+}
+
+@include m.desde-tableta {
+  .nivel__encabezado {
+    text-align: center;
+  }
+
+  .nivel__titulo {
+    margin-inline: auto;
+  }
+
+  // Sin cajas: solo divisores. Es lo que la hace leer como paso y no como tarjetas.
+  .nivel__pasos {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0;
+  }
+
+  .nivel__paso {
+    flex-direction: column;
+    align-items: center;
+    padding-inline: var(--adr-espacio-5);
+    text-align: center;
+  }
+
+  .nivel__paso + .nivel__paso {
+    border-left: 1px solid var(--adr-color-borde-divisor);
+  }
+}

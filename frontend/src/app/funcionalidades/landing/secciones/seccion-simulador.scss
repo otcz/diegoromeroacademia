@@ -1,0 +1,58 @@
+@use 'mixins' as m;
+
+.simulador__rejilla {
+  display: grid;
+  gap: var(--adr-espacio-6);
+  align-items: center;
+}
+
+// Diagrama de botones dibujado con tokens: la geometria de la propia marca.
+.simulador__diagrama {
+  display: flex;
+  flex-direction: column;
+  gap: var(--adr-espacio-3);
+}
+
+.simulador__hilera {
+  display: flex;
+  gap: var(--adr-espacio-3);
+}
+
+.simulador__boton {
+  width: 20px;
+  height: 20px;
+  background: transparent;
+  border: 2px solid var(--adr-color-borde-suave);
+  border-radius: var(--adr-radio-pastilla);
+}
+
+.simulador__boton--activo {
+  background: var(--adr-color-azul-rey);
+  border-color: var(--adr-color-azul-rey);
+}
+
+// Chips neutros sobre oscuro. NO checks verdes: el verde solo comunica progreso o
+// aprobacion, y aqui son caracteristicas (regla de color 3).
+.simulador__chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--adr-espacio-2);
+  margin-top: var(--adr-espacio-5);
+  list-style: none;
+}
+
+.simulador__chip {
+  padding: var(--adr-espacio-2) var(--adr-espacio-4);
+  font-size: var(--adr-texto-caption);
+  font-weight: 600;
+  color: var(--adr-oscuro-texto-fuerte);
+  border: 1px solid var(--adr-oscuro-borde-fuerte);
+  border-radius: var(--adr-radio-pastilla);
+}
+
+@include m.desde-tableta {
+  .simulador__rejilla {
+    grid-template-columns: 1fr 1fr;
+    gap: var(--adr-espacio-7);
+  }
+}

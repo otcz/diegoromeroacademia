@@ -1,0 +1,13 @@
+@use 'mixins' as m;
+
+.prueba__rejilla {
+  display: grid;
+  gap: var(--adr-espacio-5);
+  align-items: stretch;
+}
+
+@include m.desde-tableta {
+  .prueba__rejilla {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}

@@ -38,10 +38,19 @@ const KICKER_FOTO = 'Escuela de acordeón vallenato';
 /**
  * Redes sociales, al pie de la foto.
  *
- * <p>Hoy solo YouTube: es el unico destino que se ha podido verificar. Los otros cuatro
- * —TikTok, Facebook, X e Instagram— entran en cuanto el propietario pase sus usuarios.
- * Inventarlos llevaria al alumno al perfil de otra persona con el logotipo de la academia
- * al lado, que es peor que no ofrecer el enlace.
+ * <p><b>Cuanto se comprobo de cada uno.</b> No se inventan: se probaron contra un usuario
+ * FALSO para ver si la red distingue.
+ *
+ * <ul>
+ *   <li>YouTube — verificado: la pagina declara «Diego Romero Acordeon».
+ *   <li>Facebook — verificado que EXISTE: 200 para este usuario y 400 para uno inventado.
+ *   <li>TikTok e Instagram — <b>sin verificar</b>. Responden 200 y el mismo titulo generico
+ *       tanto para el usuario real como para uno inventado, asi que su respuesta no prueba
+ *       nada. Van con el usuario unificado del material grafico del propietario, pendientes
+ *       de que el los confirme.
+ * </ul>
+ *
+ * <p>X queda fuera: el mismo usuario da 404, o sea que esa cuenta no existe.
  */
 export interface RedSocial {
   readonly marca: NombreMarca;
@@ -50,7 +59,10 @@ export interface RedSocial {
 }
 
 const REDES: readonly RedSocial[] = [
-  { marca: 'youtube', nombre: 'YouTube', url: 'https://youtube.com/@DiegoRomeroAcordeon' },
+  { marca: 'youtube', nombre: 'YouTube', url: 'https://www.youtube.com/@DiegoRomeroAcordeon' },
+  { marca: 'tiktok', nombre: 'TikTok', url: 'https://www.tiktok.com/@diegoromeroacordeon' },
+  { marca: 'facebook', nombre: 'Facebook', url: 'https://www.facebook.com/DiegoRomeroAcordeon' },
+  { marca: 'instagram', nombre: 'Instagram', url: 'https://www.instagram.com/diegoromeroacordeon' },
 ];
 
 /** Longitud minima de contrasena aceptada por el formulario. La real la impone el backend. */

@@ -370,19 +370,28 @@ adr-alerta {
   }
 }
 
-// Rotulo de la esquina superior de la foto. Pequenio y espaciado: nombra el sitio sin
-// competir con el titular, que es quien tiene que llevarse la mirada.
+// Rotulo de la esquina superior de la foto.
+//
+// Sube de 10 a 13 px y gana una pastilla translucida detras. Suelto sobre la foto se perdia:
+// a ese tamanio y sobre una imagen con zonas claras, un texto espaciado se lee como parte del
+// fondo. La pastilla lo despega sin taparlo, y de paso le garantiza el contraste — sobre una
+// foto no se mide pixel a pixel, se apoya el texto en una superficie propia.
 .acceso__kicker {
   position: absolute;
   z-index: 1;
   top: var(--adr-espacio-6);
   left: var(--adr-espacio-6);
-  max-width: 60%;
-  font-size: 10px;
-  font-weight: 600;
-  color: var(--adr-oscuro-texto-fuerte);
+  max-width: 70%;
+  padding: 7px 14px;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--adr-color-blanco);
   text-transform: uppercase;
-  letter-spacing: 0.18em;
+  letter-spacing: 0.14em;
+  background: rgb(8 6 20 / 55%);
+  border: 1px solid rgb(255 255 255 / 14%);
+  border-radius: var(--adr-radio-pastilla);
+  backdrop-filter: blur(8px);
 }
 
 // Redes al pie de la foto. Lista de verdad, no una fila de imagenes sueltas: son enlaces

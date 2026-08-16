@@ -91,10 +91,19 @@ const TRABAJOS = [
     // existe para hermanarlas. Esto no es una foto: es una pieza terminada por el disenador
     // del propietario. Bajarle la saturacion y meterle velo seria retocar el trabajo de otro
     // — y ademas el contraste extra ensucia el borde negro de las letras.
-    origen: 'afiche-estudio-academico.png',
+    //
+    // <b>Se usa la version 3:4 y no el 9:16 original</b>, que sigue en la carpeta como
+    // maestro. El propietario extendio el fondo a los lados por su cuenta, y esa extension
+    // hecha en el afiche es mejor que la que hacia la pagina con un desenfoque en CSS: la
+    // controla quien diseño la pieza. A 3:4 la columna vuelve a medir el 42% de una pantalla
+    // 16:9, que es la proporcion con la que nacio esta pantalla.
+    //
+    // Existe tambien una version 1:1. Se descarto porque a la altura de la ventana pediria
+    // el 56% del ancho: la imagen dejaria de acompaniar al formulario y pasaria a taparlo.
+    origen: 'afiche-academia-3x4.png',
     destino: 'afiche-academia.png',
-    ancho: 1080,
-    relacion: 1080 / 1920,
+    ancho: 1440,
+    relacion: 1440 / 1920,
     foco: { x: 0.5, y: 0.5 },
     zoom: 1,
     minimo: 1000,

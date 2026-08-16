@@ -3,7 +3,7 @@
 // La proporcion del afiche. Es lo unico del archivo que esta hoja necesita saber, y esta
 // aqui una sola vez: si el material grafico cambia de forma, se cambia este numero.
 .acceso {
-  --acceso-proporcion-afiche: calc(1080 / 1920);
+  --acceso-proporcion-afiche: calc(1440 / 1920);
 
   // La columna de la imagen mide LO QUE MIDE EL AFICHE a la altura de la ventana.
   //
@@ -13,12 +13,14 @@
   // el problema. Con la columna a la medida no sobra nada que tapar ni falta nada que
   // recortar, y por eso no hace falta ningun efecto.
   //
-  // El tope de 45vw es para las ventanas mas altas que anchas, donde la cuenta pediria una
+  // El tope de 50vw es para las ventanas mas altas que anchas, donde la cuenta pediria una
   // columna que se comeria el formulario. Alli el afiche se centra y lo que queda es azul
-  // noche liso — un margen, no un borron.
+  // noche liso — un margen, no un borron. Cincuenta y no cuarenta y cinco: a 3:4 la cuenta
+  // pide 675 px en una ventana de 1440x900 y un tope de 45vw la habria recortado a 648,
+  // devolviendo las bandas justo en la medida de pantalla mas comun.
   display: grid;
   grid-template-columns:
-    min(45vw, calc(100dvh * var(--acceso-proporcion-afiche)))
+    min(50vw, calc(100dvh * var(--acceso-proporcion-afiche)))
     minmax(0, 1fr);
   min-height: 100dvh;
 }

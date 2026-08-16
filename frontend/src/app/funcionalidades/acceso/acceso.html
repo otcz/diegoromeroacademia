@@ -1,41 +1,13 @@
 <main class="acceso">
   <!-- ==================================================== PANEL DE MARCA -->
-  <!-- Alterna Noche azul con el blanco del formulario, que es el ritmo que el sistema
-       usa en la landing (regla de color 4). -->
-  <!-- La ruta de la foto entra por variable CSS y no escrita en la hoja: las imagenes llevan
-       huella de contenido en el nombre, asi que el .scss quedaria desactualizado en cuanto se
-       cambiara la foto, y el fallo se veria como un hueco vacio sin error en consola. -->
-  <section class="acceso__marca" [style.--acceso-foto]="fotoDeFondo">
-    <a class="acceso__logo" href="/" aria-label="Academia Diego Romero — inicio">
-      <span class="acceso__logo-nombre">Diego Romero</span>
-      <span class="acceso__logo-bajada">Academia</span>
-    </a>
-
-    <div class="acceso__marca-cuerpo">
-      <h2 class="acceso__marca-titulo">
-        Sigue donde<br />
-        <span class="adr-subrayado">lo dejaste.</span>
-      </h2>
-      <!-- Cifras, no viñetas. Una promesa —«tus certificados no se pierden»— la escribe
-           cualquiera; un número con su procedencia se puede comprobar, y es lo que separa
-           una pantalla que convence de una que solo afirma. Los tres son verificables: los
-           seguidores en el canal, y niveles y clases contra el temario. -->
-      <dl class="acceso__cifras">
-        @for (cifra of cifras; track cifra.rotulo) {
-          <div class="acceso__cifra">
-            <dt class="acceso__cifra-valor">{{ cifra.valor }}</dt>
-            <dd class="acceso__cifra-rotulo">{{ cifra.rotulo }}</dd>
-          </div>
-        }
-      </dl>
-
-      <p class="acceso__procedencia">{{ procedencia }}</p>
-
-      <!-- Dentro del cuerpo, no suelto al final del panel: así el velo que garantiza el
-           contraste va pegado al bloque de texto y lo tapa entero, mida lo que mida. -->
-      <p class="acceso__marca-pie">{{ instrumentos.join(' · ') }}</p>
-    </div>
-  </section>
+  <!-- Solo la foto, a sangre. Sin una palabra encima: la imagen es lo único que hay aquí y
+       cualquier texto le quitaría sitio en vez de sumarle.
+       Por eso va como fondo y con `aria-hidden`: es decoración. Un lector de pantalla que la
+       anunciara solo añadiría ruido antes de llegar al formulario, que es a lo que se viene.
+       La ruta entra por variable CSS y no escrita en la hoja: las imágenes llevan huella de
+       contenido en el nombre, así que el .scss quedaría desactualizado en cuanto se cambiara
+       la foto, y el fallo se vería como un hueco vacío sin error en consola. -->
+  <div class="acceso__marca" aria-hidden="true" [style.--acceso-foto]="fotoDeFondo"></div>
 
   <!-- ====================================================== FORMULARIO -->
   <section class="acceso__panel">

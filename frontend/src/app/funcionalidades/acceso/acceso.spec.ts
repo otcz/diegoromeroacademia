@@ -80,22 +80,15 @@ describe('Acceso', () => {
     }
   });
 
-  it('debe meter TODO el texto de marca dentro del cuerpo, que es lo que lleva el velo', async () => {
+  it('NO debe poner texto en el panel de la foto: es decoracion y va oculto al lector', async () => {
     const fixture = await crear();
-    const cuerpo = fixture.nativeElement.querySelector('.acceso__marca-cuerpo');
+    const panel: HTMLElement = fixture.nativeElement.querySelector('.acceso__marca');
 
-    // El contraste sobre la foto no se consigue midiendo la imagen —cambia en cada pixel—
-    // sino tapandola donde hay letra, y el velo que la tapa es el fondo de ESTE bloque. Un
-    // texto colgado fuera queda sobre la foto limpia: legible o no segun la toma y segun el
-    // alto de la ventana. Paso de verdad con el pie de instrumentos, que estaba suelto.
-    for (const parte of ['titulo', 'cifras', 'procedencia', 'pie']) {
-      const clase = parte === 'cifras' ? '.acceso__cifras' : `.acceso__marca-${parte}`;
-      const elemento = fixture.nativeElement.querySelector(
-        parte === 'procedencia' ? '.acceso__procedencia' : clase,
-      );
-      expect(elemento, parte).not.toBeNull();
-      expect(cuerpo.contains(elemento), parte).toBe(true);
-    }
+    // Cualquier palabra que vuelva aqui queda sobre la foto sin velo que la respalde: su
+    // contraste pasaria a depender de los pixeles que le toquen detras y del tamanio de la
+    // ventana. Si hace falta texto, primero vuelve el velo — no al reves.
+    expect(panel.textContent?.trim()).toBe('');
+    expect(panel.getAttribute('aria-hidden')).toBe('true');
   });
 
   it('debe decir la verdad sobre como se abre una cuenta: entrando con Google', async () => {

@@ -7,167 +7,32 @@
 }
 
 // ------------------------------------------------------------ panel de marca
+//
+// Sin una palabra encima, el panel ES la foto. Por eso desaparecen el acolchado, el reparto
+// en columna y los dos velos: existian todos para que se leyera la letra, y ya no hay letra
+// que proteger. El unico requisito que queda es que la imagen llegue a los cuatro bordes.
 .acceso__marca {
   position: relative;
-  isolation: isolate;
-  display: flex;
-  flex-direction: column;
   overflow: hidden;
-  padding: var(--adr-espacio-7);
-  color: var(--adr-oscuro-texto-fuerte);
+
+  // Se ve mientras la foto carga, y sostiene el panel si no llegara a cargar nunca.
   background:
     radial-gradient(120% 90% at 15% 0%, color-mix(in srgb, var(--adr-color-azul-rey) 22%, transparent), transparent 60%),
     var(--adr-color-noche-azul);
 }
 
-// La foto se ve, y se ve en color.
+// La foto, a sangre.
 //
-// Antes iba al 28% y con `mix-blend-mode: luminosity`, que la deja en gris: era un motivo
-// de fondo, no una imagen. Aqui es el sujeto —Diego tocando— y el azul y el morado de la
-// tarima son casi el azul rey del sistema, asi que no hay nada que apagar para que pegue.
+// El encuadre horizontal va al 57% y no al centro porque ahi cae Diego en la toma: con
+// «cover» el recorte se lo lleva siempre el ancho, y centrando se le comia el hombro en las
+// ventanas estrechas. Vertical al centro, que es donde no sobra nada.
 .acceso__marca::before {
   position: absolute;
-  z-index: -1;
   inset: 0;
   content: '';
   background-image: var(--acceso-foto);
-  background-position: center 22%;
+  background-position: 57% center;
   background-size: cover;
-}
-
-// Velo en degradado, no una capa plana.
-//
-// El texto no se reparte por el panel: vive en la franja de abajo (ver `--cuerpo`), y ahi
-// el velo llega a noche azul OPACO. Eso es lo que garantiza el contraste sobre una foto:
-// no medir la imagen —cambia en cada pixel— sino taparla donde hay letra. Arriba se aclara
-// hasta dejar la foto casi limpia, y en la cabecera sube otra vez para el logotipo.
-//
-// Las paradas no son a ojo. Se midio el contraste real componiendo la foto y el velo en un
-// lienzo y recorriendo pixel a pixel la caja de cada texto. Con el primer reparto el
-// titular daba 4,3:1 y el logotipo 2,36:1 — los dos por debajo del AA del ADR 0009, y el
-// logotipo por mucho, porque justo detras cae la cara desenfocada, que es lo mas claro de
-// la toma. De ahi salen las dos capas y estas paradas.
-.acceso__marca::after {
-  position: absolute;
-  z-index: -1;
-  inset: 0;
-  content: '';
-  background:
-    // Cabecera. Va en su propia capa y medida en pixeles —no en porcentaje— porque tapa
-    // una pieza de alto FIJO: el logotipo. Repartida en porcentajes crecia con la ventana
-    // y se comia la foto en las pantallas altas sin proteger mas al logotipo.
-    linear-gradient(
-        to bottom,
-        color-mix(in srgb, var(--adr-color-noche-azul) 92%, transparent) 0,
-        color-mix(in srgb, var(--adr-color-noche-azul) 84%, transparent) 120px,
-        transparent 170px
-      )
-      no-repeat,
-    // Un tinte parejo sobre el resto: hermana la foto con la paleta sin apagarla, y sostiene
-    // el fondo si la imagen no llega a cargar.
-    linear-gradient(
-      to bottom,
-      color-mix(in srgb, var(--adr-color-noche-azul) 18%, transparent),
-      color-mix(in srgb, var(--adr-color-noche-azul) 34%, transparent)
-    );
-}
-
-.acceso__logo {
-  display: flex;
-  flex-direction: column;
-  color: var(--adr-color-blanco);
-  text-decoration: none;
-}
-
-.acceso__logo-nombre {
-  font-family: var(--adr-fuente-titular);
-  font-size: 22px;
-  font-weight: 800;
-  letter-spacing: var(--adr-espaciado-letra-titulo);
-}
-
-.acceso__logo-bajada {
-  @include m.caption;
-
-  color: var(--adr-oscuro-texto-suave);
-}
-
-// El texto se agrupa ABAJO en vez de repartirse por la columna.
-//
-// Con `space-between` el titular quedaba centrado, justo encima de la cara de Diego: dos
-// cosas peleando por el mismo sitio. Empujando el bloque al pie, la mitad de arriba queda
-// para la foto y la de abajo para la letra — y cada una se lee sin estorbar a la otra.
-//
-// <b>Y el velo del texto viaja CON el bloque, no con el alto del panel.</b> Estaba repartido
-// en porcentajes del panel, medidos a 900 px de alto. A 640 el bloque de texto ocupa mucha
-// mas proporcion, el titular subia al 27% y caia sobre la parte que el degradado dejaba
-// clara: legible en la ventana donde se midio y no en la de al lado. Anclado aqui, el velo
-// empieza siempre 140 px por encima de la primera letra, mida lo que mida la ventana.
-//
-// Los margenes negativos sacan el fondo hasta los bordes del panel: sin ellos el velo se
-// quedaria dentro del acolchado y se veria como una tarjeta pegada, no como una franja.
-.acceso__marca-cuerpo {
-  margin-top: auto;
-  margin-inline: calc(-1 * var(--adr-espacio-7));
-  margin-bottom: calc(-1 * var(--adr-espacio-7));
-  padding: 140px var(--adr-espacio-7) var(--adr-espacio-7);
-  background: linear-gradient(to bottom, transparent 0, var(--adr-color-noche-azul) 140px);
-}
-
-.acceso__marca-titulo {
-  margin-bottom: var(--adr-espacio-6);
-  font-family: var(--adr-fuente-titular);
-  font-size: var(--adr-texto-seccion);
-  font-weight: 800;
-  line-height: var(--adr-interlineado-titulo);
-  color: var(--adr-color-blanco);
-  letter-spacing: var(--adr-espaciado-letra-titulo);
-}
-
-// Cifras separadas por reglas: cada una se lee sola, y la linea da el ritmo que hace que
-// se escaneen de un vistazo en vez de leerse como un parrafo.
-.acceso__cifras {
-  margin-bottom: var(--adr-espacio-4);
-}
-
-.acceso__cifra {
-  display: flex;
-  gap: var(--adr-espacio-5);
-  align-items: baseline;
-  padding-block: var(--adr-espacio-4);
-  border-top: 1px solid var(--adr-oscuro-borde);
-
-  &:last-child {
-    border-bottom: 1px solid var(--adr-oscuro-borde);
-  }
-}
-
-.acceso__cifra-valor {
-  min-width: 4.5ch;
-  font-family: var(--adr-fuente-titular);
-  font-size: var(--adr-texto-cifra);
-  font-weight: 800;
-  line-height: 1;
-  color: var(--adr-color-blanco);
-  font-variant-numeric: tabular-nums;
-}
-
-.acceso__cifra-rotulo {
-  font-size: var(--adr-texto-ui);
-  color: var(--adr-oscuro-texto-fuerte);
-}
-
-// La procedencia es lo que convierte un numero en un dato comprobable.
-.acceso__procedencia {
-  font-size: var(--adr-texto-caption);
-  color: var(--adr-oscuro-texto-suave);
-}
-
-.acceso__marca-pie {
-  @include m.caption;
-
-  margin-top: var(--adr-espacio-6);
-  color: var(--adr-oscuro-texto-suave);
 }
 
 // --------------------------------------------------------------- formulario
@@ -261,34 +126,15 @@ adr-alerta {
   // con el formulario a la vista, no obligar a desplazarse para llegar a el.
   //
   // Pero una cabecera de 60 px con la foto recortada es ruido, no imagen. Se le da alto
-  // suficiente para que se reconozca a Diego con el acordeon —que es lo que aporta— y se
-  // encuadra mas abajo que en escritorio, donde esta el instrumento.
+  // suficiente para que se reconozca a Diego con el acordeon, que es lo que aporta.
   .acceso__marca {
-    gap: var(--adr-espacio-5);
-    min-height: 160px;
-    padding: var(--adr-espacio-5);
+    min-height: 190px;
   }
 
+  // Mas abajo que en escritorio: en una franja apaisada, encuadrar por el centro deja fuera
+  // el acordeon y arriba solo queda techo de tarima.
   .acceso__marca::before {
-    background-position: center 38%;
-  }
-
-  // El degradado de escritorio reparte sus paradas a lo largo de 900 px; comprimido en 160
-  // dejaria el logotipo sobre foto limpia. Aqui se vela fuerte arriba y se abre hacia abajo.
-  //
-  // Los 70 px son el alto del logotipo con su margen: por debajo, medido, «ACADEMIA» daba
-  // 3,54:1 sobre la foto y el minimo para texto pequenio es 4,5:1.
-  .acceso__marca::after {
-    background: linear-gradient(
-      to bottom,
-      color-mix(in srgb, var(--adr-color-noche-azul) 92%, transparent) 0,
-      color-mix(in srgb, var(--adr-color-noche-azul) 82%, transparent) 70px,
-      color-mix(in srgb, var(--adr-color-noche-azul) 42%, transparent) 100%
-    );
-  }
-
-  .acceso__marca-cuerpo {
-    display: none;
+    background-position: center 42%;
   }
 
   .acceso__panel {

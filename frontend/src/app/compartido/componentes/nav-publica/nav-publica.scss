@@ -144,3 +144,17 @@
     flex-direction: column;
   }
 }
+
+// El nombre del alumno, como enlace a su cuenta. Hasta ahora /perfil no tenia enlace en
+// ninguna parte: solo se llegaba escribiendo la ruta a mano.
+.adr-nav__cuenta {
+  font-size: var(--adr-texto-ui);
+  font-weight: 600;
+  color: var(--adr-color-tinta);
+  text-decoration: none;
+  white-space: nowrap;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}

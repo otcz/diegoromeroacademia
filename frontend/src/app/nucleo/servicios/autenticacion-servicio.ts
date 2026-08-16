@@ -1,6 +1,6 @@
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Injectable, inject, signal } from '@angular/core';
-import { Observable, catchError, of, tap, throwError } from 'rxjs';
+import { Observable, catchError, of, shareReplay, tap, throwError } from 'rxjs';
 import { entorno } from '../../../entornos/entorno';
 import {
   CODIGOS_ERROR_ACCESO,
@@ -40,6 +40,9 @@ export class AutenticacionServicio {
 
   private readonly usuarioActual = signal<UsuarioSesion | null>(null);
 
+  /** Peticion de sesion en curso, compartida por todos los que pregunten a la vez. */
+  private enVuelo: Observable<UsuarioSesion | null> | null = null;
+
   /** Usuario de la sesion vigente, o nulo si no hay ninguna. Solo lectura hacia afuera. */
   readonly usuario = this.usuarioActual.asReadonly();
 
@@ -69,12 +72,46 @@ export class AutenticacionServicio {
    * legitima. Por eso se traduce a nulo en vez de propagarse.
    */
   sesionActual(): Observable<UsuarioSesion | null> {
-    return this.http.get<UsuarioSesion>(`${this.base}/sesion`).pipe(
-      tap((usuario) => this.usuarioActual.set(usuario)),
-      catchError(() => {
-        this.usuarioActual.set(null);
-        return of(null);
+    // Una sola peticion aunque pregunten varios a la vez.
+    //
+    // La barra pregunta al dibujarse y la pantalla de perfil tambien; sin esto, abrir
+    // `/perfil` disparaba DOS llamadas identicas al mismo endpoint en el mismo instante.
+    // Ademas de sobrar una, las dos escriben el mismo signal y la que conteste ultima manda:
+    // hoy dan lo mismo, pero es una carrera esperando a que dejen de darlo.
+    //
+    // Se comparte solo mientras esta EN VUELO, no se cachea el resultado: al entrar o al
+    // salir hay que volver a preguntar de verdad.
+    this.enVuelo ??= this.http.get<UsuarioSesion>(`${this.base}/sesion`).pipe(
+      catchError(() => of(null)),
+      tap((usuario) => {
+        this.usuarioActual.set(usuario);
+        this.enVuelo = null;
       }),
+      shareReplay({ bufferSize: 1, refCount: false }),
+    );
+
+    return this.enVuelo;
+  }
+
+  /**
+   * Cierra la sesion.
+   *
+   * <p>Es el BACKEND quien la cierra: invalida la sesion del servidor y borra la cookie. Un
+   * «cerrar sesion» que solo olvidara al usuario en el frontend seria mentira — la cookie
+   * seguiria valiendo, y quien tomara el computador despues entraria recargando la pagina.
+   *
+   * <p>Va por POST y no por GET a proposito: un GET lo dispara cualquier sitio ajeno con una
+   * etiqueta de imagen apuntando aqui, y el alumno se veria expulsado a mitad de una clase
+   * sin que nada lo explique.
+   *
+   * <p>Se olvida al usuario pase lo que pase. Si la peticion falla —red caida, sesion ya
+   * vencida— dejar la barra diciendo que hay sesion es peor que quedarse corto: el alumno
+   * cree que sigue dentro y no vuelve a entrar.
+   */
+  cerrarSesion(): Observable<void> {
+    return this.http.post<void>(`${this.base}/salir`, {}).pipe(
+      catchError(() => of(undefined)),
+      tap(() => this.usuarioActual.set(null)),
     );
   }
 

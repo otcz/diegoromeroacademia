@@ -1,14 +1,104 @@
+import { provideHttpClient } from '@angular/common/http';
+import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
-import { describe, expect, it } from 'vitest';
+import { beforeEach, describe, expect, it } from 'vitest';
+import { entorno } from '../../../../entornos/entorno';
 import { NavPublica } from './nav-publica';
 
 describe('NavPublica', () => {
+  const USUARIO = {
+    id: '5d082da2-aafe-4606-a53a-76326f5713e2',
+    nombre: 'Alumno',
+    correo: 'alumno@ejemplo.com',
+    rol: 'estudiante',
+  };
+
+  let http: HttpTestingController;
+
+  beforeEach(() => {
+    TestBed.configureTestingModule({
+      providers: [provideHttpClient(), provideHttpClientTesting()],
+    });
+    http = TestBed.inject(HttpTestingController);
+  });
+
   async function crear() {
     const fixture = TestBed.createComponent(NavPublica);
     fixture.detectChanges();
     await fixture.whenStable();
     return fixture;
   }
+
+  async function refrescar(fixture: Awaited<ReturnType<typeof crear>>) {
+    fixture.detectChanges();
+    await fixture.whenStable();
+  }
+
+  /** La barra ya dibujada, con la respuesta de sesion que se le indique. */
+  async function crearConSesion(usuario: object | null) {
+    const fixture = TestBed.createComponent(NavPublica);
+    fixture.detectChanges();
+
+    const peticion = http.expectOne(`${entorno.urlApi}/acceso/sesion`);
+    peticion.flush(usuario, usuario ? undefined : { status: 401, statusText: '' });
+
+    await refrescar(fixture);
+    return fixture;
+  }
+
+  it('NO debe ofrecer «Entrar» a quien ya entro, sino su cuenta y la salida', async () => {
+    const fixture = await crearConSesion(USUARIO);
+    const texto: string = fixture.nativeElement.textContent;
+
+    // Antes la barra ofrecia «Entrar» y «Registrarme» a quien ya estaba dentro, y no ofrecia
+    // ninguna forma de salir: la unica manera era borrar las cookies a mano.
+    expect(texto).toContain('Cerrar sesión');
+    expect(texto).toContain(USUARIO.nombre);
+    expect(texto).not.toContain('Registrarme');
+  });
+
+  it('debe cerrar la sesion EN EL BACKEND, no solo olvidarla aqui', async () => {
+    const fixture = await crearConSesion(USUARIO);
+
+    const boton = [...fixture.nativeElement.querySelectorAll('button')].find((b) =>
+      (b as HTMLButtonElement).textContent?.includes('Cerrar sesión'),
+    ) as HTMLButtonElement;
+    boton.click();
+    await refrescar(fixture);
+
+    // Olvidar al usuario solo en el frontend seria mentira: la cookie seguiria valiendo y
+    // bastaria recargar para volver a estar dentro.
+    const peticion = http.expectOne(`${entorno.urlApi}/acceso/salir`);
+
+    // POST y no GET: un GET lo dispara cualquier sitio ajeno con una etiqueta de imagen
+    // apuntando aqui, y el alumno se veria expulsado sin que nada lo explique.
+    expect(peticion.request.method).toBe('POST');
+
+    peticion.flush(null);
+    await refrescar(fixture);
+
+    expect(fixture.nativeElement.textContent).toContain('Entrar');
+  });
+
+  it('debe olvidar la sesion aunque la peticion de salir falle', async () => {
+    const fixture = await crearConSesion(USUARIO);
+
+    const boton = [...fixture.nativeElement.querySelectorAll('button')].find((b) =>
+      (b as HTMLButtonElement).textContent?.includes('Cerrar sesión'),
+    ) as HTMLButtonElement;
+    boton.click();
+    await refrescar(fixture);
+
+    // Red caida o sesion ya vencida. Dejar la barra diciendo que hay sesion es peor que
+    // quedarse corto: el alumno cree que sigue dentro y no vuelve a entrar.
+    http
+      .expectOne(`${entorno.urlApi}/acceso/salir`)
+      .flush(null, { status: 500, statusText: 'Server Error' });
+    await refrescar(fixture);
+
+    expect(fixture.nativeElement.textContent).toContain('Entrar');
+    expect(fixture.nativeElement.textContent).not.toContain('Cerrar sesión');
+  });
 
   it('debe llevar el logotipo a la portada desde CUALQUIER pagina', async () => {
     const fixture = await crear();

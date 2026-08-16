@@ -1,6 +1,8 @@
 package com.academiadiegoromero.configuracion.seguridad;
 
 import com.academiadiegoromero.identidad.infraestructura.web.ManejadorIngresoExitoso;
+import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.http.HttpMethod;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
@@ -8,6 +10,8 @@ import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.servlet.util.matcher.PathPatternRequestMatcher;
+import org.springframework.security.web.util.matcher.RequestMatcher;
 
 /**
  * Cadena de filtros SOLO para el tramo de ingreso con proveedor externo.
@@ -46,6 +50,10 @@ class ConfiguracionSeguridad {
 
     /** A donde vuelve el proveedor con el codigo. Debe estar registrado en su consola. */
     static final String BASE_REDIRECCION = "/api/acceso/oauth2/callback/*";
+
+    /** Cerrar sesion. Solo POST: ver el bloque de {@code logout} mas abajo. */
+    static final RequestMatcher RUTA_SALIR =
+            PathPatternRequestMatcher.withDefaults().matcher(HttpMethod.POST, "/api/acceso/salir");
 
     /**
      * Va antes que la cadena general para poder quedarse con su tramo.
@@ -86,12 +94,35 @@ class ConfiguracionSeguridad {
                 // aplicacion no puede seguir una redireccion a otro origen.
                 .exceptionHandling(e -> e.authenticationEntryPoint(sinSesion))
 
-                .logout(l -> l
-                        .logoutUrl("/api/acceso/salir")
-                        .invalidateHttpSession(true)
-                        .deleteCookies("JSESSIONID"))
+                .logout(ConfiguracionSeguridad::declararComoSeSale)
 
                 .build();
+    }
+
+    /**
+     * Como se cierra la sesion.
+     *
+     * <p><b>POST y solo POST.</b> {@code logoutUrl} por si solo se ata al metodo POST unicamente
+     * cuando CSRF esta activo, y en esta cadena esta desactivado —lo explica el javadoc de
+     * arriba—, asi que sin fijar el matcher un GET tambien cerraria la sesion. Con eso,
+     * cualquier sitio ajeno podria echar al alumno con una etiqueta de imagen apuntando aqui.
+     * No se pierden datos, pero se le expulsa a mitad de una clase sin que nada lo explique.
+     *
+     * <p>Devuelve 204 en vez de la redireccion de serie a {@code /login?logout}: esto lo llama
+     * la aplicacion por fetch, no un formulario del navegador, y una redireccion la obligaria
+     * a seguir un salto que no lleva a ninguna parte.
+     */
+    private static void declararComoSeSale(
+            org.springframework.security.config.annotation.web.configurers.LogoutConfigurer<
+                            HttpSecurity>
+                    salida) {
+        salida.logoutRequestMatcher(RUTA_SALIR)
+                .invalidateHttpSession(true)
+                .clearAuthentication(true)
+                .deleteCookies("JSESSIONID")
+                .logoutSuccessHandler(
+                        (peticion, respuesta, autenticacion) ->
+                                respuesta.setStatus(HttpServletResponse.SC_NO_CONTENT));
     }
 
     /**

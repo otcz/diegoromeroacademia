@@ -1,7 +1,8 @@
 import { ChangeDetectionStrategy, Component, DOCUMENT, inject, signal } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
-import { DESTINO_REGISTRO } from '../../../app.routes';
+import { DESTINO_REGISTRO, DESTINO_TRAS_SALIR } from '../../../app.routes';
 import { ACTIVOS } from '../../../disenio/activos';
+import { AutenticacionServicio } from '../../../nucleo/servicios/autenticacion-servicio';
 import { Boton } from '../boton/boton';
 import { Icono } from '../icono/icono';
 
@@ -91,9 +92,21 @@ import { Icono } from '../icono/icono';
           <!-- «Precios» y no «Planes»: el visitante que llega de YouTube no compra software
                por internet, y ademas cabe mejor en el menu colapsado. El ancla no cambia. -->
           <a routerLink="/" fragment="planes" (click)="irA('planes')">Precios</a>
+          <!-- La barra cambia segun haya sesion o no. Antes ofrecia «Entrar» y «Registrarme»
+               a quien ya estaba dentro, y no ofrecia ninguna forma de salir: la unica manera
+               era borrar las cookies a mano. -->
           <div class="adr-nav__acciones">
-            <adr-boton variante="secundario" enlace="/acceso">Entrar</adr-boton>
-            <adr-boton variante="primario" [enlace]="destinoRegistro">Registrarme</adr-boton>
+            @if (usuario(); as alumno) {
+              <a class="adr-nav__cuenta" routerLink="/perfil" (click)="cerrar()">
+                {{ alumno.nombre }}
+              </a>
+              <adr-boton variante="secundario" [cargando]="saliendo()" (accion)="salir()">
+                {{ saliendo() ? 'Saliendo…' : 'Cerrar sesión' }}
+              </adr-boton>
+            } @else {
+              <adr-boton variante="secundario" enlace="/acceso">Entrar</adr-boton>
+              <adr-boton variante="primario" [enlace]="destinoRegistro">Registrarme</adr-boton>
+            }
           </div>
         </nav>
       </div>
@@ -104,10 +117,22 @@ import { Icono } from '../icono/icono';
 export class NavPublica {
   private readonly router = inject(Router);
   private readonly documento = inject(DOCUMENT);
+  private readonly autenticacion = inject(AutenticacionServicio);
 
   protected readonly destinoRegistro = DESTINO_REGISTRO;
   protected readonly logotipo = ACTIVOS.logotipo;
   protected readonly abierto = signal(false);
+
+  /** Quien tiene la sesion abierta, o nulo. Decide que mitad de la barra se dibuja. */
+  protected readonly usuario = this.autenticacion.usuario;
+  protected readonly saliendo = signal(false);
+
+  constructor() {
+    // Se PREGUNTA al backend, no se mira lo que el frontend recuerda. Tras entrar con Google
+    // la aplicacion arranca de cero por una redireccion, asi que la barra no sabria que hay
+    // sesion y seguiria ofreciendo «Entrar» a quien acaba de entrar.
+    this.autenticacion.sesionActual().subscribe();
+  }
 
   /** Alterna el menu en movil. */
   protected alternar(): void {
@@ -130,8 +155,29 @@ export class NavPublica {
     }
   }
 
+  /**
+   * Cierra la sesion y devuelve a la portada.
+   *
+   * <p>Quien cierra de verdad es el backend: invalida la sesion y borra la cookie. Olvidar al
+   * usuario solo aqui seria mentir — la cookie seguiria valiendo y bastaria recargar para
+   * volver a estar dentro.
+   *
+   * <p>Se sale SIEMPRE a la portada, aunque el alumno estuviera en `/perfil`. Quedarse en una
+   * pantalla que exige sesion despues de cerrarla lo mandaria de vuelta al formulario de
+   * ingreso, y salir terminaria pareciendo entrar.
+   */
+  protected salir(): void {
+    this.saliendo.set(true);
+    this.cerrar();
+
+    this.autenticacion.cerrarSesion().subscribe(() => {
+      this.saliendo.set(false);
+      this.router.navigate([DESTINO_TRAS_SALIR]);
+    });
+  }
+
   /** Cierra el menu al elegir un enlace, para que no tape el destino al que se navega. */
-  private cerrar(): void {
+  protected cerrar(): void {
     this.abierto.set(false);
   }
 }

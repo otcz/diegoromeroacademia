@@ -85,3 +85,12 @@ export const DESTINO_REGISTRO = '/acceso';
  * tambien en la variable del backend.
  */
 export const DESTINO_TRAS_INGRESAR = '/';
+
+/**
+ * A donde va el alumno al cerrar sesion.
+ *
+ * <p>La portada, y no la pantalla donde estuviera. Si se quedara en una que exige sesion
+ * —el perfil— la guarda lo mandaria al formulario de ingreso, y salir terminaria pareciendo
+ * entrar.
+ */
+export const DESTINO_TRAS_SALIR = '/';

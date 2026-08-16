@@ -68,8 +68,13 @@
         </span>
       </div>
 
+      <!-- El título va sin ver, no eliminado — mismo criterio que la primera vez que se pidió
+           quitarlo. Sin un h1 la página se queda sin nombre para quien navega saltando de
+           encabezado en encabezado con un lector de pantalla, y sin el encabezado que espera
+           cualquier auditoría o buscador. No ocupa un pixel: lo visible es la foto, la marca
+           y el formulario, que es lo que se pidió. -->
+      <h1 class="adr-solo-lectores">Inicia sesión</h1>
       <header class="acceso__encabezado">
-        <h1 class="acceso__titulo">Inicia sesión</h1>
         <p class="acceso__intro">{{ intro }}</p>
       </header>
 

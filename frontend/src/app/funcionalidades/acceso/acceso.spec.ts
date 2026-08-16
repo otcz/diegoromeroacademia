@@ -61,15 +61,18 @@ describe('Acceso', () => {
     expect(google?.getAttribute('href')).toContain('/acceso/oauth2/google');
   });
 
-  it('debe encabezar con un h1 visible: es el nombre de la pantalla', async () => {
+  it('debe conservar el h1 aunque no se vea: es el nombre de la pantalla', async () => {
     const fixture = await crear();
     const titulo: HTMLElement = fixture.nativeElement.querySelector('h1');
 
-    // Estuvo oculto mientras el diseño no queria texto. El aprobado si lo lleva, y es mejor:
-    // un encabezado que se ve sirve a la vez de orientacion y de punto de salto para quien
-    // navega con lector de pantalla.
+    // El propietario pidio quitar «Inicia sesion» de la vista. Borrar el encabezado ademas
+    // habria dejado la pagina sin nombre para quien navega saltando de encabezado en
+    // encabezado con un lector de pantalla, y sin el h1 que espera cualquier auditoria o
+    // buscador. Ocultar a la VISTA y ocultar a la ASISTENCIA son dos cosas distintas, y aqui
+    // solo se pidio una.
+    expect(titulo).not.toBeNull();
     expect(titulo.textContent?.trim()).toBe('Inicia sesión');
-    expect(titulo.className).not.toContain('adr-solo-lectores');
+    expect(titulo.className).toContain('adr-solo-lectores');
   });
 
   it('no debe ofrecer ninguna salida que todavia no exista', async () => {

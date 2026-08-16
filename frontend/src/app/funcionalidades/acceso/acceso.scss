@@ -177,18 +177,14 @@ $quiebre-partido: 1024px;
 }
 
 // --------------------------------------------------------------- encabezado
+//
+// Ya no envuelve un titulo visible — se retiro y quedo solo el `<p>` de intro. Se conserva
+// como bloque porque una tableta o un tamanio futuro puede volver a necesitar agrupar mas de
+// un elemento aqui, y es donde alguien lo buscaria primero.
 .acceso__encabezado {
   display: flex;
   flex-direction: column;
   gap: var(--adr-espacio-2);
-}
-
-.acceso__titulo {
-  font-family: var(--adr-fuente-titular);
-  font-size: 27px;
-  font-weight: 700;
-  line-height: 1.15;
-  color: var(--adr-color-blanco);
 }
 
 .acceso__intro {
@@ -282,10 +278,6 @@ adr-alerta {
     max-width: 440px;
   }
 
-  .acceso__titulo {
-    font-size: 21px;
-  }
-
   .acceso__titular {
     font-size: 26px;
   }
@@ -310,10 +302,6 @@ adr-alerta {
 
   .acceso__caja {
     gap: 18px;
-  }
-
-  .acceso__titulo {
-    font-size: 27px;
   }
 }
 

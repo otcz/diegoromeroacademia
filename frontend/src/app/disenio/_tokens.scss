@@ -13,7 +13,24 @@
   // ---------- Superficies ----------
   --adr-color-niebla: #f6f8fb; // fondo de pagina
   --adr-color-blanco: #ffffff; // tarjetas
-  --adr-color-noche-azul: #0e1b2e; // heroe, simulador, pie
+  // ADR 0011: era #0e1b2e. La paleta del handoff del login es mas profunda y con matiz
+  // violeta, y el propietario decidio que la adopte el sistema entero. Al ser MAS oscura,
+  // todo el texto claro que va encima gana contraste — ninguna medida del ADR 0009 empeora.
+  --adr-color-noche-azul: #080614; // heroe, simulador, pie, fondo de pantallas oscuras
+
+  // Degradado de panel sobre oscuro. Da profundidad sin dibujar ninguna forma, que es lo que
+  // impide que una superficie grande se lea como un plano muerto.
+  --adr-color-noche-panel-a: #0b0820;
+  --adr-color-noche-panel-b: #0a0f2c;
+  --adr-halo-azul: rgb(30 90 220 / 22%);
+
+  // Fundidos planos para pegar una foto a lo que tiene al lado o debajo. Se llaman «scrim» y
+  // no «velo» porque «--adr-velo-*» ya existe con otro significado: los degradados de tres
+  // paradas del ADR 0008, que son para legibilidad DENTRO del marco de imagen. Reutilizar el
+  // nombre habria hecho que uno pisara al otro sin ruido — y en silencio, porque el segundo
+  // gana por orden de aparicion y no hay error que lo avise.
+  --adr-scrim-lateral: rgb(8 6 20 / 95%);
+  --adr-scrim-inferior: rgb(8 6 20 / 92%);
 
   // ---------- Texto ----------
   --adr-color-tinta: #16212e; // texto principal
@@ -28,6 +45,20 @@
   // Si algo se puede clicar, es azul.
   --adr-color-azul-rey: #1d6bf3;
   --adr-color-azul-profundo: #1552c4; // hover, enlaces de texto
+
+  // Degradado de llamada a la accion sobre oscuro, del handoff del login. NO sustituye al
+  // azul rey: el azul rey sigue siendo la tinta de accion (regla de color 1). Esto es su
+  // tratamiento cuando el boton manda en una pantalla oscura.
+  --adr-color-azul-cta-a: #1273d4;
+  --adr-color-azul-cta-b: #2f66f5;
+
+  // Enlace sobre fondo oscuro. El azul rey no sirve ahi: sobre #080614 da 6,3:1 pero se
+  // confunde con el fondo violeta; este aclarado se despega y llega a 9,1:1.
+  --adr-color-enlace-oscuro: #7fa9ff;
+
+  // Foco. Un solo par para toda la aplicacion: el anillo se ve igual en claro y en oscuro.
+  --adr-color-foco: #3b82f6;
+  --adr-anillo-foco: 0 0 0 4px rgb(59 130 246 / 18%);
 
   // ---------- Acento y estado ----------
   // Regla de color 2: el mango NUNCA va en un boton. Solo subrayados, estrellas
@@ -61,9 +92,25 @@
 
   // ---------- Sobre fondo oscuro ----------
   --adr-oscuro-texto-fuerte: rgb(255 255 255 / 85%);
+  // Se conserva el 65% del sistema en vez del 60% del handoff: es la misma jerarquia y se
+  // lee mejor. Bajarlo solo para igualar un numero de la maqueta no compra nada.
   --adr-oscuro-texto-suave: rgb(255 255 255 / 65%);
   --adr-oscuro-borde: rgb(255 255 255 / 12%);
   --adr-oscuro-borde-fuerte: rgb(255 255 255 / 40%);
+  // El handoff lo llama text/muted. Faltaba: no habia un tercer escalon por debajo de
+  // , y las pantallas lo estaban improvisando con rgb() a mano.
+  --adr-oscuro-texto-tenue: rgb(255 255 255 / 42%);
+
+  // Campos de formulario sobre oscuro. Un borde claro y un relleno apenas levantado: sobre
+  // negro un campo con fondo blanco pesa mas que el boton que hay debajo.
+  --adr-oscuro-campo-fondo: rgb(255 255 255 / 6%);
+  --adr-oscuro-campo-borde: rgb(255 255 255 / 16%);
+
+  // Error sobre oscuro. El rojo de fondo claro (#c1443f) sobre #080614 da 3,4:1 y no llega
+  // al 4,5 que pide un mensaje de error.
+  --adr-color-peligro-oscuro: #f87171;
+  --adr-color-peligro-oscuro-texto: #fca5a5;
+  --adr-tinte-peligro-oscuro-fondo: rgb(248 113 113 / 12%);
 
   // ---------- Tipografia ----------
   --adr-fuente-titular: 'Bricolage Grotesque', system-ui, -apple-system, sans-serif;

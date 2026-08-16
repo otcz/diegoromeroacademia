@@ -25,32 +25,27 @@ $quiebre-partido: 1024px;
 // el formulario iba sobre una tarjeta blanca y la costura entre los dos lados se veia. Con
 // una sola base la foto se funde con el formulario y la pantalla se lee como una pieza.
 //
-// Los colores van como propiedades de ESTA pantalla y no como tokens globales: son los del
-// handoff, mas profundos que el azul noche del sistema, y cambiarlos en `_tokens.scss`
-// repintaria la landing entera. Cuando el propietario decida si el sistema adopta esta
-// paleta, se suben; mientras tanto, la excepcion vive donde se usa y se ve.
+// La paleta ya NO vive aqui: el propietario decidio que la adopte el sistema y subio a
+//  (ADR 0011). Esta pantalla solo la consume, como cualquier otra.
 .acceso {
-  --acceso-fondo: #080614;
-  --acceso-panel-a: #0b0820;
-  --acceso-panel-b: #0a0f2c;
-  --acceso-halo: rgb(30 90 220 / 22%);
-  --acceso-velo-lateral: rgb(8 6 20 / 95%);
-  --acceso-velo-inferior: rgb(8 6 20 / 92%);
-  --acceso-texto-suave: rgb(255 255 255 / 60%);
-  --acceso-texto-tenue: rgb(255 255 255 / 42%);
-
-  // Los controles del catalogo se releen a si mismos en oscuro. No se toca el boton ni el
-  // campo: se redefinen los tokens que ellos consumen, dentro de esta pantalla. Asi el
-  // catalogo se queda intacto y ninguna otra pantalla cambia.
-  --adr-color-tinta: #ffffff;
-  --adr-color-borde-suave: rgb(255 255 255 / 16%);
-  --adr-color-texto-secundario: var(--acceso-texto-suave);
-  --adr-color-texto-atenuado: var(--acceso-texto-tenue);
+  // Los controles del catalogo se releen en oscuro por SUPERFICIE, no invirtiendo la tinta.
+  //
+  // Invertirla fue un error y se vio en produccion: «--adr-color-tinta: #fff» pinta de blanco
+  // el texto de TODO lo que hay dentro, incluidas las piezas que siguen teniendo fondo claro
+  // — el boton de Google y los campos. El rotulo del boton y el texto escrito desaparecieron
+  // sobre su propio fondo blanco. Aqui se repinta cada superficie con su par fondo/texto.
+  --adr-campo-fondo: var(--adr-oscuro-campo-fondo);
+  --adr-campo-borde: var(--adr-oscuro-campo-borde);
+  --adr-campo-texto: var(--adr-color-blanco);
+  --adr-campo-rotulo: rgb(255 255 255 / 85%);
+  --adr-campo-marcador: var(--adr-oscuro-texto-tenue);
+  --adr-color-texto-secundario: var(--adr-oscuro-texto-suave);
+  --adr-color-texto-atenuado: var(--adr-oscuro-texto-tenue);
   --adr-radio-pastilla: 12px;
 
   display: grid;
   min-height: 100dvh;
-  background: var(--acceso-fondo);
+  background: var(--adr-color-noche-azul);
 }
 
 // ---------------------------------------------------------------- panel de foto
@@ -79,8 +74,8 @@ $quiebre-partido: 1024px;
   inset: 0;
   content: '';
   background:
-    linear-gradient(100deg, rgb(8 6 20 / 12%) 38%, var(--acceso-velo-lateral) 100%),
-    linear-gradient(to top, var(--acceso-velo-inferior) 0%, rgb(8 6 20 / 5%) 52%);
+    linear-gradient(100deg, rgb(8 6 20 / 12%) 38%, var(--adr-scrim-lateral) 100%),
+    linear-gradient(to top, var(--adr-scrim-inferior) 0%, rgb(8 6 20 / 5%) 52%);
 }
 
 .acceso__foto-texto {
@@ -121,8 +116,8 @@ $quiebre-partido: 1024px;
   // El halo radial es lo que impide que el fondo se lea como un plano muerto: da un centro
   // de luz detras del formulario sin dibujar ninguna forma.
   background:
-    radial-gradient(700px 520px at 70% 25%, var(--acceso-halo), transparent 65%),
-    linear-gradient(160deg, var(--acceso-panel-a), var(--acceso-panel-b));
+    radial-gradient(700px 520px at 70% 25%, var(--adr-halo-azul), transparent 65%),
+    linear-gradient(160deg, var(--adr-color-noche-panel-a), var(--adr-color-noche-panel-b));
 }
 
 .acceso__caja {
@@ -137,7 +132,7 @@ $quiebre-partido: 1024px;
   flex-direction: column;
   gap: var(--adr-espacio-5);
   width: 100%;
-  max-width: 392px;
+  max-width: 448px;
 }
 
 // ------------------------------------------------------------------ identidad
@@ -150,8 +145,8 @@ $quiebre-partido: 1024px;
 // El logotipo entregado no tiene transparencia real en su fondo negro, asi que se recorta en
 // circulo sobre negro — que es como lo pide su propio handoff.
 .acceso__avatar {
-  width: 48px;
-  height: 48px;
+  width: 56px;
+  height: 56px;
   flex: none;
   overflow: hidden;
   background: #000000;
@@ -199,7 +194,7 @@ $quiebre-partido: 1024px;
 .acceso__intro {
   font-size: var(--adr-texto-cuerpo);
   line-height: 1.5;
-  color: var(--acceso-texto-suave);
+  color: var(--adr-oscuro-texto-suave);
 }
 
 // ------------------------------------------------------------------ controles
@@ -230,7 +225,7 @@ adr-alerta {
   span {
     font-size: 10px;
     font-weight: 600;
-    color: var(--acceso-texto-tenue);
+    color: var(--adr-oscuro-texto-tenue);
     text-transform: uppercase;
     letter-spacing: 0.14em;
   }
@@ -247,7 +242,7 @@ adr-alerta {
 .acceso__pendiente {
   font-size: 12px;
   font-weight: 600;
-  color: var(--acceso-texto-tenue);
+  color: var(--adr-oscuro-texto-tenue);
 }
 
 // ================================================================= COMPOSICION
@@ -341,7 +336,7 @@ adr-alerta {
   }
 
   .acceso__panel {
-    padding-inline: 56px;
+    padding-inline: 64px;
   }
 }
 

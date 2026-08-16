@@ -15,7 +15,7 @@
   display: block;
   font-size: var(--adr-texto-ui);
   font-weight: 600;
-  color: var(--adr-color-tinta);
+  color: var(--adr-campo-rotulo, var(--adr-color-tinta));
 }
 
 .adr-campo__control {
@@ -24,10 +24,15 @@
   padding: var(--adr-espacio-3) var(--adr-espacio-4);
 
   font-size: var(--adr-texto-cuerpo);
-  color: var(--adr-color-tinta);
 
-  background: var(--adr-color-blanco);
-  border: 1px solid var(--adr-color-borde-suave);
+  // Superficie ajustable. Antes escribia el blanco y la tinta directamente, y por eso una
+  // pantalla oscura no podia usar el campo sin quedarse con un bloque blanco: al invertir la
+  // tinta salia texto blanco sobre fondo blanco, invisible. Los valores por defecto no
+  // cambian, asi que ninguna pantalla existente se mueve.
+  color: var(--adr-campo-texto, var(--adr-color-tinta));
+
+  background: var(--adr-campo-fondo, var(--adr-color-blanco));
+  border: 1px solid var(--adr-campo-borde, var(--adr-color-borde-suave));
   border-radius: 12px;
 
   transition:
@@ -35,7 +40,7 @@
     box-shadow 0.15s ease;
 
   &::placeholder {
-    color: var(--adr-color-texto-atenuado);
+    color: var(--adr-campo-marcador, var(--adr-color-texto-atenuado));
   }
 
   &:hover:not(:disabled) {

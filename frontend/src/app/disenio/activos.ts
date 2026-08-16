@@ -32,6 +32,8 @@ export interface ManifiestoActivos {
   readonly practicaBotonadura: RutaActivo;
   /** Afiche completo de la academia, para el panel de la pantalla de acceso. Cuadrado. */
   readonly aficheAcademia: RutaActivo;
+  /** Logotipo DR sobre fondo transparente. SVG: se pone a cualquier tamaño sin perder filo. */
+  readonly logotipo: RutaActivo;
 }
 
 /**
@@ -80,6 +82,11 @@ export const ACTIVOS: ManifiestoActivos = {
   // Cuadrado, del maestro a 3840×3840 que entregó el propietario. El porqué de la
   // proporción y del tamaño de entrega, en `scripts/tratar-imagenes.mjs`.
   aficheAcademia: '/imagenes/afiche-academia.1b783bd9.webp',
+
+  // El logotipo real, reexportado con el azul del sistema (`npm run marca:logotipo`). Va la
+  // variante SIN fondo: la de fondo negro solo sirve sobre negro, y este se pone tanto en la
+  // barra blanca como en el pie oscuro.
+  logotipo: '/imagenes/logo-dr.576d7835.svg',
 
   // Sigue en null a propósito: ninguna de las imágenes entregadas es una captura del
   // simulador, y el diagrama de botones que dibuja <adr-marco-imagen> con CSS y tokens

@@ -1,7 +1,5 @@
 @use 'mixins' as m;
 
-// La proporcion del afiche. Es lo unico del archivo que esta hoja necesita saber, y esta
-// aqui una sola vez: si el material grafico cambia de forma, se cambia este numero.
 .acceso {
   // Proporcion del afiche: hoy cuadrado. Es lo unico del archivo que esta hoja necesita
   // saber, y esta aqui una sola vez.
@@ -69,17 +67,6 @@
   max-width: 420px;
 }
 
-.acceso__titulo {
-  font-family: var(--adr-fuente-titular);
-  font-size: 32px;
-  font-weight: 800;
-  letter-spacing: var(--adr-espaciado-letra-titulo);
-}
-
-.acceso__intro {
-  margin-block: var(--adr-espacio-3) var(--adr-espacio-5);
-}
-
 adr-alerta {
   margin-bottom: var(--adr-espacio-5);
 }
@@ -116,23 +103,6 @@ adr-alerta {
   display: flex;
   flex-direction: column;
   gap: var(--adr-espacio-4);
-}
-
-.acceso__olvide {
-  align-self: flex-end;
-  font-size: var(--adr-texto-caption);
-  font-weight: 600;
-}
-
-.acceso__registro {
-  margin-top: var(--adr-espacio-5);
-  font-size: var(--adr-texto-ui);
-  color: var(--adr-color-texto-secundario);
-  text-align: center;
-
-  a {
-    font-weight: 600;
-  }
 }
 
 // --------------------------------------------------------------- responsive

@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { DESTINO_REGISTRO } from '../../../app.routes';
+import { ACTIVOS } from '../../../disenio/activos';
 import { Boton } from '../boton/boton';
 import { Icono } from '../icono/icono';
 
@@ -20,9 +21,25 @@ import { Icono } from '../icono/icono';
   template: `
     <header class="adr-nav">
       <div class="adr-contenedor adr-nav__interior">
+        <!-- El logotipo ACOMPAÑA al nombre, no lo sustituye. Dentro del logotipo «DIEGO
+             ROMERO» va escrito en píxeles: a la altura de una barra no se lee, no lo lee un
+             lector de pantalla y no se puede seleccionar. El texto de al lado sí hace las
+             tres cosas. Por eso la imagen va con «alt» vacío — el nombre ya está ahí y
+             anunciarlo dos veces seguidas estorba.
+             Ancho y alto van escritos para que la barra no dé un salto al cargar. -->
         <a class="adr-nav__marca" href="#inicio" aria-label="Academia Diego Romero — inicio">
-          <span class="adr-nav__marca-nombre">Diego Romero</span>
-          <span class="adr-nav__marca-bajada">Academia</span>
+          <img
+            class="adr-nav__logotipo"
+            [src]="logotipo"
+            alt=""
+            width="40"
+            height="40"
+            decoding="async"
+          />
+          <span class="adr-nav__marca-texto">
+            <span class="adr-nav__marca-nombre">Diego Romero</span>
+            <span class="adr-nav__marca-bajada">Academia</span>
+          </span>
         </a>
 
         <!-- FUERA del menú colapsable a propósito. Medido en móvil: el menú está oculto,
@@ -71,6 +88,7 @@ import { Icono } from '../icono/icono';
 })
 export class NavPublica {
   protected readonly destinoRegistro = DESTINO_REGISTRO;
+  protected readonly logotipo = ACTIVOS.logotipo;
   protected readonly abierto = signal(false);
 
   /** Alterna el menu en movil. */

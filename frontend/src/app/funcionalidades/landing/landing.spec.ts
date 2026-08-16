@@ -234,7 +234,10 @@ describe('Landing', () => {
 
     // Seis huecos: heroe, simulador, tres portadas y la foto de practica. Hoy hay cinco
     // imagenes; el simulador sigue con su diagrama dibujado porque no existe captura real.
-    expect(fixture.nativeElement.querySelectorAll('img').length).toBe(5);
+    //
+    // Se cuentan las del marco y no todas las `img` de la pagina: la barra lleva ahora el
+    // logotipo, que no es un hueco de foto y no debe contar aqui.
+    expect(fixture.nativeElement.querySelectorAll('.adr-marco__imagen').length).toBe(5);
     expect(fixture.nativeElement.querySelectorAll('.adr-marco__marcador').length).toBe(1);
   });
 
@@ -262,11 +265,14 @@ describe('Landing', () => {
     expect(prioritarias[0].getAttribute('src')).toContain('heroe');
   });
 
-  it('debe servir todas las imagenes en WebP', async () => {
+  it('debe servir todas las FOTOS en WebP', async () => {
     const fixture = await crear();
 
+    // Solo las fotos. El logotipo de la barra es un SVG a proposito: es un dibujo de trazos,
+    // no una fotografia, y en vectorial pesa menos y se ve nitido a cualquier tamanio.
+    // Convertirlo a WebP seria empeorarlo por cumplir una regla que no le corresponde.
     const fuentes: string[] = Array.from(
-      fixture.nativeElement.querySelectorAll('img'),
+      fixture.nativeElement.querySelectorAll('.adr-marco__imagen'),
       (i) => (i as HTMLImageElement).getAttribute('src') ?? '',
     );
     expect(fuentes.length).toBeGreaterThan(0);

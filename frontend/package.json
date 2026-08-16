@@ -13,7 +13,8 @@
     "iconos:generar": "node scripts/generar-iconos.mjs",
     "imagenes:tratar": "node scripts/tratar-imagenes.mjs",
     "imagenes:optimizar": "node scripts/optimizar-imagenes.mjs",
-    "iconos:favicon": "node scripts/generar-favicon.mjs"
+    "iconos:favicon": "node scripts/generar-favicon.mjs",
+    "marca:logotipo": "node scripts/generar-logotipo.mjs"
   },
   "private": true,
   "packageManager": "npm@11.16.0",

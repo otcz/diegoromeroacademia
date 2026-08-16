@@ -25,21 +25,31 @@ import { readdir, unlink, writeFile } from 'node:fs/promises';
 import sharp from 'sharp';
 
 const PUBLICO = new URL('../public/', import.meta.url).pathname.replace(/^\/([A-Z]:)/, '$1');
-const VECTOR = new URL('../../activos/originales/logo-dr.svg', import.meta.url).pathname.replace(
+
+/**
+ * El logotipo REEXPORTADO, no el que se entregó.
+ *
+ * <p>El entregado traía su propio azul —#0170BB— distinto del azul rey del sistema. Dos
+ * azules parecidos pero no iguales en la misma pantalla se leen como descuido. El propietario
+ * decidió que ceda el logotipo, y `npm run marca:logotipo` produce esta versión. Este script
+ * depende de ella: si no se ha generado, falla al leer y lo dice.
+ */
+const VECTOR = new URL('../../activos/marca/logo-dr.svg', import.meta.url).pathname.replace(
   /^\/([A-Z]:)/,
   '$1',
 );
 
 /**
- * Azul del propio logotipo, leído de su SVG.
+ * Espejo de `--adr-color-azul-rey` en disenio/_tokens.scss. Si allí cambia, aquí también.
  *
- * <p>NO es `--adr-color-azul-rey` (#1d6bf3). El logotipo trae su azul y un logotipo no se
- * recolorea para que encaje con la web: se encaja la web con él, o se deja como está. La
- * discrepancia está anotada para que el propietario decida; mientras tanto manda el suyo.
+ * <p>Un archivo binario no puede leer una variable CSS, así que el hexadecimal aparece
+ * escrito. Es la misma excepción ya documentada para `theme-color` en `index.html`, y por eso
+ * vive en UNA constante con su origen anotado.
  *
- * <p>Blanco sobre este azul da 5,20:1, muy por encima del 3:1 que pide un elemento gráfico.
+ * <p>Blanco sobre azul rey da 4,72:1, muy por encima del 3:1 que pide un elemento gráfico.
+ * La combinación inversa solo llega a 3,66:1 y a 16 px se empasta hasta ser una mancha.
  */
-const AZUL_MARCA = '#0170bb';
+const AZUL_MARCA = '#1d6bf3';
 
 /** Lado del render intermedio del que se recortan las letras. */
 const LADO_MAESTRO = 1024;

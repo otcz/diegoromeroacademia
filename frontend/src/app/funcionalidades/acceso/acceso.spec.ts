@@ -60,10 +60,17 @@ describe('Acceso', () => {
     expect(google?.getAttribute('href')).toContain('/acceso/oauth2/google');
   });
 
-  it('debe explicar la unificacion de cuentas, que es el no negociable numero uno', async () => {
+  it('debe conservar un h1, aunque no se vea: es el nombre de la pagina', async () => {
     const fixture = await crear();
+    const titulo: HTMLElement = fixture.nativeElement.querySelector('h1');
 
-    expect(fixture.nativeElement.textContent).toContain('llegarás a la misma');
+    // El propietario pidio quitar el texto visible. Borrar el encabezado ademas habria
+    // dejado la pagina sin nombre para quien navega saltando de encabezado en encabezado
+    // con un lector de pantalla, y sin el h1 que espera cualquier auditoria. Se oculta a la
+    // vista, no a la asistencia: son dos cosas distintas y aqui solo se pidio una.
+    expect(titulo).not.toBeNull();
+    expect(titulo.textContent?.trim()).not.toBe('');
+    expect(titulo.className).toContain('adr-solo-lectores');
   });
 
   it('no debe ofrecer ninguna salida que todavia no exista', async () => {
@@ -96,16 +103,23 @@ describe('Acceso', () => {
     expect(panel.getAttribute('aria-hidden')).toBeNull();
   });
 
-  it('debe decir la verdad sobre como se abre una cuenta: entrando con Google', async () => {
+  it('no debe llevar mas texto del imprescindible para entrar', async () => {
     const fixture = await crear();
     const texto: string = fixture.nativeElement.textContent;
 
-    // Decia «Crear cuenta — proximamente» y era falso: `IngresarConProveedorExterno` busca
-    // por sujeto, luego por correo, y si no encuentra a nadie CREA el usuario. Quien llegaba
-    // por primera vez leia que no podia entrar, teniendo el boton que lo hace justo encima.
-    expect(texto).toContain('Primera vez');
-    expect(texto).toContain('Google');
-    expect(texto).not.toContain('próximamente');
+    // Se quitaron la explicacion del metodo y la nota de primera vez: el propietario los
+    // considera ruido, y los dos botones ya dicen lo que hacen. Esta prueba sujeta esa
+    // decision — sin ella, la proxima frase «util» vuelve sin que nadie lo note.
+    //
+    // El titular no esta en la lista porque NO se borro: sigue en el `h1` invisible, y por
+    // tanto sigue en `textContent`. Que no se vea lo comprueba la prueba de arriba.
+    for (const retirado of ['Usa el método', 'Primera vez', 'queda creada']) {
+      expect(texto, retirado).not.toContain(retirado);
+    }
+
+    // Lo que si tiene que seguir estando.
+    expect(texto).toContain('Continuar con Google');
+    expect(texto).toContain('Entrar');
   });
 
   it('no debe enviar nada con el formulario vacio, y debe marcar los errores', async () => {

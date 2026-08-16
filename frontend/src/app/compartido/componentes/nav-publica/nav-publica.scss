@@ -18,9 +18,23 @@
 
 .adr-nav__marca {
   display: flex;
-  flex-direction: column;
+  gap: var(--adr-espacio-3);
+  align-items: center;
   color: var(--adr-color-tinta);
   text-decoration: none;
+}
+
+// Cuarenta: el alto de la barra menos su acolchado. Mas grande empuja la barra; mas pequenio
+// deja el anillo del logotipo tan fino que se pierde.
+.adr-nav__logotipo {
+  width: 40px;
+  height: 40px;
+  flex: none;
+}
+
+.adr-nav__marca-texto {
+  display: flex;
+  flex-direction: column;
 }
 
 .adr-nav__marca-nombre {
@@ -77,6 +91,16 @@
 @include m.en-movil {
   .adr-nav__boton {
     display: inline-flex;
+  }
+
+  // En celular manda el logotipo SOLO. Con el texto al lado, medido, la marca ocupaba 155 px
+  // de los ~92 utiles y «Diego Romero» caia a TRES lineas, subiendo la barra de 73 a 91 px —
+  // el mismo defecto que ya obligo a estrechar el boton de aqui abajo.
+  //
+  // Un logotipo esta hecho justo para esto: decir la marca donde no cabe escribirla. El
+  // nombre no se pierde para quien no lo ve, porque el enlace lleva su propio rotulo.
+  .adr-nav__marca-texto {
+    display: none;
   }
 
   // Relleno reducido, NO altura reducida. Solo hay ~92 px utiles entre la marca y la

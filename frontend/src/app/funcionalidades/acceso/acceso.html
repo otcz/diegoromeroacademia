@@ -18,11 +18,11 @@
   <!-- ====================================================== FORMULARIO -->
   <section class="acceso__panel">
     <div class="acceso__caja">
-      <h1 class="acceso__titulo">Entra a tu cuenta</h1>
-      <p class="adr-texto-secundario acceso__intro">
-        Usa el método que prefieras. Si ya entraste antes con otro, llegarás a la misma
-        cuenta.
-      </p>
+      <!-- El título va sin ver, no eliminado. Sin un `h1` la página se queda sin nombre para
+           quien navega con lector de pantalla —que salta de encabezado en encabezado— y sin
+           el encabezado que todo buscador y toda auditoría esperan. No ocupa un pixel: lo
+           visible es el afiche y los dos botones, que es lo que se pidió. -->
+      <h1 class="adr-solo-lectores">Entra a tu cuenta</h1>
 
       @if (estado() === 'error') {
         <adr-alerta tono="error">{{ mensajeError() }}</adr-alerta>
@@ -84,13 +84,6 @@
         </adr-boton>
       </form>
 
-      <p class="acceso__registro">
-        <!-- Decía «Crear cuenta — próximamente», y era FALSO: `IngresarConProveedorExterno`
-             busca por sujeto, luego por correo, y si no encuentra a nadie CREA el usuario.
-             Entrar con Google por primera vez ya abre la cuenta. Lo que no existe es el
-             registro por formulario, y esa es la distinción que hay que decir. -->
-        ¿Primera vez? Entra con Google y tu cuenta queda creada al instante.
-      </p>
     </div>
   </section>
 </main>

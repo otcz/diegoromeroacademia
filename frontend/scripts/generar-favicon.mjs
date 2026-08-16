@@ -14,11 +14,16 @@
  * LAS DE LA MARCA y no una imitación con Arial. Si el logotipo se rehace, se vuelve a
  * ejecutar esto y el icono se actualiza solo.
  *
- * <p><b>Por qué solo las letras y no la marca completa.</b> Medido a los tres tamaños del
- * ICO: la marca entera —anillo azul, disco negro, «DR» y debajo «DIEGO ROMERO»— es legible a
- * 48 px, aguanta a 32 y a 16 se empasta hasta ser una mancha gris dentro de un aro. A 16 px
- * no cabe esa cantidad de detalle, y 16 px es lo que pinta la pestaña. Se queda lo que
- * identifica: las dos letras, grandes, sobre el azul de la marca.
+ * <p><b>Va la marca ENTERA, no solo las letras.</b> Antes iba un recorte de las dos letras
+ * sobre un cuadro azul, porque a 16 px la marca completa se empasta. Se legía mejor, pero la
+ * pestaña mostraba «DR blanco sobre azul» y la aplicación «anillo azul sobre negro»: dos
+ * marcas distintas para la misma academia, y eso confunde más de lo que aclara un icono
+ * nítido. La pestaña y la aplicación tienen que enseñar lo MISMO.
+ *
+ * <p>Se acepta el coste: a 16 px el rótulo interior se empasta. Se compensa recortando al
+ * anillo —el cuadro negro del original deja un margen que solo resta tamaño— para que la
+ * marca llene la baldosa. A 32 px, que es lo que pide un navegador en pantalla de alta
+ * densidad, se lee bien.
  */
 import { createHash } from 'node:crypto';
 import { readdir, unlink, writeFile } from 'node:fs/promises';
@@ -39,26 +44,24 @@ const VECTOR = new URL('../../activos/marca/logo-dr.svg', import.meta.url).pathn
   '$1',
 );
 
-/**
- * Espejo de `--adr-color-azul-rey` en disenio/_tokens.scss. Si allí cambia, aquí también.
- *
- * <p>Un archivo binario no puede leer una variable CSS, así que el hexadecimal aparece
- * escrito. Es la misma excepción ya documentada para `theme-color` en `index.html`, y por eso
- * vive en UNA constante con su origen anotado.
- *
- * <p>Blanco sobre azul rey da 4,72:1, muy por encima del 3:1 que pide un elemento gráfico.
- * La combinación inversa solo llega a 3,66:1 y a 16 px se empasta hasta ser una mancha.
- */
-const AZUL_MARCA = '#1d6bf3';
+/** Fondo de la baldosa: el mismo negro que el logotipo lleva detras en su propio archivo. */
+const FONDO = '#000000';
 
-/** Lado del render intermedio del que se recortan las letras. */
+/** Lado del render intermedio del que se recorta la marca. */
 const LADO_MAESTRO = 1024;
 
-/** Umbral por canal para considerar un pixel «blanco» al buscar las letras. */
-const UMBRAL_BLANCO = 200;
+/** Por encima de esto, un canal ya no es «el fondo negro». Sirve para hallar la marca. */
+const UMBRAL_FONDO = 40;
 
-/** Cuánto del lado del icono ocupan las letras. El resto es aire. */
-const OCUPACION_LETRAS = 0.74;
+/**
+ * Cuanto del lado ocupa la marca.
+ *
+ * <p>Casi todo en el ICO: el anillo ya trae su propio aire dentro. En el de iOS se deja mas
+ * margen porque el sistema recorta las esquinas con su propia mascara, y sin margen el
+ * anillo se queda sin sus cuatro extremos.
+ */
+const OCUPACION_ICO = 0.94;
+const OCUPACION_APPLE = 0.82;
 
 /** Radio de la esquina, en fracción del lado. */
 const RADIO = 0.18;
@@ -68,110 +71,73 @@ const TAMANIOS_ICO = [16, 32, 48];
 const TAMANIO_APPLE = 180;
 
 /**
- * Recorta del logotipo la caja de las letras «DR», dejando fuera el rótulo «DIEGO ROMERO».
+ * Recorta del logotipo la caja de LA MARCA: el anillo azul con todo lo que lleva dentro.
  *
- * <p>Se BUSCA en vez de escribir las coordenadas a mano: unos números medidos hoy dejarían de
- * valer en silencio si el logotipo se reexporta con otro encuadre, y el fallo se vería como
+ * <p>Se BUSCA en vez de escribir las coordenadas a mano: unos numeros medidos hoy dejarian de
+ * valer en silencio si el logotipo se reexporta con otro encuadre, y el fallo se veria como
  * un icono descentrado que nadie relaciona con este archivo.
  *
- * <p>El método aprovecha que el logotipo tiene dos bloques blancos separados por una franja
- * sin un solo pixel claro: arriba las letras, abajo el rótulo. Se toma el PRIMER bloque.
+ * <p>El metodo aprovecha que el original es la marca sobre un cuadro NEGRO: todo lo que no es
+ * ese negro pertenece al dibujo. Ese cuadro solo aporta margen, y en una baldosa de 16 px el
+ * margen es tamanio que se pierde.
  */
-async function cajaDeLasLetras(maestro) {
+async function cajaDeLaMarca(maestro) {
   const { data, info } = await sharp(maestro).raw().toBuffer({ resolveWithObject: true });
-  const esBlanco = (x, y) => {
+  const esDibujo = (x, y) => {
     const i = (y * info.width + x) * info.channels;
-    return (
-      data[i] > UMBRAL_BLANCO && data[i + 1] > UMBRAL_BLANCO && data[i + 2] > UMBRAL_BLANCO
-    );
+    return data[i] > UMBRAL_FONDO || data[i + 1] > UMBRAL_FONDO || data[i + 2] > UMBRAL_FONDO;
   };
-
-  const filasConBlanco = [];
-  for (let y = 0; y < info.height; y += 1) {
-    for (let x = 0; x < info.width; x += 1) {
-      if (esBlanco(x, y)) {
-        filasConBlanco.push(y);
-        break;
-      }
-    }
-  }
-
-  if (filasConBlanco.length === 0) {
-    throw new Error('El logotipo no tiene pixeles blancos: cambio de colores o de formato.');
-  }
-
-  // Primer bloque contiguo de filas: las letras. El corte es la primera fila que salta.
-  let arriba = filasConBlanco[0];
-  let abajo = arriba;
-  for (const fila of filasConBlanco) {
-    if (fila > abajo + 1) {
-      break;
-    }
-    abajo = fila;
-  }
 
   let izquierda = info.width;
-  let derecha = 0;
-  for (let y = arriba; y <= abajo; y += 1) {
+  let derecha = -1;
+  let arriba = info.height;
+  let abajo = -1;
+
+  for (let y = 0; y < info.height; y += 1) {
     for (let x = 0; x < info.width; x += 1) {
-      if (esBlanco(x, y)) {
-        izquierda = Math.min(izquierda, x);
-        derecha = Math.max(derecha, x);
+      if (esDibujo(x, y)) {
+        if (x < izquierda) izquierda = x;
+        if (x > derecha) derecha = x;
+        if (y < arriba) arriba = y;
+        if (y > abajo) abajo = y;
       }
     }
   }
 
+  if (derecha < 0) {
+    throw new Error('El logotipo salio todo negro: cambio de colores o de formato.');
+  }
+
+  // Cuadrada y centrada en el dibujo: la marca es un circulo y un recorte rectangular la
+  // dejaria descentrada dentro de la baldosa.
+  const lado = Math.max(derecha - izquierda + 1, abajo - arriba + 1);
+  const centroX = (izquierda + derecha) / 2;
+  const centroY = (arriba + abajo) / 2;
+
   return {
-    left: izquierda,
-    top: arriba,
-    width: derecha - izquierda + 1,
-    height: abajo - arriba + 1,
+    left: Math.max(0, Math.round(centroX - lado / 2)),
+    top: Math.max(0, Math.round(centroY - lado / 2)),
+    width: Math.min(lado, info.width),
+    height: Math.min(lado, info.height),
   };
 }
 
-/**
- * Convierte el recorte —letras blancas sobre negro— en letras blancas con transparencia.
- *
- * <p>Componer el recorte tal cual dejaría su fondo negro encima del azul. Usar su luminancia
- * como canal alfa conserva el suavizado de los bordes, que es lo que hace que las letras no
- * se vean dentadas a tamaños pequeños.
- */
-async function letrasTransparentes(recorte, ancho, alto) {
-  const escalado = await sharp(recorte).resize(ancho, alto, { fit: 'fill' }).toBuffer();
-  const alfa = await sharp(escalado).greyscale().toColourspace('b-w').raw().toBuffer();
-  const blanco = await sharp({
-    create: { width: ancho, height: alto, channels: 3, background: '#ffffff' },
-  })
-    .raw()
-    .toBuffer();
-
-  return sharp(blanco, { raw: { width: ancho, height: alto, channels: 3 } })
-    .joinChannel(alfa, { raw: { width: ancho, height: alto, channels: 1 } })
-    .png()
-    .toBuffer();
-}
-
-/** Baldosa azul con las letras centradas. `redondear` a false para el icono de iOS. */
-async function icono(recorte, proporcion, lado, redondear) {
-  const anchoLetras = Math.round(lado * OCUPACION_LETRAS);
-  const altoLetras = Math.max(1, Math.round(anchoLetras / proporcion));
-  const letras = await letrasTransparentes(recorte, anchoLetras, altoLetras);
+/** Baldosa negra con la marca centrada. `redondear` a false para el icono de iOS. */
+async function icono(recorte, lado, redondear) {
+  const ocupacion = redondear ? OCUPACION_ICO : OCUPACION_APPLE;
+  const ladoMarca = Math.round(lado * ocupacion);
+  const marca = await sharp(recorte).resize(ladoMarca, ladoMarca).png().toBuffer();
 
   const radio = redondear ? Math.round(lado * RADIO) : 0;
   const fondo = Buffer.from(
     `<svg xmlns="http://www.w3.org/2000/svg" width="${lado}" height="${lado}">
-       <rect width="${lado}" height="${lado}" rx="${radio}" fill="${AZUL_MARCA}"/>
+       <rect width="${lado}" height="${lado}" rx="${radio}" fill="${FONDO}"/>
      </svg>`,
   );
 
+  const centrado = Math.round((lado - ladoMarca) / 2);
   return sharp(fondo)
-    .composite([
-      {
-        input: letras,
-        left: Math.round((lado - anchoLetras) / 2),
-        top: Math.round((lado - altoLetras) / 2),
-      },
-    ])
+    .composite([{ input: marca, left: centrado, top: centrado }])
     .png({ compressionLevel: 9 })
     .toBuffer();
 }
@@ -217,14 +183,13 @@ const maestro = await sharp(VECTOR, { density: 96 })
   .png()
   .toBuffer();
 
-const caja = await cajaDeLasLetras(maestro);
+const caja = await cajaDeLaMarca(maestro);
 const recorte = await sharp(maestro).extract(caja).png().toBuffer();
-const proporcion = caja.width / caja.height;
 
 const imagenes = await Promise.all(
   TAMANIOS_ICO.map(async (lado) => ({
     lado,
-    datos: await icono(recorte, proporcion, lado, true),
+    datos: await icono(recorte, lado, true),
   })),
 );
 
@@ -249,7 +214,7 @@ await writeFile(`${PUBLICO}favicon.${huella}.ico`, ico);
 // redondear dos veces deja una orla del color de fondo asomando en las esquinas.
 await writeFile(
   `${PUBLICO}apple-touch-icon.png`,
-  await icono(recorte, proporcion, TAMANIO_APPLE, false),
+  await icono(recorte, TAMANIO_APPLE, false),
 );
 
 // Descarta huellas anteriores para que no se acumulen huérfanas en la imagen publicada.
@@ -260,7 +225,7 @@ for (const viejo of await readdir(PUBLICO)) {
   }
 }
 
-console.warn(`letras detectadas      ${caja.width}x${caja.height} px en ${caja.left},${caja.top}`);
+console.warn(`marca detectada       ${caja.width}x${caja.height} px en ${caja.left},${caja.top}`);
 console.warn(`favicon.ico            ${TAMANIOS_ICO.join('/')} px`);
 console.warn(`favicon.${huella}.ico   ← esta es la que enlaza index.html`);
 console.warn(`apple-touch-icon.png   ${TAMANIO_APPLE}x${TAMANIO_APPLE} px`);

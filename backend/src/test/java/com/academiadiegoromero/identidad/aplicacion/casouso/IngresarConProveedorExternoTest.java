@@ -8,6 +8,7 @@ import com.academiadiegoromero.identidad.aplicacion.dto.PerfilExterno;
 import com.academiadiegoromero.identidad.dominio.excepcion.CorreoSinVerificarExcepcion;
 import com.academiadiegoromero.identidad.dominio.excepcion.CuentaDesactivadaExcepcion;
 import com.academiadiegoromero.identidad.dominio.modelo.DatosUsuario;
+import com.academiadiegoromero.identidad.dominio.modelo.EstadoCuenta;
 import com.academiadiegoromero.identidad.dominio.modelo.IdentidadExterna;
 import com.academiadiegoromero.identidad.dominio.modelo.ProveedorIdentidad;
 import com.academiadiegoromero.identidad.dominio.modelo.Rol;
@@ -33,13 +34,15 @@ class IngresarConProveedorExternoTest {
     private static final String CORREO = "alumno@ejemplo.com";
 
     private RepositorioUsuarioEnMemoria repositorio;
+    private RepositorioCredencialEnMemoria credenciales;
     private IngresarConProveedorExterno ingresar;
 
     @BeforeEach
     void prepararCasoDeUso() {
         repositorio = new RepositorioUsuarioEnMemoria();
+        credenciales = new RepositorioCredencialEnMemoria();
         ingresar = new IngresarConProveedorExterno(
-                repositorio, Clock.fixed(AHORA, ZoneOffset.UTC));
+                repositorio, credenciales, Clock.fixed(AHORA, ZoneOffset.UTC));
     }
 
     @Test
@@ -135,7 +138,7 @@ class IngresarConProveedorExternoTest {
     void debeRechazarCuentaDesactivada() {
         repositorio.guardar(Usuario.rehidratar(
                 java.util.UUID.randomUUID(),
-                new DatosUsuario(new Correo(CORREO), "Alumno", Rol.ALUMNO, false),
+                new DatosUsuario(new Correo(CORREO), "Alumno", Rol.ALUMNO, new EstadoCuenta(false, true)),
                 AHORA,
                 List.of()));
 
@@ -147,40 +150,4 @@ class IngresarConProveedorExternoTest {
         return new PerfilExterno(proveedor, sujeto, new Correo(CORREO), "Alumno", true);
     }
 
-    /** Doble en memoria del puerto. Existe para que estas pruebas no necesiten PostgreSQL. */
-    private static final class RepositorioUsuarioEnMemoria
-            implements com.academiadiegoromero.identidad.dominio.puerto.RepositorioUsuario {
-
-        private final List<Usuario> guardados = new java.util.ArrayList<>();
-
-        @Override
-        public java.util.Optional<Usuario> buscarPorIdentidad(
-                ProveedorIdentidad proveedor, String sujeto) {
-            return guardados.stream()
-                    .filter(u -> u.identidadDe(proveedor)
-                            .map(i -> i.sujeto().equals(sujeto))
-                            .orElse(false))
-                    .findFirst();
-        }
-
-        @Override
-        public java.util.Optional<Usuario> buscarPorCorreo(Correo correo) {
-            return guardados.stream().filter(u -> u.datos().correo().equals(correo)).findFirst();
-        }
-
-        @Override
-        public Usuario guardar(Usuario usuario) {
-            guardados.add(usuario);
-            return usuario;
-        }
-
-        @Override
-        public void vincularIdentidad(Usuario usuario, IdentidadExterna identidad) {
-            // El agregado ya se actualizo en memoria; aqui no hay nada que persistir.
-        }
-
-        int cuantos() {
-            return guardados.size();
-        }
-    }
 }

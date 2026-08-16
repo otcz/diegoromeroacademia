@@ -7,6 +7,7 @@ import com.academiadiegoromero.identidad.dominio.modelo.Usuario;
 import com.academiadiegoromero.identidad.dominio.puerto.RepositorioUsuario;
 import com.academiadiegoromero.identidad.infraestructura.persistencia.entidad.UsuarioEntidad;
 import java.util.Optional;
+import java.util.UUID;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -37,6 +38,12 @@ class RepositorioUsuarioAdaptador implements RepositorioUsuario {
     @Transactional(readOnly = true)
     public Optional<Usuario> buscarPorCorreo(Correo correo) {
         return jpa.findByCorreo(correo.valor()).map(UsuarioEntidad::aDominio);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public Optional<Usuario> buscarPorId(UUID id) {
+        return jpa.findById(id).map(UsuarioEntidad::aDominio);
     }
 
     @Override

@@ -38,6 +38,12 @@ class ConfiguracionSeguridad {
     /** Base desde la que arranca el flujo. El frontend enlaza aqui. */
     static final String BASE_AUTORIZACION = "/api/acceso/oauth2";
 
+    /** Abrir sesion con correo y contrasena. Publico: es la puerta de entrada. */
+    static final String RUTA_SESION = "/api/acceso/sesion";
+
+    /** Poner o cambiar la contrasena. EXIGE sesion: no se toca la cuenta de otro. */
+    static final String RUTA_CONTRASENA = "/api/acceso/contrasena";
+
     /** A donde vuelve el proveedor con el codigo. Debe estar registrado en su consola. */
     static final String BASE_REDIRECCION = "/api/acceso/oauth2/callback/*";
 
@@ -67,7 +73,7 @@ class ConfiguracionSeguridad {
                 // IF_REQUIRED y no STATELESS: sin sesion no hay donde guardar el `state`.
                 .sessionManagement(s -> s.sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED))
 
-                .authorizeHttpRequests(rutas -> rutas.anyRequest().permitAll())
+                .authorizeHttpRequests(ConfiguracionSeguridad::declararQuienEntraSinSesion)
 
                 .oauth2Login(o -> o
                         .authorizationEndpoint(e -> e.baseUri(BASE_AUTORIZACION))
@@ -81,5 +87,23 @@ class ConfiguracionSeguridad {
                         .deleteCookies("JSESSIONID"))
 
                 .build();
+    }
+
+    /**
+     * Abierto SOLO lo que tiene que estarlo.
+     *
+     * <p>Al principio esto era un  para todo el tramo, y con eso el endpoint de
+     * contrasena quedaba accesible sin sesion: llegaba al controlador sin usuario y reventaba
+     * con un 500 en vez de rechazar la peticion. Cerrar por omision y abrir a mano lo
+     * imprescindible evita esa clase de descuido: un endpoint nuevo nace protegido.
+     */
+    private static void declararQuienEntraSinSesion(
+            org.springframework.security.config.annotation.web.configurers
+                            .AuthorizeHttpRequestsConfigurer<HttpSecurity>
+                            .AuthorizationManagerRequestMatcherRegistry
+                    rutas) {
+        rutas.requestMatchers(RUTA_CONTRASENA).authenticated()
+                .requestMatchers(BASE_AUTORIZACION + "/**", RUTA_SESION).permitAll()
+                .anyRequest().authenticated();
     }
 }

@@ -2,6 +2,7 @@ package com.academiadiegoromero.identidad.infraestructura.persistencia.entidad;
 
 import com.academiadiegoromero.compartido.dominio.modelo.Correo;
 import com.academiadiegoromero.identidad.dominio.modelo.DatosUsuario;
+import com.academiadiegoromero.identidad.dominio.modelo.EstadoCuenta;
 import com.academiadiegoromero.identidad.dominio.modelo.IdentidadExterna;
 import com.academiadiegoromero.identidad.dominio.modelo.Rol;
 import com.academiadiegoromero.identidad.dominio.modelo.Usuario;
@@ -47,6 +48,9 @@ public class UsuarioEntidad {
     @Column(nullable = false)
     private boolean activo;
 
+    @Column(name = "correo_verificado", nullable = false)
+    private boolean correoVerificado;
+
     @Column(name = "registrado_en", nullable = false)
     private Instant registradoEn;
 
@@ -72,7 +76,8 @@ public class UsuarioEntidad {
         entidad.correo = usuario.datos().correo().valor();
         entidad.nombre = usuario.datos().nombre();
         entidad.rol = usuario.datos().rol();
-        entidad.activo = usuario.datos().activo();
+        entidad.activo = usuario.datos().estado().activa();
+        entidad.correoVerificado = usuario.datos().estado().correoVerificado();
         entidad.registradoEn = usuario.registradoEn();
         for (IdentidadExterna identidad : usuario.identidades()) {
             entidad.agregarIdentidad(identidad);
@@ -87,7 +92,8 @@ public class UsuarioEntidad {
     public Usuario aDominio() {
         return Usuario.rehidratar(
                 id,
-                new DatosUsuario(new Correo(correo), nombre, rol, activo),
+                new DatosUsuario(
+                        new Correo(correo), nombre, rol, new EstadoCuenta(activo, correoVerificado)),
                 registradoEn,
                 identidades.stream().map(IdentidadExternaEntidad::aDominio).toList());
     }

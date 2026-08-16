@@ -102,7 +102,7 @@ class UsuarioTest {
     @DisplayName("se rehidrata tal cual se guardo")
     void debeRehidratarse() {
         UUID id = UUID.randomUUID();
-        DatosUsuario datos = new DatosUsuario(CORREO, "Alumno", Rol.INSTRUCTOR, true);
+        DatosUsuario datos = new DatosUsuario(CORREO, "Alumno", Rol.INSTRUCTOR, EstadoCuenta.verificada());
 
         Usuario usuario = Usuario.rehidratar(id, datos, AHORA, List.of(GOOGLE));
 

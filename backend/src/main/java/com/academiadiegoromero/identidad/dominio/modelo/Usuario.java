@@ -53,7 +53,7 @@ public final class Usuario {
         }
         return new Usuario(
                 UUID.randomUUID(),
-                new DatosUsuario(correo, nombre, Rol.ALUMNO, true),
+                new DatosUsuario(correo, nombre, Rol.ALUMNO, EstadoCuenta.verificada()),
                 ahora,
                 List.of(identidad));
     }
@@ -82,6 +82,17 @@ public final class Usuario {
             return;
         }
         identidades.add(identidad);
+    }
+
+    /**
+     * Da por probado que el correo es de quien entra.
+     *
+     * <p>Lo llama la unificacion cuando un proveedor externo AFIRMA haber verificado la
+     * direccion. Una prueba del proveedor vale mas que una afirmacion sin verificar, que es
+     * lo unico que puede haber dejado un registro con contrasena sin confirmar.
+     */
+    public void confirmarCorreo() {
+        this.datos = datos.conCorreoVerificado();
     }
 
     public Optional<IdentidadExterna> identidadDe(ProveedorIdentidad proveedor) {

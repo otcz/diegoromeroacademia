@@ -16,7 +16,7 @@ class DatosUsuarioTest {
     @Test
     @DisplayName("recorta los espacios del nombre")
     void debeRecortarElNombre() {
-        DatosUsuario datos = new DatosUsuario(CORREO, "  Diego  ", Rol.ALUMNO, true);
+        DatosUsuario datos = new DatosUsuario(CORREO, "  Diego  ", Rol.ALUMNO, new EstadoCuenta(true, true));
 
         assertThat(datos.nombre()).isEqualTo("Diego");
     }
@@ -24,24 +24,25 @@ class DatosUsuarioTest {
     @Test
     @DisplayName("exige correo, rol y nombre")
     void debeExigirLosCamposObligatorios() {
-        assertThatThrownBy(() -> new DatosUsuario(null, "Diego", Rol.ALUMNO, true))
+        assertThatThrownBy(() -> new DatosUsuario(null, "Diego", Rol.ALUMNO, new EstadoCuenta(true, true)))
                 .isInstanceOf(DatoInvalidoExcepcion.class);
-        assertThatThrownBy(() -> new DatosUsuario(CORREO, "Diego", null, true))
+        assertThatThrownBy(() -> new DatosUsuario(CORREO, "Diego", null, new EstadoCuenta(true, true)))
                 .isInstanceOf(DatoInvalidoExcepcion.class);
-        assertThatThrownBy(() -> new DatosUsuario(CORREO, "   ", Rol.ALUMNO, true))
+        assertThatThrownBy(() -> new DatosUsuario(CORREO, "   ", Rol.ALUMNO, new EstadoCuenta(true, true)))
                 .isInstanceOf(DatoInvalidoExcepcion.class);
     }
 
     @Test
-    @DisplayName("la copia desactivada conserva todo lo demas")
-    void debeDesactivarSinPerderNada() {
-        DatosUsuario activo = new DatosUsuario(CORREO, "Diego", Rol.INSTRUCTOR, true);
+    @DisplayName("la copia con correo verificado conserva todo lo demas")
+    void debeVerificarSinPerderNada() {
+        DatosUsuario sinVerificar =
+                new DatosUsuario(CORREO, "Diego", Rol.INSTRUCTOR, EstadoCuenta.sinVerificar());
 
-        DatosUsuario baja = activo.desactivado();
+        DatosUsuario verificado = sinVerificar.conCorreoVerificado();
 
-        assertThat(baja.activo()).isFalse();
-        assertThat(baja.correo()).isEqualTo(activo.correo());
-        assertThat(baja.nombre()).isEqualTo(activo.nombre());
-        assertThat(baja.rol()).isEqualTo(activo.rol());
+        assertThat(verificado.estado().correoVerificado()).isTrue();
+        assertThat(verificado.estado().activa()).isTrue();
+        assertThat(verificado.correo()).isEqualTo(sinVerificar.correo());
+        assertThat(verificado.rol()).isEqualTo(sinVerificar.rol());
     }
 }

@@ -5,6 +5,7 @@ import com.academiadiegoromero.identidad.dominio.modelo.IdentidadExterna;
 import com.academiadiegoromero.identidad.dominio.modelo.ProveedorIdentidad;
 import com.academiadiegoromero.identidad.dominio.modelo.Usuario;
 import java.util.Optional;
+import java.util.UUID;
 
 /**
  * Puerto de salida hacia donde vivan los usuarios.
@@ -30,6 +31,15 @@ public interface RepositorioUsuario {
      * que la comparacion es exacta y no depende de como escriba el proveedor la direccion.
      */
     Optional<Usuario> buscarPorCorreo(Correo correo);
+
+    /**
+     * Busca por identificador interno.
+     *
+     * <p>Es como se resuelve al usuario de una sesion ya abierta: el principal que se guarda
+     * es el UUID, nunca el correo — un identificador interno no cambia si la persona cambia
+     * de direccion, y no es un dato personal si acaba en una bitacora.
+     */
+    Optional<Usuario> buscarPorId(UUID id);
 
     /** Guarda un usuario nuevo o actualiza uno existente, con sus identidades. */
     Usuario guardar(Usuario usuario);

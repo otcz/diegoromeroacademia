@@ -5,6 +5,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ProblemDetail;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
@@ -29,6 +30,29 @@ public class ManejadorErroresGlobal {
         var problema = ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST, excepcion.getMessage());
         problema.setTitle("Solicitud invalida");
         problema.setProperty(PROPIEDAD_CODIGO, excepcion.codigo());
+        return problema;
+    }
+
+    /**
+     * Un cuerpo que no cumple sus restricciones es culpa de la peticion: 400, no 500.
+     *
+     * <p>Sin esto caia en la red de abajo y se devolvia «error interno» — se le decia al
+     * cliente que el servidor se rompio cuando lo que mando estaba mal, y ademas se ensuciaba
+     * la bitacora de errores con ruido que no es del sistema. Medido: enviar el formulario de
+     * acceso vacio devolvia 500.
+     *
+     * <p>No se detalla QUE campo fallo: en el formulario de acceso, decir «el correo tiene
+     * formato invalido» frente a «faltan datos» ya empieza a describir que forma tiene un
+     * correo aceptado. El frontend valida antes y sabe lo que envio.
+     */
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    ProblemDetail manejarValidacionDeCuerpo(MethodArgumentNotValidException excepcion) {
+        REGISTRO.warn("Peticion con cuerpo invalido: {} campo(s)", excepcion.getErrorCount());
+
+        var problema = ProblemDetail.forStatusAndDetail(
+                HttpStatus.BAD_REQUEST, "Faltan datos obligatorios o no tienen el formato esperado.");
+        problema.setTitle("Solicitud invalida");
+        problema.setProperty(PROPIEDAD_CODIGO, "DATOS_INVALIDOS");
         return problema;
     }
 

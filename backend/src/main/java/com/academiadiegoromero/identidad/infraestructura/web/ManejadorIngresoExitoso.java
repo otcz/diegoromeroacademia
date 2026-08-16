@@ -32,14 +32,17 @@ public class ManejadorIngresoExitoso implements AuthenticationSuccessHandler {
 
     private final IngresarConProveedorExterno ingresar;
     private final TraductorPerfilOidc traductor;
+    private final AbridorDeSesion abridor;
     private final String destinoTrasIngresar;
 
     public ManejadorIngresoExitoso(
             IngresarConProveedorExterno ingresar,
             TraductorPerfilOidc traductor,
+            AbridorDeSesion abridor,
             IdentidadPropiedades propiedades) {
         this.ingresar = ingresar;
         this.traductor = traductor;
+        this.abridor = abridor;
         this.destinoTrasIngresar = propiedades.destinoTrasIngresar();
     }
 
@@ -53,6 +56,12 @@ public class ManejadorIngresoExitoso implements AuthenticationSuccessHandler {
                 traductor.traducir(token.getAuthorizedClientRegistrationId(), token.getPrincipal());
 
         Usuario usuario = ingresar.ejecutar(perfil);
+
+        // Se reabre la sesion con NUESTRO usuario, no con el objeto de Google. Sin esto, el
+        // resto de la API veria un principal distinto segun por donde entro cada quien, y esa
+        // es la clase de diferencia por la que una comprobacion acaba aplicandose solo a la
+        // mitad de los usuarios.
+        abridor.abrir(peticion, respuesta, usuario);
 
         // Se registra el identificador interno, NUNCA el correo: docs/06 prohibe datos
         // personales en la bitacora, y el UUID basta para seguir el rastro de un incidente.

@@ -1,57 +1,43 @@
 @use 'mixins' as m;
 
+// La proporcion del afiche. Es lo unico del archivo que esta hoja necesita saber, y esta
+// aqui una sola vez: si el material grafico cambia de forma, se cambia este numero.
 .acceso {
+  --acceso-proporcion-afiche: calc(1080 / 1920);
+
+  // La columna de la imagen mide LO QUE MIDE EL AFICHE a la altura de la ventana.
+  //
+  // Antes era una fraccion fija —5 de 12— y el afiche, que es vertical 9:16, no encajaba
+  // nunca: o se le recortaba el rotulo, o sobraban dos bandas a los lados que habia que
+  // disimular con un desenfoque. Pero disimular el hueco es tratar el sintoma; el hueco era
+  // el problema. Con la columna a la medida no sobra nada que tapar ni falta nada que
+  // recortar, y por eso no hace falta ningun efecto.
+  //
+  // El tope de 45vw es para las ventanas mas altas que anchas, donde la cuenta pediria una
+  // columna que se comeria el formulario. Alli el afiche se centra y lo que queda es azul
+  // noche liso — un margen, no un borron.
   display: grid;
-  grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
-  min-height: 100vh;
+  grid-template-columns:
+    min(45vw, calc(100dvh * var(--acceso-proporcion-afiche)))
+    minmax(0, 1fr);
+  min-height: 100dvh;
 }
 
 // ------------------------------------------------------------ panel de marca
 //
-// Sin una palabra encima, el panel ES la foto. Por eso desaparecen el acolchado, el reparto
-// en columna y los dos velos: existian todos para que se leyera la letra, y ya no hay letra
-// que proteger. El unico requisito que queda es que la imagen llegue a los cuatro bordes.
+// Anclado y con alto de ventana, no simplemente estirado: si el formulario creciera mas que
+// la pantalla —un error largo, una fuente grande— la fila se haria mas alta que la ventana,
+// la columna seguiria calculada sobre `dvh` y volverian las bandas, esta vez arriba y abajo.
+// Anclado, el panel mide siempre exactamente la ventana y la cuenta se sostiene.
 .acceso__marca {
-  position: relative;
-  overflow: hidden;
+  position: sticky;
+  top: 0;
+  align-self: start;
+  height: 100dvh;
 
-  // Se ve mientras la foto carga, y sostiene el panel si no llegara a cargar nunca.
-  background:
-    radial-gradient(120% 90% at 15% 0%, color-mix(in srgb, var(--adr-color-azul-rey) 22%, transparent), transparent 60%),
-    var(--adr-color-noche-azul);
-}
-
-// Dos capas de la MISMA imagen, y esa es toda la idea.
-//
-// Un afiche es una composicion cerrada: se lee entero o no se lee. Recortarlo para llenar el
-// panel le corta el rotulo o el logotipo, que es justo lo que lo hace un afiche. Pero
-// encajarlo entero deja dos bandas vacias a los lados, y un panel medio vacio era lo que se
-// queria quitar de encima.
-//
-// La salida es que las bandas no queden vacias: las llena la misma imagen ampliada y
-// desenfocada. Se lee como una sola pieza con profundidad, no como un recorte pegado sobre
-// un fondo, y no hace falta ni inventar pixeles ni cortarle nada al afiche.
-
-// Capa de atras: rellena el panel, fuera de foco y oscurecida para que no compita.
-.acceso__marca::before {
-  position: absolute;
-  inset: 0;
-  content: '';
-  background-image: var(--acceso-foto);
-  background-position: center;
-  background-size: cover;
-  filter: blur(38px) brightness(0.72) saturate(1.15);
-
-  // El desenfoque arrastra los bordes hacia dentro y deja una orla clara. Se agranda la capa
-  // lo justo para que ese borde caiga fuera del panel.
-  scale: 1.12;
-}
-
-// Capa de delante: el afiche ENTERO, sin recortar.
-.acceso__marca::after {
-  position: absolute;
-  inset: 0;
-  content: '';
+  // `contain` y no `cover`: un afiche es una composicion cerrada, se lee entero o no se lee.
+  // El color de debajo solo asoma en esas ventanas raras, y mientras la imagen carga.
+  background-color: var(--adr-color-noche-azul);
   background-image: var(--acceso-foto);
   background-position: center;
   background-repeat: no-repeat;
@@ -145,29 +131,18 @@ adr-alerta {
     min-height: auto;
   }
 
-  // En celular el panel de marca se reduce a una cabecera: la pantalla debe abrir
-  // con el formulario a la vista, no obligar a desplazarse para llegar a el.
+  // En celular el panel de marca se reduce a una cabecera: la pantalla debe abrir con el
+  // formulario a la vista, no obligar a desplazarse para llegar a el. Deja de estar anclado
+  // y de medir la ventana — aqui es una franja, no una columna.
   //
-  // Pero una cabecera de 60 px con la foto recortada es ruido, no imagen. Se le da alto
-  // suficiente para que se reconozca a Diego con el acordeon, que es lo que aporta.
+  // En 190 px de alto el afiche entero se veria como un sello diminuto, asi que aqui SI
+  // manda el recorte, encuadrado mas abajo que el centro: a lo apaisado el centro deja fuera
+  // el acordeon y arriba solo queda techo de tarima.
   .acceso__marca {
-    min-height: 190px;
-  }
-
-  // En una franja apaisada de 190 px la foto completa se veria como un sello diminuto en
-  // medio, con desenfoque a los dos lados. Aqui manda el recorte: se quita la capa nitida y
-  // la de atras vuelve a ser la foto normal, sin desenfocar.
-  //
-  // Y se encuadra mas abajo que en escritorio, porque a lo apaisado el centro deja fuera el
-  // acordeon y arriba solo queda techo de tarima.
-  .acceso__marca::before {
+    position: static;
+    height: 190px;
     background-position: center 42%;
-    filter: none;
-    scale: 1;
-  }
-
-  .acceso__marca::after {
-    display: none;
+    background-size: cover;
   }
 
   .acceso__panel {

@@ -16,19 +16,19 @@
       decoding="async"
     />
 
-    <div class="acceso__foto-texto">
-      <!-- La marca vive aquí en móvil y tableta vertical, y en la columna del formulario
-           desde tableta horizontal. Son dos copias y solo una se dibuja: la que está oculta
-           con `display:none` no existe para un lector de pantalla, así que no se anuncia dos
-           veces. Moverla con CSS entre dos paneles hermanos no es posible. -->
-      <div class="acceso__identidad acceso__identidad--foto">
-        <img class="acceso__avatar" [src]="logotipo" alt="" width="56" height="56" />
-        <span class="acceso__identidad-texto">
-          <span class="acceso__identidad-nombre">{{ marca.nombre }}</span>
-          <span class="acceso__identidad-kicker">{{ marca.bajada }}</span>
-        </span>
-      </div>
+    <!-- La marca, arriba a la izquierda de la foto. Estaba duplicada —una copia encima de la
+         foto en pantallas pequenias y otra encabezando el formulario en grandes— y solo se
+         dibujaba una. Con el sitio fijo en la esquina sobra la segunda: menos marcado, y el
+         nombre deja de saltar de un panel a otro segun el ancho. -->
+    <div class="acceso__identidad">
+      <img class="acceso__avatar" [src]="logotipo" alt="" width="56" height="56" />
+      <span class="acceso__identidad-texto">
+        <span class="acceso__identidad-nombre">{{ marca.nombre }}</span>
+        <span class="acceso__identidad-kicker">{{ marca.bajada }}</span>
+      </span>
+    </div>
 
+    <div class="acceso__foto-texto">
       <!-- Kicker encima del titular, en mango. Es la composicion que ya usa el heroe de la
            portada, y resuelve de paso lo que fallaba: suelto en la esquina se leia como una
            chapa pegada y quedaba escondido. Aqui forma una unidad con el titular —de donde
@@ -61,14 +61,6 @@
   <!-- ==================================================== PANEL DEL FORMULARIO -->
   <section class="acceso__panel">
     <div class="acceso__caja">
-      <div class="acceso__identidad acceso__identidad--panel">
-        <img class="acceso__avatar" [src]="logotipo" alt="" width="56" height="56" />
-        <span class="acceso__identidad-texto">
-          <span class="acceso__identidad-nombre">{{ marca.nombre }}</span>
-          <span class="acceso__identidad-kicker">{{ marca.bajada }}</span>
-        </span>
-      </div>
-
       <!-- El título va sin ver, no eliminado — mismo criterio que la primera vez que se pidió
            quitarlo. Sin un h1 la página se queda sin nombre para quien navega saltando de
            encabezado en encabezado con un lector de pantalla, y sin el encabezado que espera

@@ -48,6 +48,10 @@ $quiebre-partido: 1024px;
   // mantiene asi en los tres puntos de quiebre sin tener que acordarse de ajustar dos numeros.
   --acceso-titular: 32px;
 
+  // Margen del panel de la foto. Lo comparten la marca de arriba y el bloque de abajo, para
+  // que los dos cuelguen de la misma linea vertical.
+  --acceso-margen: 38px;
+
   display: grid;
   min-height: 100dvh;
   background: var(--adr-color-noche-azul);
@@ -80,18 +84,33 @@ $quiebre-partido: 1024px;
   content: '';
   background:
     linear-gradient(100deg, rgb(8 6 20 / 12%) 38%, var(--adr-scrim-lateral) 100%),
-    linear-gradient(to top, var(--adr-scrim-inferior) 0%, rgb(8 6 20 / 5%) 52%);
+    // Suave, solo para fundir. El que GARANTIZA el contraste ya no vive aqui: va pegado al
+    // bloque de texto, porque en porcentajes del panel fallaba en cuanto el heroe se hacia
+    // bajo — en celular mide 309 px, el texto cae al 37% y ahi este degradado aun no entra.
+    linear-gradient(to top, rgb(8 6 20 / 55%) 0%, rgb(8 6 20 / 5%) 55%),
+    // Tercero, arriba: lo pide la marca desde que subio a esta esquina. Los otros dos dejan
+    // el borde superior casi limpio, y ahi el nombre caia sobre la foto sin nada detras.
+    linear-gradient(to bottom, rgb(8 6 20 / 78%) 0%, rgb(8 6 20 / 0%) 26%);
 }
 
+// El bloque de texto lleva SU PROPIO velo, no uno medido sobre el panel.
+//
+// Es la leccion que ya costo una vez en esta pantalla: un degradado repartido en porcentajes
+// vale para el alto en que se midio y falla en el de al lado. Aqui el velo entra siempre 120
+// px por encima de la primera letra y llega opaco al pie, mida lo que mida el heroe y toque
+// lo que toque de la foto. El acolchado lateral sustituye al margen: asi el fondo llega a los
+// bordes del panel y no se ve como una tarjeta pegada.
 .acceso__foto-texto {
   position: absolute;
   z-index: 1;
-  right: var(--adr-espacio-6);
-  bottom: var(--adr-espacio-6);
-  left: var(--adr-espacio-6);
+  right: 0;
+  bottom: 0;
+  left: 0;
   display: flex;
   flex-direction: column;
   gap: var(--adr-espacio-3);
+  padding: 120px var(--acceso-margen) var(--acceso-margen);
+  background: linear-gradient(to bottom, rgb(8 6 20 / 0%) 0, rgb(8 6 20 / 88%) 120px);
 }
 
 .acceso__titular {
@@ -141,9 +160,17 @@ $quiebre-partido: 1024px;
 }
 
 // ------------------------------------------------------------------ identidad
+//
+// Anclada a la esquina superior izquierda de la foto. Comparte el margen con el bloque de
+// abajo —misma variable— para que los dos extremos de la columna cuelguen de la misma linea:
+// es lo que hace que se lea ordenada y no como dos piezas colocadas por separado.
 .acceso__identidad {
+  position: absolute;
+  z-index: 1;
+  top: var(--acceso-margen);
+  left: var(--acceso-margen);
   display: flex;
-  gap: 13px;
+  gap: var(--adr-espacio-3);
   align-items: center;
 }
 
@@ -165,18 +192,23 @@ $quiebre-partido: 1024px;
   gap: 4px;
 }
 
+// El nombre toma el tamanio del kicker del titular, que es la escala de este panel. Antes iba
+// a 15 px fijos, heredados de cuando vivia en la columna del formulario, y en la foto se veia
+// pequenio al lado de todo lo demas.
 .acceso__identidad-nombre {
-  font-size: 15px;
+  font-size: calc(var(--acceso-titular) * 0.5);
   font-weight: 700;
-  line-height: 1;
+  line-height: 1.1;
   color: var(--adr-color-blanco);
 }
 
 .acceso__identidad-kicker {
-  font-size: 9.5px;
+  // Con suelo: la fraccion sola lo dejaba en 8,96 px en escritorio y 7,3 en celular, y una
+  // linea en mayusculas con espaciado por debajo de 10 px deja de leerse y pasa a ser textura.
+  font-size: max(10px, calc(var(--acceso-titular) * 0.32));
   font-weight: 600;
   line-height: 1;
-  color: rgb(255 255 255 / 55%);
+  color: var(--adr-oscuro-texto-suave);
   text-transform: uppercase;
   letter-spacing: 0.18em;
 }
@@ -251,12 +283,9 @@ adr-alerta {
 // Apilado por debajo de 1024: la foto arriba, el formulario debajo. Partido a partir de ahi.
 @include apilado {
   .acceso {
-    grid-template-rows: auto 1fr;
-  }
+    --acceso-margen: 24px;
 
-  // La marca vive DENTRO de la foto, sobre el titular.
-  .acceso__identidad--panel {
-    display: none;
+    grid-template-rows: auto 1fr;
   }
 
   .acceso__foto {
@@ -294,10 +323,8 @@ adr-alerta {
     height: clamp(360px, 42vh, 470px);
   }
 
-  .acceso__foto-texto {
-    right: var(--adr-espacio-7);
-    bottom: var(--adr-espacio-7);
-    left: var(--adr-espacio-7);
+  .acceso {
+    --acceso-margen: 48px;
   }
 
   .acceso {
@@ -318,17 +345,6 @@ adr-alerta {
     // 44% para la foto: es lo que fija el handoff, y deja al formulario el ancho que necesita
     // para no estrecharse en una tableta horizontal.
     grid-template-columns: 44% minmax(0, 1fr);
-  }
-
-  // Ahora la marca encabeza el formulario, no la foto.
-  .acceso__identidad--foto {
-    display: none;
-  }
-
-  .acceso__foto-texto {
-    right: 34px;
-    bottom: 40px;
-    left: 38px;
   }
 
   .acceso__panel {

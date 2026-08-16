@@ -62,9 +62,26 @@
   background: var(--adr-color-niebla);
 }
 
+// Los controles de ESTA pantalla van mas grandes que los del resto del sitio.
+//
+// No es capricho: al quitar el titular y los dos parrafos, el formulario quedo como un
+// bloque pequenio flotando en una columna ancha. En una pantalla cuyo unico proposito es
+// pulsar un boton, ese boton tiene que pesar.
+//
+// Se sube redefiniendo los TOKENS en este contenedor, no tocando el boton ni el campo.
+// Asi el catalogo se queda intacto —ningun otro sitio cambia— y los dos crecen a la vez y
+// siguen coincidiendo entre si, que es lo que se rompe cuando cada uno se ajusta a mano.
 .acceso__caja {
+  // 56 en vez de 48. Sigue por encima del minimo tactil de docs/04 §5, que era el motivo
+  // de los 48: subirlo nunca lo incumple, bajarlo si.
+  --adr-altura-control: 56px;
+  --adr-texto-ui: 16px;
+  --adr-texto-cuerpo: 17px;
+
   width: 100%;
-  max-width: 420px;
+
+  // La caja acompania a los controles: con 420 y los botones a 56 se ve estrecha de alto.
+  max-width: 480px;
 }
 
 adr-alerta {

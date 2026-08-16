@@ -64,6 +64,23 @@ const RECETA = {
  */
 const TRABAJOS = [
   {
+    // La foto de Diego SIN los textos del afiche. La edito el propietario para el rediseño
+    // del acceso: se recorto el rotulado impreso y se borro el destello, porque en el diseño
+    // nuevo el titular es TEXTO de la interfaz y no pixeles dentro de la imagen. Con eso el
+    // titular escala, se selecciona, lo lee un lector de pantalla y se traduce.
+    //
+    // Va CRUDA por lo mismo que el afiche: el diseño se aprobo con estos colores. Pasarla por
+    // la receta —que baja saturacion y añade velo— la alejaria de lo aprobado.
+    origen: 'diego-tocando.png',
+    destino: 'diego-tocando.png',
+    ancho: 1080,
+    relacion: 1080 / 950,
+    foco: { x: 0.5, y: 0.5 },
+    zoom: 1,
+    minimo: 900,
+    crudo: true,
+  },
+  {
     // EL acordeon vallenato: un Hohner Corona III, con su marca a la vista. Dominio publico
     // (Wikimedia Commons, «Acordeon vallenato.jpg»), asi que no debe atribucion.
     //

@@ -17,7 +17,10 @@
 
   // 48px es tambien el minimo tactil accesible: una sola medida cubre ambas cosas.
   min-height: var(--adr-altura-control);
-  padding: 13px var(--adr-espacio-5);
+  // El acolchado vertical es ajustable porque en algunas pantallas manda la ALTURA exacta y
+  // no el aire: con 13 fijos, un boton de 48 de minimo terminaba midiendo 50,8. El valor por
+  // defecto no cambia, asi que ninguna pantalla existente se mueve.
+  padding: var(--adr-boton-acolchado-y, 13px) var(--adr-espacio-5);
 
   font-family: var(--adr-fuente-cuerpo);
   font-size: var(--adr-texto-ui);

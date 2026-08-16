@@ -61,17 +61,15 @@ describe('Acceso', () => {
     expect(google?.getAttribute('href')).toContain('/acceso/oauth2/google');
   });
 
-  it('debe conservar un h1, aunque no se vea: es el nombre de la pagina', async () => {
+  it('debe encabezar con un h1 visible: es el nombre de la pantalla', async () => {
     const fixture = await crear();
     const titulo: HTMLElement = fixture.nativeElement.querySelector('h1');
 
-    // El propietario pidio quitar el texto visible. Borrar el encabezado ademas habria
-    // dejado la pagina sin nombre para quien navega saltando de encabezado en encabezado
-    // con un lector de pantalla, y sin el h1 que espera cualquier auditoria. Se oculta a la
-    // vista, no a la asistencia: son dos cosas distintas y aqui solo se pidio una.
-    expect(titulo).not.toBeNull();
-    expect(titulo.textContent?.trim()).not.toBe('');
-    expect(titulo.className).toContain('adr-solo-lectores');
+    // Estuvo oculto mientras el diseño no queria texto. El aprobado si lo lleva, y es mejor:
+    // un encabezado que se ve sirve a la vez de orientacion y de punto de salto para quien
+    // navega con lector de pantalla.
+    expect(titulo.textContent?.trim()).toBe('Inicia sesión');
+    expect(titulo.className).not.toContain('adr-solo-lectores');
   });
 
   it('no debe ofrecer ninguna salida que todavia no exista', async () => {
@@ -88,39 +86,21 @@ describe('Acceso', () => {
     }
   });
 
-  it('NO debe poner texto propio sobre el afiche, y debe darle un rotulo al lector', async () => {
+  it('debe llevar el titular como TEXTO sobre la foto, no dentro de sus pixeles', async () => {
     const fixture = await crear();
-    const panel: HTMLElement = fixture.nativeElement.querySelector('.acceso__marca');
+    const panel: HTMLElement = fixture.nativeElement.querySelector('.acceso__foto');
+    const foto = panel.querySelector('img') as HTMLImageElement;
 
-    // Sin texto nuestro: el afiche ya trae el suyo quemado, y dos textos en la misma columna
-    // se pelean. Ademas cualquier palabra que vuelva aqui quedaria sobre la imagen sin velo
-    // detras, con el contraste a merced de los pixeles que le tocaran.
-    expect(panel.textContent?.trim()).toBe('');
+    // El diseño anterior usaba el afiche con su rotulacion quemada. Este saca el titular a la
+    // interfaz, y esa es la mitad del cambio: un texto de verdad escala con el navegador, se
+    // selecciona, lo lee un lector de pantalla y algun dia se traduce. Uno hecho de pixeles
+    // no hace ninguna de las cuatro.
+    expect(panel.querySelector('h2')?.textContent).toContain('acordeón desde cero');
+    expect(panel.textContent).toContain('Clases en video');
 
-    // Pero NO oculto al lector de pantalla: la rotulacion del afiche es hoy lo unico que
-    // nombra la marca en esta pantalla, y un lector no puede leer letras hechas de pixeles.
-    expect(panel.getAttribute('role')).toBe('img');
-    expect(panel.getAttribute('aria-label')).toContain('Diego Romero');
-    expect(panel.getAttribute('aria-hidden')).toBeNull();
-  });
-
-  it('no debe llevar mas texto del imprescindible para entrar', async () => {
-    const fixture = await crear();
-    const texto: string = fixture.nativeElement.textContent;
-
-    // Se quitaron la explicacion del metodo y la nota de primera vez: el propietario los
-    // considera ruido, y los dos botones ya dicen lo que hacen. Esta prueba sujeta esa
-    // decision — sin ella, la proxima frase «util» vuelve sin que nadie lo note.
-    //
-    // El titular no esta en la lista porque NO se borro: sigue en el `h1` invisible, y por
-    // tanto sigue en `textContent`. Que no se vea lo comprueba la prueba de arriba.
-    for (const retirado of ['Usa el método', 'Primera vez', 'queda creada']) {
-      expect(texto, retirado).not.toContain(retirado);
-    }
-
-    // Lo que si tiene que seguir estando.
-    expect(texto).toContain('Continuar con Google');
-    expect(texto).toContain('Entrar');
+    // Y la imagen pasa a ser ambientacion: su alt va vacio porque lo que dice la pantalla ya
+    // esta escrito al lado.
+    expect(foto.getAttribute('alt')).toBe('');
   });
 
   it('no debe enviar nada con el formulario vacio, y debe marcar los errores', async () => {

@@ -1,107 +1,210 @@
 @use 'mixins' as m;
+@use 'variables' as v;
 
-.acceso {
-  // Proporcion del afiche: hoy cuadrado. Es lo unico del archivo que esta hoja necesita
-  // saber, y esta aqui una sola vez.
-  --acceso-proporcion-afiche: 1;
+// Punto de quiebre PROPIO de esta pantalla, y por eso vive aqui y no en las variables
+// compartidas. El sistema parte en 1200, pero el handoff pide la composicion partida desde
+// 1024: una tableta en horizontal —1112 px— tiene sitio de sobra para foto y formulario lado
+// a lado, y con el quiebre general se le daria la version apilada, que ahi sobra pantalla.
+$quiebre-partido: 1024px;
 
-  // Lo que el formulario necesita para seguir siendo usable: su ancho maximo (420 px) mas
-  // el acolchado del panel a los dos lados (24) mas aire. Es la unica razon legitima para
-  // recortar la columna de la imagen, asi que es lo que la recorta.
-  --acceso-formulario-minimo: 520px;
-
-  // La columna de la imagen mide LO QUE MIDE EL AFICHE a la altura de la ventana.
-  //
-  // Antes era una fraccion fija —5 de 12— y el afiche no encajaba nunca: o se le recortaba
-  // el rotulo, o sobraban bandas que habia que disimular con un desenfoque. Pero disimular
-  // el hueco es tratar el sintoma; el hueco era el problema. Con la columna a la medida no
-  // sobra nada que tapar ni falta nada que recortar, y no hace falta ningun efecto.
-  //
-  // <b>El tope sale del formulario, no de un porcentaje.</b> Antes era 50vw, elegido a ojo:
-  // con el afiche cuadrado ese numero recortaba la columna a 960 px en una ventana de
-  // 1920x1080 cuando la imagen pedia 1080, y devolvia las bandas —arriba y abajo— justo en
-  // la medida de pantalla mas comun. La pregunta real no es «cuanto ancho puede ocupar la
-  // imagen» sino «cuanto necesita el formulario para no estrecharse», y eso si es un dato.
-  display: grid;
-  grid-template-columns:
-    min(
-      calc(100dvh * var(--acceso-proporcion-afiche)),
-      calc(100% - var(--acceso-formulario-minimo))
-    )
-    minmax(0, 1fr);
-  min-height: 100dvh;
+@mixin partido {
+  @media (width >= #{$quiebre-partido}) {
+    @content;
+  }
 }
 
-// ------------------------------------------------------------ panel de marca
+@mixin apilado {
+  @media (width < #{$quiebre-partido}) {
+    @content;
+  }
+}
+
+// ---------------------------------------------------------------- la pantalla
 //
-// Anclado y con alto de ventana, no simplemente estirado: si el formulario creciera mas que
-// la pantalla —un error largo, una fuente grande— la fila se haria mas alta que la ventana,
-// la columna seguiria calculada sobre `dvh` y volverian las bandas, esta vez arriba y abajo.
-// Anclado, el panel mide siempre exactamente la ventana y la cuenta se sostiene.
-.acceso__marca {
-  position: sticky;
-  top: 0;
-  align-self: start;
-  height: 100dvh;
+// Toda ella oscura, no solo el panel de la foto. Es el cambio de fondo del rediseño: antes
+// el formulario iba sobre una tarjeta blanca y la costura entre los dos lados se veia. Con
+// una sola base la foto se funde con el formulario y la pantalla se lee como una pieza.
+//
+// Los colores van como propiedades de ESTA pantalla y no como tokens globales: son los del
+// handoff, mas profundos que el azul noche del sistema, y cambiarlos en `_tokens.scss`
+// repintaria la landing entera. Cuando el propietario decida si el sistema adopta esta
+// paleta, se suben; mientras tanto, la excepcion vive donde se usa y se ve.
+.acceso {
+  --acceso-fondo: #080614;
+  --acceso-panel-a: #0b0820;
+  --acceso-panel-b: #0a0f2c;
+  --acceso-halo: rgb(30 90 220 / 22%);
+  --acceso-velo-lateral: rgb(8 6 20 / 95%);
+  --acceso-velo-inferior: rgb(8 6 20 / 92%);
+  --acceso-texto-suave: rgb(255 255 255 / 60%);
+  --acceso-texto-tenue: rgb(255 255 255 / 42%);
 
-  // `contain` y no `cover`: un afiche es una composicion cerrada, se lee entero o no se lee.
-  // El color de debajo solo asoma en esas ventanas raras, y mientras la imagen carga.
-  background-color: var(--adr-color-noche-azul);
-  background-image: var(--acceso-foto);
-  background-position: center;
-  background-repeat: no-repeat;
-  background-size: contain;
+  // Los controles del catalogo se releen a si mismos en oscuro. No se toca el boton ni el
+  // campo: se redefinen los tokens que ellos consumen, dentro de esta pantalla. Asi el
+  // catalogo se queda intacto y ninguna otra pantalla cambia.
+  --adr-color-tinta: #ffffff;
+  --adr-color-borde-suave: rgb(255 255 255 / 16%);
+  --adr-color-texto-secundario: var(--acceso-texto-suave);
+  --adr-color-texto-atenuado: var(--acceso-texto-tenue);
+  --adr-radio-pastilla: 12px;
+
+  display: grid;
+  min-height: 100dvh;
+  background: var(--acceso-fondo);
 }
 
-// --------------------------------------------------------------- formulario
+// ---------------------------------------------------------------- panel de foto
+.acceso__foto {
+  position: relative;
+  overflow: hidden;
+}
+
+.acceso__foto-imagen {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+
+  // El encuadre lo fija el handoff: con `cover` el recorte se lo lleva el eje que sobra, y
+  // sin decir por donde cortar la cara de Diego se pierde en cuanto cambia la proporcion.
+  object-position: 62% 26%;
+}
+
+// Dos velos, cada uno con un trabajo.
+//
+// El lateral funde la foto con el panel del formulario para que no haya una linea recta
+// entre los dos; el inferior es el que hace legible el titular, que va encima de la foto.
+// Contra una imagen no se mide el contraste pixel a pixel: se tapa donde hay letra.
+.acceso__foto::after {
+  position: absolute;
+  inset: 0;
+  content: '';
+  background:
+    linear-gradient(100deg, rgb(8 6 20 / 12%) 38%, var(--acceso-velo-lateral) 100%),
+    linear-gradient(to top, var(--acceso-velo-inferior) 0%, rgb(8 6 20 / 5%) 52%);
+}
+
+.acceso__foto-texto {
+  position: absolute;
+  z-index: 1;
+  right: var(--adr-espacio-6);
+  bottom: var(--adr-espacio-6);
+  left: var(--adr-espacio-6);
+  display: flex;
+  flex-direction: column;
+  gap: var(--adr-espacio-3);
+}
+
+.acceso__titular {
+  font-family: var(--adr-fuente-titular);
+  font-size: 32px;
+  font-style: italic;
+  font-weight: 800;
+  line-height: 1;
+  color: var(--adr-color-blanco);
+  text-transform: uppercase;
+  text-wrap: balance;
+}
+
+.acceso__bajada {
+  font-size: var(--adr-texto-caption);
+  font-weight: 500;
+  line-height: 1.5;
+  color: rgb(255 255 255 / 72%);
+}
+
+// ---------------------------------------------------- panel del formulario
 .acceso__panel {
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: var(--adr-espacio-7) var(--adr-espacio-5);
-  background: var(--adr-color-niebla);
+
+  // El halo radial es lo que impide que el fondo se lea como un plano muerto: da un centro
+  // de luz detras del formulario sin dibujar ninguna forma.
+  background:
+    radial-gradient(700px 520px at 70% 25%, var(--acceso-halo), transparent 65%),
+    linear-gradient(160deg, var(--acceso-panel-a), var(--acceso-panel-b));
 }
 
-// El formulario es una TARJETA, no una lista de controles sueltos.
-//
-// Suelto sobre el fondo, y sin titular ni parrafos que lo enmarcaran, se veia como piezas
-// flotando en media pantalla vacia. Una superficie con borde propio les da un limite: deja
-// de ser «espacio con cosas» y pasa a ser un objeto colocado en su sitio. Es la misma pieza
-// del catalogo que usa el resto de la web para agrupar (docs/04 §3), aplicada aqui.
-//
-// Los controles ademas van mas grandes que los del resto del sitio: en una pantalla cuyo
-// unico proposito es pulsar un boton, ese boton tiene que pesar. Se sube redefiniendo los
-// TOKENS en este contenedor y no tocando el boton ni el campo — asi el catalogo se queda
-// intacto, ningun otro sitio cambia, y los dos crecen a la vez y siguen coincidiendo entre
-// si, que es justo lo que se rompe cuando cada control se ajusta a mano.
 .acceso__caja {
-  // 60 en vez de 48. Sigue muy por encima del minimo tactil de docs/04 §5, que era el
-  // motivo de los 48: subirlo nunca lo incumple, bajarlo si.
-  --adr-altura-control: 60px;
-  --adr-texto-ui: 17px;
-  --adr-texto-cuerpo: 17px;
+  // Con el acolchado de serie el boton medía 50,8 y el handoff pide 48 clavados. Bajandolo,
+  // manda la altura minima y el numero sale exacto en las tres composiciones.
+  --adr-boton-acolchado-y: 10px;
+  --adr-altura-control: 48px;
+  --adr-texto-ui: 14.5px;
+  --adr-texto-cuerpo: 14px;
 
+  display: flex;
+  flex-direction: column;
+  gap: var(--adr-espacio-5);
   width: 100%;
-
-  // 560 con 48 de acolchado deja los controles en 464, que es el ancho comodo de un
-  // formulario de acceso. Mas anchos, la linea de escritura se hace larga de leer.
-  max-width: 560px;
-  padding: var(--adr-espacio-7);
-  background: var(--adr-color-blanco);
-  border-radius: var(--adr-radio-tarjeta);
-  box-shadow: var(--adr-sombra-tarjeta);
+  max-width: 392px;
 }
 
-// La marca encabeza la tarjeta. Es lo que sustituye al titular que se retiro: da entrada
-// sin traer de vuelta el texto.
-.acceso__logotipo {
-  width: 72px;
-  height: 72px;
-  margin: 0 auto var(--adr-espacio-6);
+// ------------------------------------------------------------------ identidad
+.acceso__identidad {
+  display: flex;
+  gap: 13px;
+  align-items: center;
 }
 
+// El logotipo entregado no tiene transparencia real en su fondo negro, asi que se recorta en
+// circulo sobre negro — que es como lo pide su propio handoff.
+.acceso__avatar {
+  width: 48px;
+  height: 48px;
+  flex: none;
+  overflow: hidden;
+  background: #000000;
+  border-radius: 50%;
+  box-shadow: 0 0 0 1px rgb(255 255 255 / 18%);
+}
+
+.acceso__identidad-texto {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.acceso__identidad-nombre {
+  font-size: 15px;
+  font-weight: 700;
+  line-height: 1;
+  color: var(--adr-color-blanco);
+}
+
+.acceso__identidad-kicker {
+  font-size: 9.5px;
+  font-weight: 600;
+  line-height: 1;
+  color: rgb(255 255 255 / 55%);
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+}
+
+// --------------------------------------------------------------- encabezado
+.acceso__encabezado {
+  display: flex;
+  flex-direction: column;
+  gap: var(--adr-espacio-2);
+}
+
+.acceso__titulo {
+  font-family: var(--adr-fuente-titular);
+  font-size: 27px;
+  font-weight: 700;
+  line-height: 1.15;
+  color: var(--adr-color-blanco);
+}
+
+.acceso__intro {
+  font-size: var(--adr-texto-cuerpo);
+  line-height: 1.5;
+  color: var(--acceso-texto-suave);
+}
+
+// ------------------------------------------------------------------ controles
 adr-alerta {
-  margin-bottom: var(--adr-espacio-5);
+  display: block;
 }
 
 .acceso__proveedores {
@@ -115,20 +218,21 @@ adr-alerta {
   display: flex;
   gap: var(--adr-espacio-4);
   align-items: center;
-  margin-block: var(--adr-espacio-5);
 
   &::before,
   &::after {
     flex: 1;
     height: 1px;
     content: '';
-    background: var(--adr-color-borde-divisor);
+    background: rgb(255 255 255 / 14%);
   }
 
   span {
-    @include m.caption;
-
-    color: var(--adr-color-texto-atenuado);
+    font-size: 10px;
+    font-weight: 600;
+    color: var(--acceso-texto-tenue);
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
   }
 }
 
@@ -138,56 +242,135 @@ adr-alerta {
   gap: var(--adr-espacio-4);
 }
 
-// --------------------------------------------------------------- responsive
-@include m.en-movil {
+// Lo que todavia no existe: se nombra, no se enlaza. El diseño lo dibuja como enlace, pero
+// la pantalla de recuperacion no existe y un enlace a un 404 aqui es peor que no tenerlo.
+.acceso__pendiente {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--acceso-texto-tenue);
+}
+
+// ================================================================= COMPOSICION
+//
+// Apilado por debajo de 1024: la foto arriba, el formulario debajo. Partido a partir de ahi.
+@include apilado {
   .acceso {
-    grid-template-columns: minmax(0, 1fr);
-    min-height: auto;
+    grid-template-rows: auto 1fr;
   }
 
-  // En celular el panel deja de estar anclado y de medir la ventana: aqui es una cabecera,
-  // no una columna.
-  //
-  // <b>Y el afiche entra ENTERO, no recortado.</b> Antes era una franja de 190 px con
-  // `cover`, y el recorte partia «APRENDE A TOCAR» por la mitad: se veia la mitad de arriba
-  // de las letras. Media palabra cortada no se lee como un encuadre, se lee como que la
-  // pagina esta rota. O la frase se ve completa o no se ve — y con `cover` no hay altura que
-  // garantice lo primero, porque el recorte depende de la proporcion de cada telefono.
-  //
-  // La caja toma la proporcion del afiche, asi que `contain` lo llena exacto y no hay ni
-  // recorte ni bandas. El tope de 60dvh es para el telefono en horizontal, donde la cuenta
-  // pediria una cabecera de pantalla entera; alli el afiche se centra, completo.
-  .acceso__marca {
-    position: static;
+  // La marca vive DENTRO de la foto, sobre el titular.
+  .acceso__identidad--panel {
+    display: none;
+  }
 
-    // El ancho se fija a proposito. Con solo `aspect-ratio` y `max-height`, el telefono en
-    // horizontal recortaba la caja por el ANCHO para conservar la proporcion: el afiche
-    // quedaba como un cuadrado pequenio pegado a la izquierda, con media pantalla de fondo
-    // al lado. Fijando el ancho, el tope solo recorta el alto y el afiche se centra dentro.
-    width: 100%;
-    aspect-ratio: var(--acceso-proporcion-afiche);
-    height: auto;
-    max-height: 60dvh;
-    background-size: contain;
+  .acceso__foto {
+    // Alto del hero: crece con la pantalla pero con topes, para que en un telefono bajo no se
+    // coma el formulario y en una tableta alta no quede como una franja.
+    height: clamp(280px, 38vh, 360px);
+  }
+
+  .acceso__foto-imagen {
+    object-position: 64% 22%;
   }
 
   .acceso__panel {
-    padding: var(--adr-espacio-6) var(--adr-espacio-5);
+    align-items: start;
+    padding: var(--adr-espacio-5) var(--adr-espacio-5) var(--adr-espacio-6);
   }
 
-  // En celular la tarjeta pierde su acolchado grande y su sombra: a 375 px, 48 de aire a
-  // cada lado dejaria los controles en 239 y el formulario se estrecharia justo donde menos
-  // sitio hay. Sin sombra tampoco hace falta el borde, porque ya ocupa el ancho entero.
   .acceso__caja {
-    padding: var(--adr-espacio-5) 0 0;
-    background: none;
-    box-shadow: none;
+    // Alturas tactiles mas generosas que en escritorio: aqui se pulsa con el dedo.
+    --adr-altura-control: 52px;
+    --adr-radio-pastilla: 14px;
+
+    gap: 15px;
+    max-width: 440px;
+  }
+
+  .acceso__titulo {
+    font-size: 21px;
+  }
+
+  .acceso__titular {
+    font-size: 26px;
   }
 }
 
-// Lo que todavia no existe: se nombra, no se enlaza. Atenuado para que se lea como «pronto»
-// y no como un control que no responde al pulsarlo.
-.acceso__pendiente {
-  font-size: var(--adr-texto-caption);
-  color: var(--adr-color-texto-atenuado);
+// Tableta vertical: la foto tiene sitio para respirar y la marca sube a la esquina.
+@media (width >= #{v.$adr-quiebre-movil}) and (width < #{$quiebre-partido}) {
+  .acceso__foto {
+    height: clamp(360px, 42vh, 470px);
+  }
+
+  .acceso__foto-texto {
+    right: var(--adr-espacio-7);
+    bottom: var(--adr-espacio-7);
+    left: var(--adr-espacio-7);
+  }
+
+  .acceso__titular {
+    max-width: 560px;
+    font-size: 42px;
+  }
+
+  .acceso__caja {
+    gap: 18px;
+  }
+
+  .acceso__titulo {
+    font-size: 27px;
+  }
+}
+
+@include partido {
+  .acceso {
+    // 44% para la foto: es lo que fija el handoff, y deja al formulario el ancho que necesita
+    // para no estrecharse en una tableta horizontal.
+    grid-template-columns: 44% minmax(0, 1fr);
+  }
+
+  // Ahora la marca encabeza el formulario, no la foto.
+  .acceso__identidad--foto {
+    display: none;
+  }
+
+  .acceso__foto-texto {
+    right: 34px;
+    bottom: 40px;
+    left: 38px;
+  }
+
+  .acceso__panel {
+    padding-inline: 56px;
+  }
+}
+
+// Tableta en HORIZONTAL (6c). Se distingue de escritorio por el dedo, no por el ancho: el
+// handoff da 1120 de referencia para escritorio y 1112 para esta, o sea practicamente el
+// mismo numero. Lo que de verdad cambia entre las dos es que una se toca y la otra se pulsa
+// con raton, y eso `pointer: coarse` si lo sabe.
+@media (width >= #{$quiebre-partido}) and (pointer: coarse) {
+  .acceso {
+    grid-template-columns: 46% minmax(0, 1fr);
+  }
+
+  .acceso__panel {
+    padding-inline: 60px;
+  }
+
+  .acceso__caja {
+    --adr-altura-control: 52px;
+    --adr-radio-pastilla: 13px;
+
+    max-width: 420px;
+  }
+
+  .acceso__titular {
+    font-size: 38px;
+  }
+
+  .acceso__avatar {
+    width: 50px;
+    height: 50px;
+  }
 }

@@ -9,6 +9,21 @@ import { ACTIVOS } from '../../disenio/activos';
 import { DESTINO_TRAS_INGRESAR } from '../../app.routes';
 import { entorno } from '../../../entornos/entorno';
 
+/**
+ * Los textos de la pantalla, del handoff de diseño aprobado.
+ *
+ * <p>Viven aqui arriba y no repartidos por la plantilla: el titular y la bajada aparecen en
+ * el panel de la foto y son lo que ANTES estaba quemado dentro del afiche. Sacarlos a texto
+ * es la mitad del rediseño — asi escalan con el navegador, se pueden seleccionar, los lee un
+ * lector de pantalla y algun dia se pueden traducir.
+ */
+const TITULAR = 'Aprende a tocar acordeón desde cero';
+const BAJADA = 'Clases en video, a tu ritmo, con acompañamiento real.';
+const INTRO = 'Accede a tus lecciones de acordeón y sigue desde donde quedaste.';
+
+/** Bloque de identidad que encabeza la pantalla. El nombre de la academia, en dos lineas. */
+const MARCA = { nombre: 'Diego Romero', bajada: 'Estudio académico' } as const;
+
 /** Longitud minima de contrasena aceptada por el formulario. La real la impone el backend. */
 const LONGITUD_MINIMA_CONTRASENA = 8;
 
@@ -50,16 +65,20 @@ export class Acceso {
   protected readonly mensajeError = signal('');
 
   /**
-   * El afiche que ocupa el panel izquierdo, entero.
+   * La foto del panel, sin los textos del afiche.
    *
-   * <p>Antes iba el Hohner Corona, una foto de banco del instrumento. Cambia porque esto es
-   * una marca personal: quien entra a la academia de Diego Romero espera a Diego, no a un
-   * acordeon anonimo. El instrumento solo no distingue esta academia de ninguna otra.
+   * <p>El afiche traia su rotulacion quemada; el diseño aprobado la saca a la interfaz. La
+   * imagen se queda con lo que solo ella puede dar: a Diego tocando.
    */
-  protected readonly afiche = `url(${ACTIVOS.aficheAcademia})`;
+  protected readonly foto = ACTIVOS.diegoTocando;
 
   /** El mismo logotipo que la barra y el pie: una sola fuente para la marca. */
   protected readonly logotipo = ACTIVOS.logotipo;
+
+  protected readonly titular = TITULAR;
+  protected readonly bajada = BAJADA;
+  protected readonly intro = INTRO;
+  protected readonly marca = MARCA;
 
   protected readonly urlGoogle = this.autenticacion.urlProveedor('google');
   protected readonly urlFacebook = this.autenticacion.urlProveedor('facebook');

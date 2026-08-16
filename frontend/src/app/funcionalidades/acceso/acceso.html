@@ -1,50 +1,63 @@
 <main class="acceso">
-  <!-- ==================================================== PANEL DE MARCA -->
-  <!-- El afiche del propietario, entero. Sin una palabra nuestra encima: el afiche ya trae
-       la suya y dos textos en la misma columna se pelean.
-       Lleva `role="img"` con rótulo, y NO `aria-hidden`: su rotulación quemada es hoy lo
-       único que nombra la marca en esta pantalla, y un lector de pantalla no puede leer
-       texto que vive dentro de un píxel. El rótulo dice lo que dice el afiche.
-       La ruta entra por variable CSS y no escrita en la hoja: las imágenes llevan huella de
-       contenido en el nombre, así que el .scss quedaría desactualizado en cuanto se cambiara
-       la imagen, y el fallo se vería como un hueco vacío sin error en consola. -->
-  <div
-    class="acceso__marca"
-    role="img"
-    aria-label="Academia Diego Romero — aprende a tocar acordeón desde cero"
-    [style.--acceso-foto]="afiche"
-  ></div>
+  <!-- ====================================================== PANEL DE FOTO -->
+  <!-- La foto va como <img> y no como fondo CSS: el navegador la descubre en el HTML y la
+       empieza a bajar antes de aplicar estilos, que en esta pantalla es la imagen grande y
+       lo primero que se ve. `fetchpriority` la adelanta al resto.
+       Alt vacío: es ambientación. Lo que dice la pantalla lo dicen el titular y la bajada,
+       que ahora son TEXTO — antes vivían dentro de los píxeles del afiche. -->
+  <section class="acceso__foto">
+    <img
+      class="acceso__foto-imagen"
+      [src]="foto"
+      alt=""
+      width="1080"
+      height="950"
+      fetchpriority="high"
+      decoding="async"
+    />
 
-  <!-- ====================================================== FORMULARIO -->
+    <div class="acceso__foto-texto">
+      <!-- La marca vive aquí en móvil y tableta vertical, y en la columna del formulario
+           desde tableta horizontal. Son dos copias y solo una se dibuja: la que está oculta
+           con `display:none` no existe para un lector de pantalla, así que no se anuncia dos
+           veces. Moverla con CSS entre dos paneles hermanos no es posible. -->
+      <div class="acceso__identidad acceso__identidad--foto">
+        <img class="acceso__avatar" [src]="logotipo" alt="" width="48" height="48" />
+        <span class="acceso__identidad-texto">
+          <span class="acceso__identidad-nombre">{{ marca.nombre }}</span>
+          <span class="acceso__identidad-kicker">{{ marca.bajada }}</span>
+        </span>
+      </div>
+
+      <h2 class="acceso__titular">{{ titular }}</h2>
+      <p class="acceso__bajada">{{ bajada }}</p>
+    </div>
+  </section>
+
+  <!-- ==================================================== PANEL DEL FORMULARIO -->
   <section class="acceso__panel">
     <div class="acceso__caja">
-      <!-- El título va sin ver, no eliminado. Sin un `h1` la página se queda sin nombre para
-           quien navega con lector de pantalla —que salta de encabezado en encabezado— y sin
-           el encabezado que todo buscador y toda auditoría esperan. No ocupa un pixel: lo
-           visible es el afiche y los dos botones, que es lo que se pidió. -->
-      <h1 class="adr-solo-lectores">Entra a tu cuenta</h1>
+      <div class="acceso__identidad acceso__identidad--panel">
+        <img class="acceso__avatar" [src]="logotipo" alt="" width="48" height="48" />
+        <span class="acceso__identidad-texto">
+          <span class="acceso__identidad-nombre">{{ marca.nombre }}</span>
+          <span class="acceso__identidad-kicker">{{ marca.bajada }}</span>
+        </span>
+      </div>
 
-      <!-- El logotipo, no un titular. Da a esta columna algo que la encabece sin traer de
-           vuelta el texto que se pidió quitar, y de paso es la marca la que recibe a quien
-           entra. Va con alt vacío: el nombre ya está en el h1 de arriba. -->
-      <img
-        class="acceso__logotipo"
-        [src]="logotipo"
-        alt=""
-        width="72"
-        height="72"
-        decoding="async"
-      />
+      <header class="acceso__encabezado">
+        <h1 class="acceso__titulo">Inicia sesión</h1>
+        <p class="acceso__intro">{{ intro }}</p>
+      </header>
 
       @if (estado() === 'error') {
         <adr-alerta tono="error">{{ mensajeError() }}</adr-alerta>
       }
 
       <div class="acceso__proveedores">
-        <!-- Marca, no icono. Llevaba la «G» de Phosphor: un glifo monocromo que se teñía con
-             el color del texto. Se parece a la de Google sin serlo, y su identidad exige el
-             logotipo de cuatro colores sin recolorear (ADR 0010). Un logotipo aproximado es
-             lo primero que delata que una pantalla de ingreso no es de fiar. -->
+        <!-- Marca, no icono. Su identidad exige el logotipo de cuatro colores sin recolorear
+             (ADR 0010): un logotipo aproximado es lo primero que delata que una pantalla de
+             ingreso no es de fiar. -->
         <adr-boton variante="proveedor" marca="google" [anchoCompleto]="true" [enlace]="urlGoogle">
           Continuar con Google
         </adr-boton>
@@ -75,16 +88,16 @@
         <adr-campo
           etiqueta="Contraseña"
           tipo="password"
+          marcador="Mínimo 8 caracteres"
           autocompletado="current-password"
           [control]="formulario.controls.contrasena"
         >
-          <!-- Sin enlace: la pantalla de recuperación no existe todavía, y un control que no
-               responde al pulsarlo enseña que la aplicación no reacciona. Pero decir
-               «próximamente» tampoco ayuda a quien la olvidó AHORA: se le señala la salida
-               que sí existe, que además está a dos dedos, justo arriba. -->
+          <!-- El diseño lo dibuja como enlace, pero la pantalla de recuperación NO existe: un
+               enlace a un 404 justo aquí es peor que no tenerlo, y ya se corrigió dos veces en
+               esta página. Se conserva el sitio y el aspecto del diseño y se dice la salida
+               que sí funciona hoy. Pasa a ser enlace el día que exista la pantalla. -->
           <span accion class="acceso__pendiente">¿La olvidaste? Entra con Google</span>
         </adr-campo>
-
 
         <adr-boton
           tipo="submit"
@@ -92,10 +105,9 @@
           [anchoCompleto]="true"
           [cargando]="estado() === 'enviando'"
         >
-          {{ estado() === 'enviando' ? 'Entrando…' : 'Entrar' }}
+          {{ estado() === 'enviando' ? 'Entrando…' : 'Entrar a mis clases' }}
         </adr-boton>
       </form>
-
     </div>
   </section>
 </main>

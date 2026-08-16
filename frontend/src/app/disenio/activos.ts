@@ -34,6 +34,8 @@ export interface ManifiestoActivos {
   readonly aficheAcademia: RutaActivo;
   /** Logotipo DR sobre fondo transparente. SVG: se pone a cualquier tamaño sin perder filo. */
   readonly logotipo: RutaActivo;
+  /** Diego tocando, sin los textos del afiche. Para el panel de la pantalla de acceso. */
+  readonly diegoTocando: RutaActivo;
 }
 
 /**
@@ -87,6 +89,11 @@ export const ACTIVOS: ManifiestoActivos = {
   // variante SIN fondo: la de fondo negro solo sirve sobre negro, y este se pone tanto en la
   // barra blanca como en el pie oscuro.
   logotipo: '/imagenes/logo-dr.576d7835.svg',
+
+  // La foto SIN el rotulado del afiche. En el rediseño del acceso el titular es texto de la
+  // interfaz, no pixeles: asi escala, se selecciona, lo lee un lector de pantalla y se puede
+  // traducir. La edito el propietario; el detalle, en `scripts/tratar-imagenes.mjs`.
+  diegoTocando: '/imagenes/diego-tocando.697bbcce.webp',
 
   // Sigue en null a propósito: ninguna de las imágenes entregadas es una captura del
   // simulador, y el diagrama de botones que dibuja <adr-marco-imagen> con CSS y tokens

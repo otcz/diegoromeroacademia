@@ -16,13 +16,18 @@
       decoding="async"
     />
 
+    <!-- Dice DONDE se esta, arriba a la izquierda, sin repetir el nombre de la marca ni el
+         titular de abajo. Los tres textos de esta foto reparten trabajo: aqui la escuela,
+         abajo lo que se aprende y como. -->
+    <p class="acceso__kicker">{{ kickerFoto }}</p>
+
     <div class="acceso__foto-texto">
       <!-- La marca vive aquí en móvil y tableta vertical, y en la columna del formulario
            desde tableta horizontal. Son dos copias y solo una se dibuja: la que está oculta
            con `display:none` no existe para un lector de pantalla, así que no se anuncia dos
            veces. Moverla con CSS entre dos paneles hermanos no es posible. -->
       <div class="acceso__identidad acceso__identidad--foto">
-        <img class="acceso__avatar" [src]="logotipo" alt="" width="48" height="48" />
+        <img class="acceso__avatar" [src]="logotipo" alt="" width="56" height="56" />
         <span class="acceso__identidad-texto">
           <span class="acceso__identidad-nombre">{{ marca.nombre }}</span>
           <span class="acceso__identidad-kicker">{{ marca.bajada }}</span>
@@ -31,6 +36,24 @@
 
       <h2 class="acceso__titular">{{ titular }}</h2>
       <p class="acceso__bajada">{{ bajada }}</p>
+
+      <!-- Solo las redes cuyo destino se ha podido verificar. Un icono que lleva al perfil de
+           otra persona con el logotipo de la academia al lado es peor que no ofrecerlo. -->
+      <ul class="acceso__redes">
+        @for (red of redes; track red.marca) {
+          <li>
+            <a
+              class="acceso__red"
+              [href]="red.url"
+              target="_blank"
+              rel="noopener noreferrer"
+              [attr.aria-label]="red.nombre + ' de la academia'"
+            >
+              <adr-marca [nombre]="red.marca" [tamanio]="22" />
+            </a>
+          </li>
+        }
+      </ul>
     </div>
   </section>
 
@@ -38,7 +61,7 @@
   <section class="acceso__panel">
     <div class="acceso__caja">
       <div class="acceso__identidad acceso__identidad--panel">
-        <img class="acceso__avatar" [src]="logotipo" alt="" width="48" height="48" />
+        <img class="acceso__avatar" [src]="logotipo" alt="" width="56" height="56" />
         <span class="acceso__identidad-texto">
           <span class="acceso__identidad-nombre">{{ marca.nombre }}</span>
           <span class="acceso__identidad-kicker">{{ marca.bajada }}</span>

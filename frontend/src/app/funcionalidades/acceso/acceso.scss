@@ -369,3 +369,52 @@ adr-alerta {
     height: 50px;
   }
 }
+
+// Rotulo de la esquina superior de la foto. Pequenio y espaciado: nombra el sitio sin
+// competir con el titular, que es quien tiene que llevarse la mirada.
+.acceso__kicker {
+  position: absolute;
+  z-index: 1;
+  top: var(--adr-espacio-6);
+  left: var(--adr-espacio-6);
+  max-width: 60%;
+  font-size: 10px;
+  font-weight: 600;
+  color: var(--adr-oscuro-texto-fuerte);
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+}
+
+// Redes al pie de la foto. Lista de verdad, no una fila de imagenes sueltas: son enlaces
+// hermanos y un lector de pantalla los anuncia como el grupo que son.
+.acceso__redes {
+  display: flex;
+  gap: var(--adr-espacio-3);
+  align-items: center;
+  margin-top: var(--adr-espacio-2);
+  padding: 0;
+  list-style: none;
+}
+
+.acceso__red {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  // 44 es el minimo tactil de docs/04 §5. El icono mide 22 y el resto es area de toque: sin
+  // esto, en celular habria que acertarle a un objetivo de 22 px.
+  width: 44px;
+  height: 44px;
+  margin-inline-start: calc(-1 * var(--adr-espacio-3));
+  border-radius: 50%;
+  transition: background-color 0.15s ease;
+
+  &:hover {
+    background: rgb(255 255 255 / 10%);
+  }
+}
+
+.acceso__identidad-nombre {
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}

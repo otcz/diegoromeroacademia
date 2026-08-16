@@ -4,9 +4,11 @@ import { Router } from '@angular/router';
 import { Alerta } from '../../compartido/componentes/alerta/alerta';
 import { Boton } from '../../compartido/componentes/boton/boton';
 import { Campo } from '../../compartido/componentes/campo/campo';
+import { Marca } from '../../compartido/componentes/marca/marca';
 import { AutenticacionServicio } from '../../nucleo/servicios/autenticacion-servicio';
 import { ACTIVOS } from '../../disenio/activos';
 import { DESTINO_TRAS_INGRESAR } from '../../app.routes';
+import { NombreMarca } from '../../disenio/iconos/marcas';
 import { entorno } from '../../../entornos/entorno';
 
 /**
@@ -22,7 +24,34 @@ const BAJADA = 'Clases en video, a tu ritmo, con acompañamiento real.';
 const INTRO = 'Accede a tus lecciones de acordeón y sigue desde donde quedaste.';
 
 /** Bloque de identidad que encabeza la pantalla. El nombre de la academia, en dos lineas. */
-const MARCA = { nombre: 'Diego Romero', bajada: 'Estudio académico' } as const;
+const MARCA = { nombre: 'Diego Romero Acordeón', bajada: 'Estudio académico' } as const;
+
+/**
+ * Rotulo de la esquina superior de la foto.
+ *
+ * <p>Dice QUE es esto en tres palabras, sin repetir el nombre que ya esta en el bloque de
+ * marca. Es lo primero que necesita saber quien llega sin conocer la escuela — el titular de
+ * abajo dice que se aprende, este dice donde se esta.
+ */
+const KICKER_FOTO = 'Escuela de acordeón vallenato';
+
+/**
+ * Redes sociales, al pie de la foto.
+ *
+ * <p>Hoy solo YouTube: es el unico destino que se ha podido verificar. Los otros cuatro
+ * —TikTok, Facebook, X e Instagram— entran en cuanto el propietario pase sus usuarios.
+ * Inventarlos llevaria al alumno al perfil de otra persona con el logotipo de la academia
+ * al lado, que es peor que no ofrecer el enlace.
+ */
+export interface RedSocial {
+  readonly marca: NombreMarca;
+  readonly nombre: string;
+  readonly url: string;
+}
+
+const REDES: readonly RedSocial[] = [
+  { marca: 'youtube', nombre: 'YouTube', url: 'https://youtube.com/@DiegoRomeroAcordeon' },
+];
 
 /** Longitud minima de contrasena aceptada por el formulario. La real la impone el backend. */
 const LONGITUD_MINIMA_CONTRASENA = 8;
@@ -42,7 +71,7 @@ type EstadoAcceso = 'inactivo' | 'enviando' | 'error';
 @Component({
   selector: 'adr-acceso',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [Alerta, Boton, Campo, ReactiveFormsModule],
+  imports: [Alerta, Boton, Campo, Marca, ReactiveFormsModule],
   templateUrl: './acceso.html',
   styleUrl: './acceso.scss',
 })
@@ -79,6 +108,8 @@ export class Acceso {
   protected readonly bajada = BAJADA;
   protected readonly intro = INTRO;
   protected readonly marca = MARCA;
+  protected readonly kickerFoto = KICKER_FOTO;
+  protected readonly redes = REDES;
 
   protected readonly urlGoogle = this.autenticacion.urlProveedor('google');
   protected readonly urlFacebook = this.autenticacion.urlProveedor('facebook');

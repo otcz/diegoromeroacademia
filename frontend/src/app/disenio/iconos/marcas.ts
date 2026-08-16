@@ -40,6 +40,14 @@ export const MARCAS = {
       '<path fill="#1877F2" d="M36 18C36 8.06 27.94 0 18 0S0 8.06 0 18c0 8.98 6.58 16.43 15.19 17.78V23.2h-4.57V18h4.57v-3.96c0-4.51 2.69-7 6.8-7 1.97 0 4.03.35 4.03.35v4.43h-2.27c-2.24 0-2.94 1.39-2.94 2.81V18h5l-.8 5.2h-4.2v12.58C29.42 34.43 36 26.98 36 18z"/>' +
       '<path fill="#FFF" d="M25.01 23.2l.8-5.2h-5v-3.37c0-1.42.7-2.81 2.94-2.81h2.27V7.39s-2.06-.35-4.03-.35c-4.11 0-6.8 2.49-6.8 7V18h-4.57v5.2h4.57v12.58a18.1 18.1 0 005.62 0V23.2h4.2z"/>',
   },
+  // Fuente: identidad oficial de YouTube. El boton de reproduccion, con su rojo de marca.
+  youtube: {
+    viewBox: '0 0 24 24',
+    titular: 'YouTube',
+    contenido:
+      '<path fill="#FF0000" d="M23.5 6.2a3 3 0 0 0-2.1-2.1C19.5 3.5 12 3.5 12 3.5s-7.5 0-9.4.6A3 3 0 0 0 .5 6.2C0 8.1 0 12 0 12s0 3.9.5 5.8a3 3 0 0 0 2.1 2.1c1.9.6 9.4.6 9.4.6s7.5 0 9.4-.6a3 3 0 0 0 2.1-2.1c.5-1.9.5-5.8.5-5.8s0-3.9-.5-5.8z"/>' +
+      '<path fill="#FFF" d="M9.6 15.6V8.4l6.2 3.6-6.2 3.6z"/>',
+  },
 } as const satisfies Record<string, Marca>;
 
 /** Nombres validos de marca. Uno fuera de esta lista no compila. */

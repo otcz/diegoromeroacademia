@@ -2,6 +2,7 @@ import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { DESTINO_REGISTRO } from '../../../app.routes';
 import { ACTIVOS } from '../../../disenio/activos';
 import { Boton } from '../boton/boton';
+import { RouterLink } from '@angular/router';
 import { Icono } from '../icono/icono';
 
 /**
@@ -17,7 +18,7 @@ import { Icono } from '../icono/icono';
 @Component({
   selector: 'adr-nav-publica',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [Boton, Icono],
+  imports: [Boton, Icono, RouterLink],
   template: `
     <header class="adr-nav">
       <div class="adr-contenedor adr-nav__interior">
@@ -27,7 +28,18 @@ import { Icono } from '../icono/icono';
              tres cosas. Por eso la imagen va con «alt» vacío — el nombre ya está ahí y
              anunciarlo dos veces seguidas estorba.
              Ancho y alto van escritos para que la barra no dé un salto al cargar. -->
-        <a class="adr-nav__marca" href="#inicio" aria-label="Academia Diego Romero — inicio">
+        <!-- A la portada, no a un ancla. Con «#inicio» el logotipo solo funcionaba EN la
+             portada: desde /acceso o /perfil se limitaba a pegar el ancla a la URL actual y
+             no pasaba nada, que es lo peor que puede hacer un control — parecer pulsable y
+             no responder. Con routerLink navega desde cualquier pagina y sin recargar la
+             aplicacion entera; el fragmento conserva el salto al heroe cuando ya se esta en
+             la portada, porque el enrutador tiene «anchorScrolling» activado. -->
+        <a
+          class="adr-nav__marca"
+          routerLink="/"
+          fragment="inicio"
+          aria-label="Academia Diego Romero — inicio"
+        >
           <img
             class="adr-nav__logotipo"
             [src]="logotipo"

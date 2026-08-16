@@ -173,9 +173,12 @@ describe('Landing', () => {
     // Los ocho botones de la página apuntaban a `/registro`, que no existe: el comodín los
     // devolvía en silencio a la portada, así que un enlace roto se veía igual que uno bueno.
     // Es el defecto más caro que puede tener una landing y no sale en ninguna captura.
+    // Se compara la RUTA, no el enlace entero: lo que el enrutador tiene que saber resolver
+    // es el camino. El fragmento y la consulta van detras y no cambian el destino — el
+    // logotipo apunta a `/#inicio`, que es la portada con un salto al heroe.
     const internos: string[] = Array.from(
       fixture.nativeElement.querySelectorAll('a[href^="/"]'),
-      (a) => (a as HTMLAnchorElement).getAttribute('href') ?? '',
+      (a) => ((a as HTMLAnchorElement).getAttribute('href') ?? '').split(/[?#]/)[0],
     );
 
     expect(internos.length).toBeGreaterThan(0);

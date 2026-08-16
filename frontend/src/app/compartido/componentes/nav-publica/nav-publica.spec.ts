@@ -10,6 +10,21 @@ describe('NavPublica', () => {
     return fixture;
   }
 
+  it('debe llevar el logotipo a la portada desde CUALQUIER pagina', async () => {
+    const fixture = await crear();
+    const marca: HTMLAnchorElement = fixture.nativeElement.querySelector('.adr-nav__marca');
+
+    // Llevaba «#inicio» a secas. En la portada colaba, pero la barra tambien se usa en
+    // /acceso y /perfil, y alli el ancla no existe: pulsar el logotipo solo pegaba «#inicio»
+    // a la URL actual y no pasaba nada. Un control que parece pulsable y no responde es lo
+    // que hace pensar que la aplicacion se rompio.
+    //
+    // Se comprueba el href resuelto y no el atributo: `routerLink` escribe uno y otro, y lo
+    // que importa es a donde apunta de verdad.
+    expect(new URL(marca.href).pathname).toBe('/');
+    expect(new URL(marca.href).hash).toBe('#inicio');
+  });
+
   it('debe ofrecer los tres enlaces de seccion y las dos acciones de cuenta', async () => {
     const fixture = await crear();
 

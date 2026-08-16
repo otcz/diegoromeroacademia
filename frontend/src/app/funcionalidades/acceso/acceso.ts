@@ -5,7 +5,13 @@ import { Boton } from '../../compartido/componentes/boton/boton';
 import { Campo } from '../../compartido/componentes/campo/campo';
 import { Icono } from '../../compartido/componentes/icono/icono';
 import { AutenticacionServicio } from '../../nucleo/servicios/autenticacion-servicio';
+import { ACTIVOS } from '../../disenio/activos';
 import { entorno } from '../../../entornos/entorno';
+import {
+  CIFRAS,
+  INSTRUMENTOS,
+  PROCEDENCIA_CIFRAS,
+} from '../landing/landing.contenido';
 
 /** Longitud minima de contrasena aceptada por el formulario. La real la impone el backend. */
 const LONGITUD_MINIMA_CONTRASENA = 8;
@@ -45,6 +51,23 @@ export class Acceso {
 
   protected readonly estado = signal<EstadoAcceso>('inactivo');
   protected readonly mensajeError = signal('');
+
+  /**
+   * Las mismas tres cifras que la landing, y de la misma fuente.
+   *
+   * <p>Se toman de  en vez de repetirlas: si Diego llega a 30.000
+   * seguidores, se cambia en un sitio. Dos copias del mismo numero divergen siempre, y la
+   * que se queda vieja es justo la que menos gente revisa.
+   *
+   * <p>Se dejan tres de las cuatro: «100% examenes revisados» es un argumento de venta y
+   * aqui no se vende, se entra.
+   */
+  /** Fondo del panel de marca: el Hohner Corona, el acordeon del vallenato. */
+  protected readonly fotoDeFondo = `url(${ACTIVOS.practicaBotonadura})`;
+
+  protected readonly cifras = CIFRAS.slice(0, 3);
+  protected readonly procedencia = PROCEDENCIA_CIFRAS;
+  protected readonly instrumentos = INSTRUMENTOS;
 
   protected readonly urlGoogle = this.autenticacion.urlProveedor('google');
   protected readonly urlFacebook = this.autenticacion.urlProveedor('facebook');

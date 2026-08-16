@@ -2,7 +2,10 @@
   <!-- ==================================================== PANEL DE MARCA -->
   <!-- Alterna Noche azul con el blanco del formulario, que es el ritmo que el sistema
        usa en la landing (regla de color 4). -->
-  <section class="acceso__marca">
+  <!-- La ruta de la foto entra por variable CSS y no escrita en la hoja: las imagenes llevan
+       huella de contenido en el nombre, asi que el .scss quedaria desactualizado en cuanto se
+       cambiara la foto, y el fallo se veria como un hueco vacio sin error en consola. -->
+  <section class="acceso__marca" [style.--acceso-foto]="fotoDeFondo">
     <a class="acceso__logo" href="/" aria-label="Academia Diego Romero — inicio">
       <span class="acceso__logo-nombre">Diego Romero</span>
       <span class="acceso__logo-bajada">Academia</span>
@@ -13,23 +16,23 @@
         Sigue donde<br />
         <span class="adr-subrayado">lo dejaste.</span>
       </h2>
-      <ul class="acceso__marca-lista">
-        <li>
-          <adr-icono nombre="lock-open" [tamanio]="20" />
-          <span>Tus niveles aprobados quedan siempre disponibles</span>
-        </li>
-        <li>
-          <adr-icono nombre="certificate" [tamanio]="20" />
-          <span>Tus certificados no se pierden aunque venza el plan</span>
-        </li>
-        <li>
-          <adr-icono nombre="play-circle" [tamanio]="20" />
-          <span>Continúas la clase en el segundo exacto donde la dejaste</span>
-        </li>
-      </ul>
+      <!-- Cifras, no viñetas. Una promesa —«tus certificados no se pierden»— la escribe
+           cualquiera; un número con su procedencia se puede comprobar, y es lo que separa
+           una pantalla que convence de una que solo afirma. Los tres son verificables: los
+           seguidores en el canal, y niveles y clases contra el temario. -->
+      <dl class="acceso__cifras">
+        @for (cifra of cifras; track cifra.rotulo) {
+          <div class="acceso__cifra">
+            <dt class="acceso__cifra-valor">{{ cifra.valor }}</dt>
+            <dd class="acceso__cifra-rotulo">{{ cifra.rotulo }}</dd>
+          </div>
+        }
+      </dl>
+
+      <p class="acceso__procedencia">{{ procedencia }}</p>
     </div>
 
-    <p class="acceso__marca-pie">Acordeón · Caja · Guacharaca · Guitarra</p>
+    <p class="acceso__marca-pie">{{ instrumentos.join(' · ') }}</p>
   </section>
 
   <!-- ====================================================== FORMULARIO -->
@@ -46,19 +49,18 @@
       }
 
       <div class="acceso__proveedores">
-        <adr-boton
-          variante="secundario"
-          icono="google-logo"
-          [anchoCompleto]="true"
-          [enlace]="urlGoogle"
-        >
+        <!-- Marca, no icono. Llevaba la «G» de Phosphor: un glifo monocromo que se teñía con
+             el color del texto. Se parece a la de Google sin serlo, y su identidad exige el
+             logotipo de cuatro colores sin recolorear (ADR 0010). Un logotipo aproximado es
+             lo primero que delata que una pantalla de ingreso no es de fiar. -->
+        <adr-boton variante="proveedor" marca="google" [anchoCompleto]="true" [enlace]="urlGoogle">
           Continuar con Google
         </adr-boton>
 
         @if (facebookHabilitado) {
           <adr-boton
-            variante="secundario"
-            icono="facebook-logo"
+            variante="proveedor"
+            marca="facebook"
             [anchoCompleto]="true"
             [enlace]="urlFacebook"
           >
@@ -83,12 +85,14 @@
           tipo="password"
           autocompletado="current-password"
           [control]="formulario.controls.contrasena"
-        />
+        >
+          <!-- Sin enlace: la pantalla de recuperación no existe todavía, y un control que no
+               responde al pulsarlo enseña que la aplicación no reacciona. Pero decir
+               «próximamente» tampoco ayuda a quien la olvidó AHORA: se le señala la salida
+               que sí existe, que además está a dos dedos, justo arriba. -->
+          <span accion class="acceso__pendiente">¿La olvidaste? Entra con Google</span>
+        </adr-campo>
 
-        <!-- Sin enlace: `/recuperar-contrasena` no existe y el comodín del enrutador la
-             mandaba a la pantalla de error. Un control visible que no responde al pulsarlo
-             enseña que la aplicación no reacciona, justo donde hay que generar confianza. -->
-        <p class="acceso__olvide acceso__pendiente">¿Olvidaste tu contraseña? — próximamente</p>
 
         <adr-boton
           tipo="submit"
@@ -101,11 +105,11 @@
       </form>
 
       <p class="acceso__registro">
-        <!-- Decía «Crea una desde el formulario de arriba», y era FALSO: este formulario solo
-             inicia sesión — su único botón dice «Entrar» y llama a `iniciarSesion()`. Además
-             el backend todavía no expone ningún controlador, así que hoy no hay forma de
-             crear una cuenta. Decirlo es mejor que un formulario que falla tras el esfuerzo. -->
-        Crear cuenta — próximamente. Por ahora solo entran las cuentas ya creadas.
+        <!-- Decía «Crear cuenta — próximamente», y era FALSO: `IngresarConProveedorExterno`
+             busca por sujeto, luego por correo, y si no encuentra a nadie CREA el usuario.
+             Entrar con Google por primera vez ya abre la cuenta. Lo que no existe es el
+             registro por formulario, y esa es la distinción que hay que decir. -->
+        ¿Primera vez? Entra con Google y tu cuenta queda creada al instante.
       </p>
     </div>
   </section>

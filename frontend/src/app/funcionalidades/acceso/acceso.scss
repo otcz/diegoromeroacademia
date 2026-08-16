@@ -8,14 +8,40 @@
 
 // ------------------------------------------------------------ panel de marca
 .acceso__marca {
+  position: relative;
+  isolation: isolate;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  overflow: hidden;
   padding: var(--adr-espacio-7);
   color: var(--adr-oscuro-texto-fuerte);
   background:
-    radial-gradient(120% 90% at 15% 0%, rgb(29 107 243 / 22%), transparent 60%),
+    radial-gradient(120% 90% at 15% 0%, color-mix(in srgb, var(--adr-color-azul-rey) 22%, transparent), transparent 60%),
     var(--adr-color-noche-azul);
+}
+
+// La foto va DETRAS de todo y muy velada: aporta el motivo vallenato sin competir con el
+// texto. A esta opacidad tampoco se nota que el original es una instantanea con flash.
+.acceso__marca::before {
+  position: absolute;
+  z-index: -1;
+  inset: 0;
+  content: '';
+  background-image: var(--acceso-foto);
+  background-position: center;
+  background-size: cover;
+  opacity: 0.28;
+  mix-blend-mode: luminosity;
+}
+
+// Velo sobre la foto, para que el contraste del texto no dependa de la imagen.
+.acceso__marca::after {
+  position: absolute;
+  z-index: -1;
+  inset: 0;
+  content: '';
+  background: linear-gradient(160deg, color-mix(in srgb, var(--adr-color-noche-azul) 82%, transparent), var(--adr-color-noche-azul));
 }
 
 .acceso__logo {
@@ -48,20 +74,43 @@
   letter-spacing: var(--adr-espaciado-letra-titulo);
 }
 
-.acceso__marca-lista {
-  list-style: none;
+// Cifras separadas por reglas: cada una se lee sola, y la linea da el ritmo que hace que
+// se escaneen de un vistazo en vez de leerse como un parrafo.
+.acceso__cifras {
+  margin-bottom: var(--adr-espacio-4);
+}
 
-  li {
-    display: flex;
-    gap: var(--adr-espacio-3);
-    align-items: center;
-    margin-bottom: var(--adr-espacio-4);
-    font-size: var(--adr-texto-ui);
-  }
+.acceso__cifra {
+  display: flex;
+  gap: var(--adr-espacio-5);
+  align-items: baseline;
+  padding-block: var(--adr-espacio-4);
+  border-top: 1px solid var(--adr-oscuro-borde);
 
-  adr-icono {
-    color: var(--adr-color-mango);
+  &:last-child {
+    border-bottom: 1px solid var(--adr-oscuro-borde);
   }
+}
+
+.acceso__cifra-valor {
+  min-width: 4.5ch;
+  font-family: var(--adr-fuente-titular);
+  font-size: var(--adr-texto-cifra);
+  font-weight: 800;
+  line-height: 1;
+  color: var(--adr-color-blanco);
+  font-variant-numeric: tabular-nums;
+}
+
+.acceso__cifra-rotulo {
+  font-size: var(--adr-texto-ui);
+  color: var(--adr-oscuro-texto-fuerte);
+}
+
+// La procedencia es lo que convierte un numero en un dato comprobable.
+.acceso__procedencia {
+  font-size: var(--adr-texto-caption);
+  color: var(--adr-oscuro-texto-suave);
 }
 
 .acceso__marca-pie {
@@ -172,4 +221,11 @@ adr-alerta {
   .acceso__panel {
     padding: var(--adr-espacio-6) var(--adr-espacio-5);
   }
+}
+
+// Lo que todavia no existe: se nombra, no se enlaza. Atenuado para que se lea como «pronto»
+// y no como un control que no responde al pulsarlo.
+.acceso__pendiente {
+  font-size: var(--adr-texto-caption);
+  color: var(--adr-color-texto-atenuado);
 }

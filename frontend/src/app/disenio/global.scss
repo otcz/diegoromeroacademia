@@ -16,6 +16,17 @@
 
 html {
   -webkit-text-size-adjust: 100%;
+
+  // Chrome trae «tema oscuro automático»: si el sistema está en oscuro y la página no dice
+  // nada, el navegador le INVIERTE los colores por su cuenta. Eso repinta la paleta entera
+  // —el panel niebla sale azul noche, la tinta sale blanca— y se lleva por delante el
+  // trabajo de contraste del ADR 0009, que se midió sobre los colores reales.
+  //
+  // Y sobre el logotipo de Google es peor: sus cuatro colores son de otro y no se tocan.
+  //
+  // `only light` es la única forma de renunciar a ese repintado. No cierra la puerta a un
+  // modo oscuro nuestro: el día que exista, se diseña, se mide y se cambia esta línea.
+  color-scheme: only light;
 }
 
 body {

@@ -68,17 +68,28 @@ describe('Acceso', () => {
 
   it('no debe ofrecer ninguna salida que todavia no exista', async () => {
     const fixture = await crear();
-    const texto: string = fixture.nativeElement.textContent;
 
-    // Esta pantalla solo INICIA SESION: su unico boton dice «Entrar» y el backend todavia no
-    // expone ningun controlador. Prometer registro o recuperacion de contrasena manda al
-    // visitante a la pantalla de error justo donde hay que ganarse su confianza.
-    expect(texto).toContain('Crear cuenta — próximamente');
-    expect(texto).toContain('¿Olvidaste tu contraseña? — próximamente');
-
+    // El formulario de esta pantalla solo INICIA SESION —su unico boton dice «Entrar»— y no
+    // hay pantalla de recuperacion. Llevar al visitante a un 404 justo donde hay que ganarse
+    // su confianza es el peor sitio para hacerlo.
+    //
+    // Se comprueba el destino y no el texto: la redaccion se afina, y una prueba clavada a
+    // la frase exacta solo obliga a venir a reescribirla sin proteger nada.
     for (const roto of ['/registro', '/recuperar-contrasena']) {
       expect(fixture.nativeElement.querySelector(`a[href="${roto}"]`)).toBeNull();
     }
+  });
+
+  it('debe decir la verdad sobre como se abre una cuenta: entrando con Google', async () => {
+    const fixture = await crear();
+    const texto: string = fixture.nativeElement.textContent;
+
+    // Decia «Crear cuenta — proximamente» y era falso: `IngresarConProveedorExterno` busca
+    // por sujeto, luego por correo, y si no encuentra a nadie CREA el usuario. Quien llegaba
+    // por primera vez leia que no podia entrar, teniendo el boton que lo hace justo encima.
+    expect(texto).toContain('Primera vez');
+    expect(texto).toContain('Google');
+    expect(texto).not.toContain('próximamente');
   });
 
   it('no debe enviar nada con el formulario vacio, y debe marcar los errores', async () => {

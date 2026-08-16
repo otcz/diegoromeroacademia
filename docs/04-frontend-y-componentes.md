@@ -138,6 +138,28 @@ Se usa **una vez por pantalla como máximo**. Repetido pierde todo su efecto.
 **Prohibido:** emojis, iconos de otra librería, iconos como imagen `.png`, e iconos como único
 portador de significado (siempre `aria-label` o texto acompañante).
 
+### Marcas de terceros — no son iconos (ADR 0010)
+
+Un icono **comunica una idea** y es nuestro. Una marca **identifica a su titular** y no lo es:
+Google exige su «G» de cuatro colores sin recolorear en cualquier botón de ingreso, y teñirla
+con `currentColor` incumple su norma además de delatar la pantalla como poco fiable.
+
+- Viven en `frontend/src/app/disenio/iconos/marcas.ts`, **escritas a mano**. No pasan por
+  `npm run iconos:generar`.
+- Se consumen por `<adr-marca nombre="google">`, nunca por `<adr-icono>`.
+- Es el **único** sitio del proyecto donde se escriben colores literales (excepción a la
+  regla 15): esos colores no son de nuestra paleta.
+- Cada marca declara a su `titular`, para poder rendir cuentas de las marcas ajenas usadas.
+- En botón se usan siempre con la variante `proveedor`, que no invierte al pasar el ratón.
+
+### Esquema de color
+
+`global.scss` declara `color-scheme: only light`. Sin esa línea, el **tema oscuro automático de
+Chrome** invierte la paleta por su cuenta cuando el sistema está en oscuro: el panel niebla sale
+azul noche, la tinta sale blanca y las medidas de contraste del ADR 0009 dejan de valer, porque
+se tomaron sobre los colores reales. El día que exista un modo oscuro propio se diseña, se mide
+y se cambia esa línea.
+
 ---
 
 ## 3. Catálogo de componentes
@@ -150,8 +172,9 @@ agrega al catálogo — no se improvisa localmente.
 
 | Componente | Selector | Variantes / estados |
 |---|---|---|
-| Botón | `<adr-boton>` | `primario`, `secundario`, `fantasma`, `sobre-oscuro`, `peligro` · estados: normal, hover, foco, activo, deshabilitado, cargando |
+| Botón | `<adr-boton>` | `primario`, `secundario`, `proveedor`, `fantasma`, `sobre-oscuro`, `peligro` · estados: normal, hover, foco, activo, deshabilitado, cargando |
 | Icono | `<adr-icono>` | Phosphor duotone, 16/20/24/32 |
+| Marca de tercero | `<adr-marca>` | `google`, `facebook` — colores del titular, ADR 0010 |
 | Etiqueta | `<adr-etiqueta>` | Tintes: azul, mango, verde, neutro |
 | Tarjeta | `<adr-tarjeta>` | Con y sin encabezado, con y sin pie |
 | Campo de texto | `<adr-campo>` | Rótulo, ayuda, error, requerido, deshabilitado |

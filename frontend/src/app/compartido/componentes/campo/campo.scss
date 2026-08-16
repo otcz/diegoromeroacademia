@@ -2,9 +2,17 @@
   display: block;
 }
 
+.adr-campo__cabecera {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--adr-espacio-3);
+  align-items: baseline;
+  justify-content: space-between;
+  margin-bottom: var(--adr-espacio-2);
+}
+
 .adr-campo__rotulo {
   display: block;
-  margin-bottom: var(--adr-espacio-2);
   font-size: var(--adr-texto-ui);
   font-weight: 600;
   color: var(--adr-color-tinta);

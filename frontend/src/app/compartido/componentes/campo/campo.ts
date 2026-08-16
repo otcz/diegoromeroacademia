@@ -38,7 +38,13 @@ const MENSAJES: Record<string, (error: ValidationErrors[string]) => string> = {
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [Icono, ReactiveFormsModule],
   template: `
-    <label class="adr-campo__rotulo" [for]="idCampo">{{ etiqueta() }}</label>
+    <!-- La cabecera admite una accion a la derecha del rotulo —«¿olvidaste tu contrasena?»,
+         «ver ejemplo»—. Ahi se lee al mirar el campo, que es cuando sirve; debajo del control
+         se lee cuando ya lo rellenaste. -->
+    <div class="adr-campo__cabecera">
+      <label class="adr-campo__rotulo" [for]="idCampo">{{ etiqueta() }}</label>
+      <ng-content select="[accion]" />
+    </div>
 
     <div class="adr-campo__caja">
       <input

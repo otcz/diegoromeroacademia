@@ -3,15 +3,28 @@ import { ChangeDetectionStrategy, Component, computed, input, output } from '@an
 import { RouterLink } from '@angular/router';
 import { entorno } from '../../../../entornos/entorno';
 import { Icono, TamanioIcono } from '../icono/icono';
+import { Marca } from '../marca/marca';
 import { NombreIcono } from '../../../disenio/iconos/registro-iconos';
+import { NombreMarca } from '../../../disenio/iconos/marcas';
 
 /**
  * Variantes del boton.
  *
  * <p>No existe una variante mango: la regla de color 2 prohibe el mango en botones. Es
  * acento, no accion. Dejar la variante fuera del tipo hace que ni siquiera se pueda pedir.
+ *
+ * <p>`proveedor` es el boton de ingreso con un tercero (Google, Facebook). Existe aparte
+ * porque no es una accion NUESTRA: la marca manda sobre el aspecto, y usar `secundario`
+ * lo pintaba con la tinta del proyecto y lo invertia al pasar el raton — con el logotipo
+ * de Google encima, eso es exactamente lo que su identidad no permite.
  */
-export type VarianteBoton = 'primario' | 'secundario' | 'fantasma' | 'sobre-oscuro' | 'peligro';
+export type VarianteBoton =
+  | 'primario'
+  | 'secundario'
+  | 'proveedor'
+  | 'fantasma'
+  | 'sobre-oscuro'
+  | 'peligro';
 
 export type TipoBoton = 'button' | 'submit';
 
@@ -46,12 +59,14 @@ const RUTA_API = `${new URL(entorno.urlApi, 'http://base.invalida').pathname.rep
 @Component({
   selector: 'adr-boton',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [Icono, NgTemplateOutlet, RouterLink],
+  imports: [Icono, Marca, NgTemplateOutlet, RouterLink],
   template: `
     <!-- El contenido se declara una sola vez y se reutiliza en las dos ramas: dos
          <ng-content> en la misma plantilla no proyectan lo que uno espera. -->
     <ng-template #contenido>
-      @if (icono(); as nombreIcono) {
+      @if (marca(); as nombreMarca) {
+        <adr-marca [nombre]="nombreMarca" [tamanio]="tamanioIcono" />
+      } @else if (icono(); as nombreIcono) {
         <adr-icono [nombre]="nombreIcono" [tamanio]="tamanioIcono" />
       }
       <span class="adr-boton__texto"><ng-content /></span>
@@ -95,6 +110,14 @@ export class Boton {
   readonly cargando = input(false);
   readonly anchoCompleto = input(false);
   readonly icono = input<NombreIcono | null>(null);
+
+  /**
+   * Marca de un tercero, en vez de un icono.
+   *
+   * <p>Excluyente con `icono` y con prioridad sobre el: un boton lleva una cosa o la otra.
+   * Dos simbolos delante del texto no dicen mas, solo hacen dudar de cual es el que manda.
+   */
+  readonly marca = input<NombreMarca | null>(null);
 
   /** Si se indica, el boton se dibuja como enlace en vez de como boton. */
   readonly enlace = input<string | null>(null);

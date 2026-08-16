@@ -99,6 +99,22 @@ describe('Boton', () => {
     expect(conIcono.nativeElement.querySelector('adr-icono')).not.toBeNull();
   });
 
+  it('debe dibujar la marca del tercero y no un icono del sistema', async () => {
+    const fixture = await crear({ marca: 'google' });
+
+    // Un `adr-icono` aqui significaria que la «G» se esta tiñendo con `currentColor`, que
+    // es justo lo que la identidad de Google prohibe (ADR 0010).
+    expect(fixture.nativeElement.querySelector('adr-marca')).not.toBeNull();
+    expect(fixture.nativeElement.querySelector('adr-icono')).toBeNull();
+  });
+
+  it('debe llevar una sola cosa delante del texto cuando se piden marca e icono', async () => {
+    const fixture = await crear({ marca: 'google', icono: 'play-circle' });
+
+    expect(fixture.nativeElement.querySelector('adr-marca')).not.toBeNull();
+    expect(fixture.nativeElement.querySelector('adr-icono')).toBeNull();
+  });
+
   it('debe permitir enviar un formulario cuando el tipo es submit', async () => {
     const fixture = await crear({ tipo: 'submit' });
 

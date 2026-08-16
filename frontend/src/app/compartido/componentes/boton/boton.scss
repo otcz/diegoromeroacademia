@@ -70,6 +70,24 @@
   }
 }
 
+// Ingreso con un tercero. La identidad de Google exige superficie propia —blanca o
+// negra, nunca teñida—, su logotipo sin recolorear y el texto legible sobre ella. Por eso
+// esta variante no invierte al pasar el ratón como `secundario`: eso dejaría la «G» de
+// cuatro colores sobre fondo oscuro, que es de lo poco que su marca no admite.
+.adr-boton--proveedor {
+  font-weight: 500; // menos peso que una acción nuestra: aquí manda la marca, no el botón
+  color: var(--adr-color-tinta);
+  background: var(--adr-color-blanco);
+  border-color: var(--adr-color-borde-suave);
+  box-shadow: var(--adr-sombra-tarjeta);
+
+  &:hover:not(:disabled) {
+    background: var(--adr-color-blanco);
+    border-color: var(--adr-color-texto-atenuado);
+    box-shadow: var(--adr-sombra-tarjeta-alta);
+  }
+}
+
 .adr-boton--fantasma {
   color: var(--adr-color-azul-profundo);
 

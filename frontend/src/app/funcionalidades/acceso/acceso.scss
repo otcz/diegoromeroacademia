@@ -21,11 +21,18 @@
     var(--adr-color-noche-azul);
 }
 
-// La foto, a sangre.
+// Dos capas de la MISMA foto, y esa es toda la idea.
 //
-// El encuadre horizontal va al 57% y no al centro porque ahi cae Diego en la toma: con
-// «cover» el recorte se lo lleva siempre el ancho, y centrando se le comia el hombro en las
-// ventanas estrechas. Vertical al centro, que es donde no sobra nada.
+// La foto es casi cuadrada (1080x1030) y el panel es vertical. Con `cover` llenaba el hueco
+// pero cortaba por los lados: se perdian el acordeon de la izquierda y el hombro de Diego.
+// Con `contain` se ve entera, pero deja dos bandas vacias arriba y abajo — y un panel medio
+// vacio era justo lo que se querian quitar de encima.
+//
+// La salida es que las bandas no queden vacias: las llena la misma imagen ampliada y
+// desenfocada. Se lee como una sola fotografia con profundidad, no como un recorte pegado
+// sobre un fondo, y no hace falta ni inventar pixeles ni recortar a nadie.
+
+// Capa de atras: rellena el panel, fuera de foco y oscurecida para que no compita.
 .acceso__marca::before {
   position: absolute;
   inset: 0;
@@ -33,6 +40,27 @@
   background-image: var(--acceso-foto);
   background-position: 57% center;
   background-size: cover;
+  filter: blur(38px) brightness(0.72) saturate(1.15);
+
+  // El desenfoque arrastra los bordes hacia dentro y deja una orla clara. Se agranda la capa
+  // lo justo para que ese borde caiga fuera del panel.
+  scale: 1.12;
+}
+
+// Capa de delante: la foto ENTERA, sin recortar.
+//
+// No lleva mascara de desvanecido en los bordes, que seria lo obvio para disimular el corte:
+// obligaria a escribir aqui la proporcion del archivo, y el .scss quedaria mintiendo el dia
+// que la foto cambie de forma. No hace falta — arriba y abajo la toma es penumbra de tarima,
+// y contra su propio desenfoque el borde no se distingue.
+.acceso__marca::after {
+  position: absolute;
+  inset: 0;
+  content: '';
+  background-image: var(--acceso-foto);
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: contain;
 }
 
 // --------------------------------------------------------------- formulario
@@ -131,10 +159,20 @@ adr-alerta {
     min-height: 190px;
   }
 
-  // Mas abajo que en escritorio: en una franja apaisada, encuadrar por el centro deja fuera
-  // el acordeon y arriba solo queda techo de tarima.
+  // En una franja apaisada de 190 px la foto completa se veria como un sello diminuto en
+  // medio, con desenfoque a los dos lados. Aqui manda el recorte: se quita la capa nitida y
+  // la de atras vuelve a ser la foto normal, sin desenfocar.
+  //
+  // Y se encuadra mas abajo que en escritorio, porque a lo apaisado el centro deja fuera el
+  // acordeon y arriba solo queda techo de tarima.
   .acceso__marca::before {
     background-position: center 42%;
+    filter: none;
+    scale: 1;
+  }
+
+  .acceso__marca::after {
+    display: none;
   }
 
   .acceso__panel {

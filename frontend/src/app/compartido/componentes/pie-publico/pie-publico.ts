@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component, input } from '@angular/core';
 import { DESTINO_REGISTRO } from '../../../app.routes';
+import { ACTIVOS } from '../../../disenio/activos';
 import { Boton } from '../boton/boton';
 
 /**
@@ -43,9 +44,23 @@ import { Boton } from '../boton/boton';
         }
 
         <div class="adr-pie__enlaces">
-          <div>
-            <p class="adr-pie__marca">Academia Diego Romero</p>
-            <p class="adr-texto-claro">diegoromeroacademia.com</p>
+          <div class="adr-pie__identidad">
+            <!-- Aqui SI cabe el logotipo con su nombre al lado: el pie no compite por
+                 espacio como la barra. Va con alt vacio por lo mismo que en la barra — el
+                 nombre esta escrito en texto justo al lado y repetirlo estorba. -->
+            <img
+              class="adr-pie__logotipo"
+              [src]="logotipo"
+              alt=""
+              width="56"
+              height="56"
+              loading="lazy"
+              decoding="async"
+            />
+            <div>
+              <p class="adr-pie__marca">Academia Diego Romero</p>
+              <p class="adr-texto-claro">diegoromeroacademia.com</p>
+            </div>
           </div>
           <div>
             <!-- Términos y Reembolsos apuntaban a rutas que no existen:
@@ -82,6 +97,7 @@ import { Boton } from '../boton/boton';
   styleUrl: './pie-publico.scss',
 })
 export class PiePublico {
+  protected readonly logotipo = ACTIVOS.logotipo;
   readonly numeroWhatsapp = input('');
   readonly anio = input(new Date().getFullYear());
 

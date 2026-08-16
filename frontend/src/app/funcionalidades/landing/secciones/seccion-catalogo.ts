@@ -21,12 +21,17 @@ import { CATALOGO, NOTA_CATALOGO } from '../landing.contenido';
             <p class="adr-kicker adr-kicker--azul">Catálogo</p>
             <h2 class="adr-titulo-seccion">La ruta completa o una canción.</h2>
           </div>
-          <a class="catalogo__enlace" href="#catalogo">Ver todo →</a>
+          <!-- Aquí había un «Ver todo», cuyo destino apuntaba DENTRO de esta misma sección:
+               no movía nada al pulsarlo, que es la señal de confianza inversa a la que busca
+               el catálogo. Vuelve como enlace el día que exista la pantalla de cursos. -->
+          <p class="catalogo__dato">{{ tutorialesDisponibles }} tutoriales disponibles hoy</p>
         </div>
 
         <div class="catalogo__rejilla">
           @for (curso of catalogo; track curso.clave) {
             <adr-tarjeta-curso
+              [class.catalogo__destacada]="curso.destacado"
+              [destacado]="curso.destacado"
               [titulo]="curso.titulo"
               [kicker]="curso.kicker"
               [descripcion]="curso.descripcion"
@@ -50,4 +55,7 @@ import { CATALOGO, NOTA_CATALOGO } from '../landing.contenido';
 export class SeccionCatalogo {
   protected readonly catalogo = CATALOGO;
   protected readonly nota = NOTA_CATALOGO;
+
+  /** Se cuenta, no se escribe: un número a mano se desincroniza en la primera alta. */
+  protected readonly tutorialesDisponibles = CATALOGO.filter((c) => c.precio !== null).length;
 }

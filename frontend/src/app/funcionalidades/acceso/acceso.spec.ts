@@ -66,12 +66,19 @@ describe('Acceso', () => {
     expect(fixture.nativeElement.textContent).toContain('llegarás a la misma');
   });
 
-  it('debe ofrecer salida a recuperar contrasena y a registro', async () => {
+  it('no debe ofrecer ninguna salida que todavia no exista', async () => {
     const fixture = await crear();
-
     const texto: string = fixture.nativeElement.textContent;
-    expect(texto).toContain('¿Olvidaste tu contraseña?');
-    expect(texto).toContain('Regístrate gratis');
+
+    // Esta pantalla solo INICIA SESION: su unico boton dice «Entrar» y el backend todavia no
+    // expone ningun controlador. Prometer registro o recuperacion de contrasena manda al
+    // visitante a la pantalla de error justo donde hay que ganarse su confianza.
+    expect(texto).toContain('Crear cuenta — próximamente');
+    expect(texto).toContain('¿Olvidaste tu contraseña? — próximamente');
+
+    for (const roto of ['/registro', '/recuperar-contrasena']) {
+      expect(fixture.nativeElement.querySelector(`a[href="${roto}"]`)).toBeNull();
+    }
   });
 
   it('no debe enviar nada con el formulario vacio, y debe marcar los errores', async () => {

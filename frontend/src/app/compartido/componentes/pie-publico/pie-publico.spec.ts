@@ -34,7 +34,7 @@ describe('PiePublico', () => {
     expect(fixture.nativeElement.querySelector('.adr-pie__nota')).toBeNull();
   });
 
-  it('debe enlazar los documentos legales y la verificacion de certificado', async () => {
+  it('debe nombrar los documentos legales y la verificacion, sin enlazarlos aun', async () => {
     const fixture = await crear();
 
     const texto: string = fixture.nativeElement.textContent;

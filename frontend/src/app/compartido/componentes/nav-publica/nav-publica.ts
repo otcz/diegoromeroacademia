@@ -1,4 +1,5 @@
 import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
+import { DESTINO_REGISTRO } from '../../../app.routes';
 import { Boton } from '../boton/boton';
 import { Icono } from '../icono/icono';
 
@@ -24,6 +25,23 @@ import { Icono } from '../icono/icono';
           <span class="adr-nav__marca-bajada">Academia</span>
         </a>
 
+        <!-- FUERA del menú colapsable a propósito. Medido en móvil: el menú está oculto,
+             así que las cinco acciones viven tras la hamburguesa y entre el
+             bloque del héroe (y=467) y el siguiente botón visible (y=5204) hay 4737 px —
+             5,8 pantallas de argumento sin nada que pulsar, en el canal que la propia
+             especificación §14.1 declara mayoritario. La barra es pegajosa; ahora lleva
+             pegada una acción.
+
+             «Empezar» y no «Registrarme»: medido, quedan ~92 px útiles entre la marca y la
+             hamburguesa, y «Registrarme» (137 px) empuja la marca a tres líneas. -->
+        <adr-boton
+          class="adr-nav__cta-movil"
+          variante="primario"
+          [enlace]="destinoRegistro"
+        >
+          Empezar
+        </adr-boton>
+
         <button
           type="button"
           class="adr-nav__boton"
@@ -38,10 +56,12 @@ import { Icono } from '../icono/icono';
         <nav id="menu-principal" class="adr-nav__menu" [class.adr-nav__menu--abierto]="abierto()">
           <a href="#catalogo" (click)="cerrar()">Cursos</a>
           <a href="#simulador" (click)="cerrar()">Simulador</a>
-          <a href="#planes" (click)="cerrar()">Planes</a>
+          <!-- «Precios» y no «Planes»: el visitante que llega de YouTube no compra software
+               por internet, y ademas cabe mejor en el menu colapsado. El ancla no cambia. -->
+          <a href="#planes" (click)="cerrar()">Precios</a>
           <div class="adr-nav__acciones">
             <adr-boton variante="secundario" enlace="/acceso">Entrar</adr-boton>
-            <adr-boton variante="primario" enlace="/registro">Registrarme</adr-boton>
+            <adr-boton variante="primario" [enlace]="destinoRegistro">Registrarme</adr-boton>
           </div>
         </nav>
       </div>
@@ -50,6 +70,7 @@ import { Icono } from '../icono/icono';
   styleUrl: './nav-publica.scss',
 })
 export class NavPublica {
+  protected readonly destinoRegistro = DESTINO_REGISTRO;
   protected readonly abierto = signal(false);
 
   /** Alterna el menu en movil. */

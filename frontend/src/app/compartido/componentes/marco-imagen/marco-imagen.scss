@@ -2,11 +2,21 @@
   display: block;
 }
 
+// El degradado del sistema es SIEMPRE la base, haya foto o no. Asi el marco nunca se ve
+// vacio mientras carga la imagen, y la variante `textura` puede mezclarse contra el.
 .adr-marco {
   position: relative;
   display: block;
   width: 100%;
   overflow: hidden;
+}
+
+.adr-marco--marcador-oscuro {
+  background: var(--adr-degradado-marcador-oscuro);
+}
+
+.adr-marco--marcador-claro {
+  background: var(--adr-degradado-marcador-claro);
 }
 
 .adr-marco__imagen {
@@ -15,21 +25,21 @@
   object-fit: cover;
 }
 
-// Lo que se ve mientras no hay foto: geometria de la propia marca, no un hueco gris.
+// Cuando la imagen no da la talla como fotografia —resolucion corta, recorte forzado— se
+// mezcla con el degradado en vez de sustituirlo. A esta opacidad no se percibe el pixelado
+// ni el estiramiento: queda el color y el motivo, que es lo que aporta.
+.adr-marco--textura .adr-marco__imagen {
+  opacity: 0.3;
+  mix-blend-mode: soft-light;
+}
+
+// Contenido dibujado cuando todavia no hay foto: geometria de la propia marca.
 .adr-marco__marcador {
   position: absolute;
   inset: 0;
   display: flex;
   align-items: center;
   justify-content: center;
-}
-
-.adr-marco--marcador-oscuro .adr-marco__marcador {
-  background: var(--adr-degradado-marcador-oscuro);
-}
-
-.adr-marco--marcador-claro .adr-marco__marcador {
-  background: var(--adr-degradado-marcador-claro);
 }
 
 // ---------------------------------------------------------------------- velos

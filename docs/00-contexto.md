@@ -105,6 +105,9 @@ indica qué no se puede terminar hasta resolverla.
 | 10 | Cerrar el registro de `diegoromeroacademia.com` en Hostinger — está en «Configuración pendiente» y el DNS mundial responde NXDOMAIN | Tomás | Publicar el entorno de demostración |
 | 8 | Alcance geográfico del envío de productos físicos | Diego | Fase 4 — cálculo de envío |
 | 9 | Aprobar el uso del servidor físico como entorno de demostración — [ADR 0007](adr/0007-uso-del-servidor-fisico.md), en estado *propuesto* | Tomás | Que Diego pueda revisar pantallas antes de terminar la fase 1 |
+| 11 | **Derechos de uso de los tres cuadros vallenatos** entregados el 2026-08-15. Están firmados por otros pintores («Ru…», «momo/2016»). ¿Comprados, encargados, o tomados de internet? | Diego | Que puedan usarse en un sitio comercial. Registro en `activos/originales/LEEME.md` |
+| 12 | Sesión de fotos con Diego y su acordeón | Diego | El héroe y las portadas del catálogo. Ninguna foto de banco construye la marca personal |
+| 13 | Número de WhatsApp de la academia | Diego | El botón flotante y el del pie no se dibujan sin él |
 
 **Cómo se maneja lo pendiente:** cada decisión abierta se implementa detrás de una interfaz
 (puerto) y un valor configurable con un valor por defecto documentado. La decisión cambia
@@ -138,6 +141,8 @@ configuración, no código. Ver `docs/03-configuracion.md`.
 | **Deriva de convenciones entre sesiones de IA** | Alto | Reglas escritas, ArchUnit en el build, cobertura obligatoria |
 | El servidor de demostración no tiene acceso fuera de banda confirmado | Alto | Solo se llega por Tailscale, tras NAT. Si `tailscaled` o la red no levantan tras un reinicio, hace falta ir físicamente. El servidor tiene iLO 4 (`/dev/ipmi0` presente), pero **falta confirmar si su puerto está cableado y con IP** |
 | El servidor no tiene cortafuegos activo | Medio | `ufw` está instalado pero con `ENABLED=no`; el unit figura «active» solo por ser `oneshot`. Lo que protege los servicios es enlazarlos a `127.0.0.1`, no un filtro. Publicar algo en `0.0.0.0` lo sirve a toda la red de la oficina |
+| **La landing no puede convertir: el backend no expone ningún controlador** | Alto | Medido el 2026-08-15: `POST /api/acceso/sesion` devuelve 403 y en `backend/src/main` no hay un solo `@RestController`. Hoy no se puede entrar ni registrarse. La landing ya dejó de prometer lo que no existe («— próximamente»), pero **ninguna mejora de la página convierte una visita en alumno** hasta que exista el módulo `identidad`. Es el siguiente trabajo real |
+| Una imagen cambiada conservando el nombre queda cacheada | Medio | Pasó de verdad: sustituir un acordeón por otro dejó a Cloudflare sirviendo el anterior durante horas, y el propietario veía la página sin cambios. Mitigado con huella de contenido en el nombre (`imagenes:optimizar`) y una prueba que falla si falta. `index.html` va con `Cache-Control: no-cache` |
 | `/data` del servidor no tiene ningún respaldo | Medio | No hay restic, borg ni equivalente. Solo existe un volcado lógico de la base de otro proyecto, y vive en el mismo sistema de archivos que protegería. Aplica a `/data/academia/postgres` cuando el catálogo se cargue a mano |
 
 ---
@@ -154,3 +159,8 @@ configuración, no código. Ver `docs/03-configuracion.md`.
 | 2026-08-14 | Frontend verificado: compila, lint limpio, 33 pruebas, 100% de cobertura |
 | 2026-08-14 | Backend verificado en el servidor: 41 pruebas y las cinco puertas de calidad en verde |
 | 2026-08-14 | Imágenes de Docker construidas; la API arranca y responde `UP` contra PostgreSQL |
+| 2026-08-15 | Demostración publicada en `diegoromeroacademia.com` por túnel de Cloudflare. Sin contraseña, por decisión del propietario y mientras no haya cuentas ni pagos |
+| 2026-08-15 | Pantalla de acceso construida. Landing rediseñada: 8 secciones compuestas, 21 componentes de catálogo |
+| 2026-08-15 | Auditoría multiagente de la landing (10 agentes). 10 correcciones aplicadas — la más grave: los 8 CTA apuntaban a `/registro`, que no existía |
+| 2026-08-15 | Segunda auditoría (58 agentes, 23 hallazgos verificados). Destapado el héroe, borrada la ruta duplicada, retiradas las promesas sin respaldo |
+| 2026-08-15 | Establecido el registro de procedencia de imágenes con licencia, y la huella de contenido en el nombre de archivo |

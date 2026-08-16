@@ -1,13 +1,17 @@
 import { ChangeDetectionStrategy, Component, input } from '@angular/core';
+import { DESTINO_REGISTRO } from '../../../app.routes';
 import { Boton } from '../boton/boton';
-import { entorno } from '../../../../entornos/entorno';
 
 /**
  * Pie de las paginas publicas, con la llamada final a la accion (docs/04 §3).
  *
  * <p>Igual que la navegacion, vive en el catalogo porque se repite en todas las paginas
- * abiertas. El enlace de verificacion de certificado sale de la configuracion de entorno,
- * no escrito a mano: cambia entre desarrollo y produccion.
+ * abiertas.
+ *
+ * <p>Terminos, reembolsos, verificacion de certificado y tienda figuran SIN enlace, como
+ * «— proximamente»: sus paginas no existen y el comodin del enrutador las mandaba a la
+ * pantalla de error, al 97% del scroll. Nombran lo que hay en el modelo de negocio sin
+ * venderlo en presente. Terminos y reembolsos son ademas requisito para activar la pasarela.
  */
 @Component({
   selector: 'adr-pie-publico',
@@ -21,7 +25,7 @@ import { entorno } from '../../../../entornos/entorno';
         <h2 class="adr-pie__titulo">{{ titulo() }}</h2>
 
         <div class="adr-pie__acciones">
-          <adr-boton variante="primario" enlace="/registro">{{ textoAccion() }}</adr-boton>
+          <adr-boton variante="primario" [enlace]="destinoRegistro">{{ textoAccion() }}</adr-boton>
           @if (numeroWhatsapp()) {
             <adr-boton
               variante="sobre-oscuro"
@@ -44,9 +48,19 @@ import { entorno } from '../../../../entornos/entorno';
             <p class="adr-texto-claro">diegoromeroacademia.com</p>
           </div>
           <div>
-            <a href="/terminos">Términos y condiciones</a>
-            <a href="/reembolsos">Reembolsos</a>
-            <a [href]="urlVerificacion">Verificar certificado</a>
+            <!-- Términos y Reembolsos apuntaban a rutas que no existen:
+                 el comodín los devolvía a la portada y parecían funcionar. Van sin enlace
+                 hasta que existan las páginas, y existir es REQUISITO para cobrar el primer
+                 peso — no puede activarse la pasarela (decisión pendiente #1) sin ellas. -->
+            <p class="adr-pie__pendiente">Términos y condiciones — próximamente</p>
+            <p class="adr-pie__pendiente">Reembolsos — próximamente</p>
+            <!-- El pie ya trataba así lo que no existe; este se quedó enlazado por descuido.
+                 La ruta de verificación devuelve el index por el respaldo de SPA y el comodín
+                 pinta la pantalla de error, al 97% del scroll. -->
+            <p class="adr-pie__pendiente">Verificar certificado — próximamente</p>
+            <!-- La cuarta fuente de ingreso de la especificación, nombrada sin venderla en
+                 presente: existe en el modelo, todavía no en el producto. -->
+            <p class="adr-pie__pendiente">Tienda de instrumentos y accesorios — próximamente</p>
           </div>
           <div>
             <a
@@ -69,12 +83,20 @@ import { entorno } from '../../../../entornos/entorno';
 })
 export class PiePublico {
   readonly numeroWhatsapp = input('');
-  readonly anio = input(2026);
+  readonly anio = input(new Date().getFullYear());
 
   /** Llamada final. Fusiona cierre y pie en una sola seccion, en vez de gastar dos. */
   readonly titulo = input('Empieza hoy por el nivel 1.');
   readonly textoAccion = input('Registrarme');
-  readonly nota = input('Sin permanencia · Cancela cuando quieras');
+  /**
+   * «Cancela cuando quieras» se dice DOS veces en la página, no tres.
+   *
+   * <p>La del héroe se queda: está 42 px bajo la llamada a la acción y es reversión de riesgo
+   * estándar en ese sitio. Esta se retira porque llega DESPUÉS de que la sección de acceso ya
+   * explicó que cancelar cuesta los cursos de la ruta — y dejar la promesa sin matizar como
+   * lo último que la página dice sobre cancelar es exactamente lo que genera el reclamo.
+   */
+  readonly nota = input('Sin permanencia');
 
-  protected readonly urlVerificacion = entorno.urlVerificacionCertificado;
+  protected readonly destinoRegistro = DESTINO_REGISTRO;
 }

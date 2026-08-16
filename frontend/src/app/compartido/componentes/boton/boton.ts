@@ -1,5 +1,7 @@
 import { NgTemplateOutlet } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, input, output } from '@angular/core';
+import { RouterLink } from '@angular/router';
+import { entorno } from '../../../../entornos/entorno';
 import { Icono, TamanioIcono } from '../icono/icono';
 import { NombreIcono } from '../../../disenio/iconos/registro-iconos';
 
@@ -14,6 +16,18 @@ export type VarianteBoton = 'primario' | 'secundario' | 'fantasma' | 'sobre-oscu
 export type TipoBoton = 'button' | 'submit';
 
 /**
+ * Camino de la API, normalizado a ruta.
+ *
+ * <p>`entorno.urlApi` vale `/api` en el servidor pero `http://localhost:8080/api` en
+ * desarrollo, donde el frontend y el backend viven en puertos distintos. Comparar el prefijo
+ * en crudo funcionaba solo en uno de los dos entornos — lo destapo la prueba de clic.
+ *
+ * <p>Pasarla por `URL` deja `/api/` en los dos casos. La base es ficticia y solo sirve para
+ * poder resolver una ruta relativa; nunca se usa para pedir nada.
+ */
+const RUTA_API = `${new URL(entorno.urlApi, 'http://base.invalida').pathname.replace(/\/$/, '')}/`;
+
+/**
  * Boton estandar del catalogo (docs/04 §3).
  *
  * <p>Ninguna pantalla crea su propio boton. Cuando cada pantalla improvisa el suyo, las
@@ -22,11 +36,17 @@ export type TipoBoton = 'button' | 'submit';
  * <p>Si se le pasa `enlace`, se dibuja como `<a>`; si no, como `<button>`. La distincion no
  * es estetica: navegar es lo que hace un enlace, y un lector de pantalla lo anuncia distinto.
  * Un boton que navega deja al usuario sin saber que va a cambiar de pagina.
+ *
+ * <p><b>Un destino interno usa `routerLink`, no `href`.</b> Con `href`, cada clic dentro de la
+ * propia aplicacion recarga el paquete entero: se pierde el estado, se vuelve a descargar todo
+ * y el visitante ve un parpadeo en blanco. La distincion se decide por la FORMA del destino
+ * — empieza por `/` — y no por una entrada nueva, para que ninguna pantalla pueda equivocarse
+ * al pedirla.
  */
 @Component({
   selector: 'adr-boton',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [Icono, NgTemplateOutlet],
+  imports: [Icono, NgTemplateOutlet, RouterLink],
   template: `
     <!-- El contenido se declara una sola vez y se reutiliza en las dos ramas: dos
          <ng-content> en la misma plantilla no proyectan lo que uno espera. -->
@@ -38,14 +58,20 @@ export type TipoBoton = 'button' | 'submit';
     </ng-template>
 
     @if (enlace(); as destino) {
-      <a
-        [href]="destino"
-        [class]="clases()"
-        [attr.target]="nuevaPestania() ? '_blank' : null"
-        [attr.rel]="nuevaPestania() ? 'noopener noreferrer' : null"
-      >
-        <ng-container [ngTemplateOutlet]="contenido" />
-      </a>
+      @if (esInterno()) {
+        <a [routerLink]="destino" [class]="clases()">
+          <ng-container [ngTemplateOutlet]="contenido" />
+        </a>
+      } @else {
+        <a
+          [href]="destino"
+          [class]="clases()"
+          [attr.target]="nuevaPestania() ? '_blank' : null"
+          [attr.rel]="nuevaPestania() ? 'noopener noreferrer' : null"
+        >
+          <ng-container [ngTemplateOutlet]="contenido" />
+        </a>
+      }
     } @else {
       <button
         [type]="tipo()"
@@ -75,6 +101,27 @@ export class Boton {
   readonly nuevaPestania = input(false);
 
   readonly accion = output<void>();
+
+  /**
+   * Una ruta de ESTA aplicacion: empieza por `/` y no cuelga de la API.
+   *
+   * <p>Las anclas (`#planes`) y las direcciones externas (`https://`, `mailto:`) no lo son:
+   * el enrutador no las conoce y convertirlas en `routerLink` las rompe.
+   *
+   * <p><b>Y `/api/...` tampoco lo es, aunque empiece por barra.</b> Es un endpoint del
+   * servidor. Con la regla anterior —«interno si empieza por `/`»— el boton «Continuar con
+   * Google» se dibujaba con `routerLink`: al pulsarlo, Angular navegaba por dentro SIN pedirle
+   * nada al servidor, no encontraba la ruta y pintaba el 404. Recargando esa misma URL si
+   * funcionaba, porque entonces el navegador si hacia la peticion. Un fallo que solo aparece
+   * al pulsar, nunca al mirar.
+   *
+   * <p>El prefijo se toma de la configuracion y no se escribe aqui: el dia que la API cambie
+   * de base, esto sigue siendo cierto sin que nadie se acuerde de venir.
+   */
+  protected readonly esInterno = computed(() => {
+    const destino = this.enlace();
+    return destino !== null && destino.startsWith('/') && !destino.startsWith(RUTA_API);
+  });
 
   protected readonly clases = computed(() => {
     const partes = ['adr-boton', `adr-boton--${this.variante()}`];

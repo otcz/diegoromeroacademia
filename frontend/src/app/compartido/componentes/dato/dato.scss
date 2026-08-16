@@ -15,6 +15,14 @@
 .adr-dato__rotulo {
   @include m.caption;
 
+  // Reserva de dos lineas para TODOS los rotulos de una cinta.
+  //
+  // Medido: en la cinta de cifras, tres rotulos ocupaban una linea (19,2 px) y el cuarto
+  // — «Examenes que revisa Diego» — llegaba a tres (57,6 px) a 768 px. La fila entera
+  // heredaba la altura del mas largo y los cuatro datos quedaban desalineados entre si.
+  //
+  // Derivado de tokens, no un numero suelto: dos veces el interlineado de cuerpo.
+  min-height: calc(2 * var(--adr-interlineado-cuerpo) * 1em);
   margin-top: var(--adr-espacio-2);
   color: var(--adr-color-texto-atenuado);
 }

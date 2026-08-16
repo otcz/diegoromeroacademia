@@ -2,7 +2,7 @@
 
 .acceso {
   display: grid;
-  grid-template-columns: 5fr 7fr;
+  grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
   min-height: 100vh;
 }
 
@@ -153,7 +153,7 @@ adr-alerta {
 // --------------------------------------------------------------- responsive
 @include m.en-movil {
   .acceso {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
     min-height: auto;
   }
 

@@ -1,0 +1,120 @@
+@use 'mixins' as m;
+
+.camino {
+  background: var(--adr-color-niebla);
+}
+
+.camino__encabezado {
+  margin-bottom: var(--adr-espacio-6);
+}
+
+// Mobile first: vertical, con el riel cosiendo los numerales por la izquierda. En movil una
+// fila de cuatro pasos obligaria a un carrusel, y un carrusel esconde tres cuartas partes
+// del recorrido justo en el dispositivo del que viene casi todo el trafico.
+.camino__pasos {
+  position: relative;
+  display: grid;
+  gap: var(--adr-espacio-5);
+  list-style: none;
+}
+
+.camino__paso {
+  position: relative;
+  display: flex;
+  gap: var(--adr-espacio-4);
+  align-items: flex-start;
+}
+
+// El riel vertical: se dibuja desde cada paso hasta el siguiente, no como una linea suelta
+// de fondo. Asi nunca sobresale por debajo del ultimo numeral, que es el defecto tipico.
+.camino__paso:not(:last-child)::before {
+  position: absolute;
+  top: 56px;
+  bottom: calc(var(--adr-espacio-5) * -1);
+  left: 27px;
+  width: 2px;
+  content: '';
+  background: var(--adr-color-pista-barra);
+}
+
+.camino__numero {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  width: 56px;
+  height: 56px;
+  font-family: var(--adr-fuente-titular);
+  font-size: 22px;
+  font-weight: 800;
+  color: var(--adr-color-blanco);
+  background: var(--adr-color-azul-rey);
+  border-radius: var(--adr-radio-pastilla);
+}
+
+.camino__cuerpo {
+  padding-top: var(--adr-espacio-2);
+}
+
+.camino__titulo {
+  margin-bottom: var(--adr-espacio-2);
+  font-family: var(--adr-fuente-titular);
+  font-size: var(--adr-texto-tarjeta);
+  font-weight: 700;
+}
+
+// El distintivo del tramo que se repite. Azul y no verde: no es progreso ni aprobacion,
+// es una regla de la mecanica (regla de color 3).
+//
+// ADR 0009: usa `--adr-tinte-azul-texto` y no el azul rey. La pildora llevaba el FONDO de un
+// par con la TINTA del otro, y daba 4,00:1. El par completo da 6,29:1.
+.camino__repeticion {
+  display: inline-flex;
+  gap: var(--adr-espacio-2);
+  align-items: center;
+  margin-top: var(--adr-espacio-3);
+  padding: var(--adr-espacio-2) var(--adr-espacio-4);
+  font-size: var(--adr-texto-caption);
+  font-weight: 600;
+  color: var(--adr-tinte-azul-texto);
+  background: var(--adr-tinte-azul-fondo);
+  border-radius: var(--adr-radio-pastilla);
+}
+
+@include m.desde-tableta {
+  .camino__encabezado {
+    text-align: center;
+  }
+
+  .camino__titulo-seccion {
+    margin-inline: auto;
+  }
+
+  .camino__pasos {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: var(--adr-espacio-5);
+  }
+
+  .camino__paso {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  // En horizontal el riel cambia de eje: sale del numeral hacia el paso siguiente.
+  .camino__paso:not(:last-child)::before {
+    top: 27px;
+    right: calc(var(--adr-espacio-5) * -1);
+    bottom: auto;
+    left: 56px;
+    width: auto;
+    height: 2px;
+  }
+
+  .camino__numero {
+    margin-inline: auto;
+  }
+
+  .camino__cuerpo {
+    padding-top: var(--adr-espacio-4);
+  }
+}

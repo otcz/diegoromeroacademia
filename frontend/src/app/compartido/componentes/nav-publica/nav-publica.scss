@@ -58,6 +58,12 @@
   gap: var(--adr-espacio-3);
 }
 
+// El CTA de la barra solo existe en movil: desde tableta el menu esta desplegado y ya lleva
+// «Entrar» y «Registrarme». Duplicarlo ahi seria un tercer boton azul en la misma fila.
+.adr-nav__cta-movil {
+  display: none;
+}
+
 .adr-nav__boton {
   display: none;
   padding: var(--adr-espacio-2);
@@ -71,6 +77,25 @@
 @include m.en-movil {
   .adr-nav__boton {
     display: inline-flex;
+  }
+
+  // Relleno reducido, NO altura reducida. Solo hay ~92 px utiles entre la marca y la
+  // hamburguesa; con el relleno de serie el boton mide 113 px y empuja la marca a tres
+  // lineas. Con este, 89 px y la barra se queda en sus 73 px.
+  //
+  // `--adr-altura-control` (48 px) no se toca: es el minimo de todo objetivo tactil de
+  // docs/04 §5, y bajarlo aqui violaria la regla justo en el ancho para el que existe.
+  // La restriccion nunca fue el alto, era el ancho.
+  // `::ng-deep` es obligatorio: el `<a class="adr-boton">` vive dentro de la plantilla de
+  // <adr-boton>, asi que lleva el atributo de encapsulacion de ESE componente y un selector
+  // descendente normal desde aqui no lo alcanza. Medido: sin esto el boton se queda en
+  // 113 px, empuja la marca a tres lineas y la barra pasa de 73 a 91 px de alto.
+  .adr-nav__cta-movil {
+    display: inline-flex;
+
+    ::ng-deep .adr-boton {
+      padding-inline: var(--adr-espacio-3);
+    }
   }
 
   .adr-nav__menu {

@@ -1,5 +1,12 @@
 @use 'mixins' as m;
 
+// Convierte el marco en contexto de contencion para que el diagrama se mida contra el, y no
+// contra el viewport. `::ng-deep` es la unica via: el marco lo dibuja <adr-marco-imagen> y la
+// encapsulacion Emulated no deja alcanzarlo desde aqui de otra forma.
+:host ::ng-deep .adr-marco--ventana {
+  container-type: inline-size;
+}
+
 .simulador__rejilla {
   display: grid;
   gap: var(--adr-espacio-6);
@@ -7,20 +14,31 @@
 }
 
 // Diagrama de botones dibujado con tokens: la geometria de la propia marca.
+// Ocupa la mayor parte del marco: a tamanio pequenio la ventana se veia vacia y parecia
+// que faltaba contenido, en vez de leerse como el producto.
 .simulador__diagrama {
   display: flex;
   flex-direction: column;
-  gap: var(--adr-espacio-3);
+  gap: 3cqw;
+  width: 100%;
+  padding-inline: 6cqw;
 }
 
 .simulador__hilera {
   display: flex;
-  gap: var(--adr-espacio-3);
+  gap: 3cqw;
+  justify-content: center;
 }
 
+// El tamanio se ancla al CONTENEDOR (`cqw`) y no al viewport (`vw`).
+//
+// Con `clamp(20px, 3.6vw, 34px)` el boton saturaba en 34 px a partir de ~944 px de ancho de
+// pantalla mientras el marco seguia creciendo con su columna: la ocupacion util caia del 65%
+// a 768 px al 44% a 1280 y seguia bajando. Ademas la columna esta topada a 1200 px, asi que
+// por encima de ahi las dos medidas dejaban de correlacionar del todo.
 .simulador__boton {
-  width: 20px;
-  height: 20px;
+  width: clamp(14px, 6cqw, 40px);
+  height: clamp(14px, 6cqw, 40px);
   background: transparent;
   border: 2px solid var(--adr-color-borde-suave);
   border-radius: var(--adr-radio-pastilla);
@@ -52,7 +70,7 @@
 
 @include m.desde-tableta {
   .simulador__rejilla {
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
     gap: var(--adr-espacio-7);
   }
 }

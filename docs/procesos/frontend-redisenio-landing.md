@@ -169,11 +169,11 @@ Curso completo de acordeón
 [Empezar con el plan]
 
 La gota fría   (Nuevo)
-★★★☆☆ · 184 alumnos
+★★★☆☆ · (sin cifra de inscritos — ver nota al pie de esta sección)
 $34.900   [Comprar]
 
 Los caminos de la vida
-★★☆☆☆ · 281 alumnos
+★★☆☆☆ · (sin cifra de inscritos — ver nota al pie de esta sección)
 $34.900   [Comprar]
 
 Lo que compras es tuyo para siempre.
@@ -510,3 +510,20 @@ algo que ya se evaluó y se rechazó por un motivo concreto.
 - Solo existen 11 componentes en compartido/componentes/ frente a los ~30 que declara el catalogo de docs/04 §3. Faltan avatar, tarjeta, pestanias, item-nivel, item-clase, tarjeta-curso, tarjeta-plan, estado-vacio, esqueleto, panel-lateral y mas. Las tres propuestas construyen entre 9 y 19 componentes nuevos bajo un umbral de 80% en statements/lines/functions y 75% en branches. Solo 'ruta' nombra las conductas concretas que hay que probar (los cuatro estados de la estacion, el marcador cuando fuente es null, que no se pierdan estaciones al cambiar de orientacion); las otras dos tratan la cobertura como un costo de calendario sin decir que se prueba.
 - 'producto' — las maquetas meten interfaz falsa en el DOM (controles 'inertes' en la barra de cromo, botones de acordeon, lista de clases) sin una palabra sobre inert, orden de tabulacion o aria-hidden. Una maqueta decorativa con elementos enfocables rompe la navegacion por teclado que exige docs/04 §5, y en la seccion del heroe ademas es el fold mas pesado de las tres propuestas en gama baja.
 - 'prueba' — <adr-verificador-certificado> construye interfaz de una funcion de Fase 2 que no verifica nada. Es codigo especulativo con ramas que hay que cubrir para sostener el 75% de branches, y contradice el mensaje de su propia seccion. O no entra, o entra sin logica y sin ramas que cubrir.
+
+---
+
+## Nota sobre las cifras de inscritos (añadida el 2026-08-15)
+
+Las tarjetas de este documento mostraban **«184 alumnos»** y **«281 alumnos»**. Eran cifras
+de la maqueta de diseño, **no del negocio**, y se copiaron tal cual a `landing.contenido.ts`.
+Llegaron a producción.
+
+Eran falsas por construcción: el backend no expone ningún controlador, así que no existía ni
+un solo inscrito. Y contradecían la disciplina que este mismo documento defiende — a 700 px
+de distancia la página aplicaba dos varas incompatibles: cita verificable con enlace para los
+testimonios («mejor ausente que fabricada»), cifra inventada para los inscritos.
+
+**La regla, a partir de ahora:** el campo `alumnos` va en `null` hasta que `GET /api/cursos`
+sirva el conteo real. El mecanismo de prueba social sigue aprobado; lo que no se acepta es
+escribirlo a mano. Con cero inscritos, el mecanismo produce **nada**, no 184.

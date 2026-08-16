@@ -13,6 +13,39 @@ describe('Boton', () => {
     return fixture;
   }
 
+  /**
+   * Distingue el enlace que INTERCEPTA Angular del que llega al servidor.
+   *
+   * <p>Comprobar el `href` no sirve: `routerLink` tambien lo escribe, y por eso el fallo del
+   * boton de Google paso las pruebas. Lo que de verdad cambia es si el clic sale a la red.
+   * Se simula un clic con el boton izquierdo y sin modificadores —que es lo unico que
+   * `RouterLink` intercepta— y se mira si alguien llamo a `preventDefault`.
+   */
+  async function elClicSaleALaRed(destino: string) {
+    const fixture = await crear({ enlace: destino });
+    const ancla: HTMLAnchorElement = fixture.nativeElement.querySelector('a');
+
+    const clic = new MouseEvent('click', { bubbles: true, cancelable: true, button: 0 });
+    ancla.dispatchEvent(clic);
+    return !clic.defaultPrevented;
+  }
+
+  it('NO debe interceptar los destinos de la API: son del servidor, no rutas', async () => {
+    // El boton «Continuar con Google» apunta a /api/acceso/oauth2/google. Cuando se
+    // interceptaba, Angular navegaba por dentro, no encontraba la ruta y pintaba el 404
+    // sin haberle pedido nada al servidor. Recargando esa URL si funcionaba.
+    expect(await elClicSaleALaRed('/api/acceso/oauth2/google')).toBe(true);
+  });
+
+  it('debe interceptar las rutas propias, para no recargar la aplicacion entera', async () => {
+    expect(await elClicSaleALaRed('/acceso')).toBe(false);
+  });
+
+  it('no debe interceptar anclas ni destinos externos', async () => {
+    expect(await elClicSaleALaRed('#planes')).toBe(true);
+    expect(await elClicSaleALaRed('https://youtube.com/@DiegoRomeroAcordeon')).toBe(true);
+  });
+
   it('debe usar la variante primaria cuando no se indica ninguna', async () => {
     const fixture = await crear();
 

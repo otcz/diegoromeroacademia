@@ -4,6 +4,7 @@ import com.academiadiegoromero.configuracion.propiedades.ApiPropiedades;
 import java.util.List;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -36,11 +37,17 @@ public class SeguridadHttpConfiguracion {
     /**
      * Cadena de filtros de la API.
      *
+     * <p>Va SEGUNDA. El tramo de ingreso con proveedor externo lo atiende antes la cadena de
+     * {@code ConfiguracionSeguridad}, que necesita sesion para guardar el parametro de estado
+     * de OAuth entre la ida a Google y la vuelta. Esta recoge todo lo demas y conserva la
+     * decision de API sin estado, que sigue siendo la correcta para el resto del sistema.
+     *
      * <p>CSRF va deshabilitado porque la API es sin estado y se autentica por token en la
      * cabecera, no por cookie de sesion: sin cookie no hay vector de falsificacion de
      * peticion entre sitios.
      */
     @Bean
+    @Order(2)
     SecurityFilterChain cadenaDeFiltros(HttpSecurity http) throws Exception {
         http
                 .csrf(csrf -> csrf.disable())

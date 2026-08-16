@@ -69,11 +69,29 @@ class ReglasArquitecturaTest {
                     alwaysTrue(),
                     resideInAnyPackage("..compartido..", "..configuracion.."));
 
-    /** Un ciclo entre modulos significa que falta un evento de dominio (docs/02 §6). */
+    /**
+     * Un ciclo entre modulos significa que falta un evento de dominio (docs/02 §6).
+     *
+     * <p>`configuracion` queda fuera del recuento por la misma razon que en la regla de
+     * arriba: no es un modulo de negocio, es el cableado. La aplicacion lo necesita en las dos
+     * direcciones —el cableado conoce los casos de uso, y los modulos leen sus propiedades
+     * validadas— y llamar ciclo a eso convierte la regla en un estorbo que se acaba apagando.
+     *
+     * <p>Lo que la regla SI debe seguir cazando es un ciclo entre modulos de negocio de
+     * verdad: identidad con catalogo, o comercio con aprendizaje. Eso siempre significa que
+     * falta un evento.
+     */
     @ArchTest
     static final ArchRule SIN_CICLOS_ENTRE_MODULOS = slices()
             .matching("com.academiadiegoromero.(*)..")
-            .should().beFreeOfCycles();
+            .namingSlices("modulo $1")
+            .should().beFreeOfCycles()
+            .ignoreDependency(
+                    resideInAnyPackage("..configuracion.."),
+                    alwaysTrue())
+            .ignoreDependency(
+                    alwaysTrue(),
+                    resideInAnyPackage("..configuracion.."));
 
     // Las cuatro reglas de sufijo llevan allowEmptyShould(true) porque hoy no existe todavia
     // ninguna clase Controlador, Adaptador ni Puerto: los modulos aun no se han construido.

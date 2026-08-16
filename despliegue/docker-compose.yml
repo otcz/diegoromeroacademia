@@ -45,6 +45,17 @@ services:
       BD_USUARIO: ${BD_USUARIO:-academia}
       BD_CONTRASENA: ${BD_CONTRASENA:?falta BD_CONTRASENA en despliegue/.env}
       ORIGENES_PERMITIDOS: ${URL_PUBLICA:?falta URL_PUBLICA en despliegue/.env}
+
+      # Credenciales de Google. Sin esta pareja de lineas, la variable existe en el archivo
+      # de entorno pero NUNCA llega al contenedor: compose solo inyecta lo que se nombra
+      # aqui, y el arranque parecia correcto con un boton de Google que no podia funcionar.
+      #
+      # Van SIN `:?` a proposito, al contrario que las de base de datos: compose interpola el
+      # archivo entero, asi que un `:?` aqui impediria tambien desplegar el frontend mientras
+      # las credenciales no esten puestas. Quien valida es la aplicacion, con
+      # `CredencialesGooglePropiedades`, que ademas comprueba la FORMA de cada una.
+      GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID:-}
+      GOOGLE_CLIENT_SECRET: ${GOOGLE_CLIENT_SECRET:-}
     # Sin `ports`: solo lo alcanza nginx por la red interna.
 
   academia-web:

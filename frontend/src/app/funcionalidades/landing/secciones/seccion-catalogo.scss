@@ -1,16 +1,20 @@
 @use 'mixins' as m;
 
+// `flex-end` y no `baseline`: el bloque hermano empieza con un kicker de 12 px, asi que la
+// primera linea base con la que `baseline` alineaba dejaba el dato 34 px MAS ARRIBA que el
+// H2 con el que forma pareja.
 .catalogo__encabezado {
   display: flex;
   flex-wrap: wrap;
   gap: var(--adr-espacio-4);
-  align-items: baseline;
+  align-items: flex-end;
   justify-content: space-between;
 }
 
-.catalogo__enlace {
+.catalogo__dato {
   font-size: var(--adr-texto-ui);
   font-weight: 600;
+  color: var(--adr-color-texto-atenuado);
   white-space: nowrap;
 }
 
@@ -20,9 +24,25 @@
 }
 
 @include m.desde-tableta {
-  // Asimetrica: tres tarjetas iguales dirian que la suscripcion y un tutorial suelto
-  // valen lo mismo, y no es cierto.
+  // Dos columnas, con la destacada cruzando entera. La asimetria de tres columnas no cabe
+  // en esta franja: medida, la pista `2fr` quedaba en 241 px contra 266 px de las `1fr`.
   .catalogo__rejilla {
-    grid-template-columns: 2fr 1fr 1fr;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .catalogo__destacada {
+    grid-column: 1 / -1;
+  }
+}
+
+@include m.en-escritorio {
+  // Asimetrica: tres tarjetas iguales dirian que la suscripcion y un tutorial suelto valen
+  // lo mismo, y no es cierto. Medido a 1280 px: 524/266/266, casi 2:1 exacto.
+  .catalogo__rejilla {
+    grid-template-columns: minmax(0, 2fr) minmax(0, 1fr) minmax(0, 1fr);
+  }
+
+  .catalogo__destacada {
+    grid-column: auto;
   }
 }

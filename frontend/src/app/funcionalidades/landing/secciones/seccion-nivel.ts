@@ -1,6 +1,8 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { Icono } from '../../../compartido/componentes/icono/icono';
-import { PASOS_NIVEL } from '../landing.contenido';
+import { MarcoImagen } from '../../../compartido/componentes/marco-imagen/marco-imagen';
+import { ACTIVOS } from '../../../disenio/activos';
+import { PASOS_NIVEL, PRACTICA_NIVEL } from '../landing.contenido';
 
 /**
  * Qué pasa dentro de un nivel: ves, practicas, apruebas.
@@ -12,7 +14,7 @@ import { PASOS_NIVEL } from '../landing.contenido';
 @Component({
   selector: 'adr-seccion-nivel',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [Icono],
+  imports: [Icono, MarcoImagen],
   template: `
     <section class="adr-seccion nivel">
       <div class="adr-contenedor">
@@ -34,6 +36,16 @@ import { PASOS_NIVEL } from '../landing.contenido';
             </div>
           }
         </div>
+
+        <figure class="nivel__prueba">
+          <adr-marco-imagen
+            [fuente]="activos.practicaBotonadura"
+            relacion="3/2"
+            velo="inferior"
+            [alternativo]="foto.alternativo"
+          />
+          <figcaption class="nivel__pie">{{ foto.pie }}</figcaption>
+        </figure>
       </div>
     </section>
   `,
@@ -41,4 +53,6 @@ import { PASOS_NIVEL } from '../landing.contenido';
 })
 export class SeccionNivel {
   protected readonly pasos = PASOS_NIVEL;
+  protected readonly foto = PRACTICA_NIVEL;
+  protected readonly activos = ACTIVOS;
 }

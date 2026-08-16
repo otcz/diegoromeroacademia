@@ -2,14 +2,57 @@
 <html lang="es">
   <head>
     <meta charset="utf-8" />
-    <title>Academia Diego Romero — Aprende a tocar acordeón desde cero</title>
+    <title>Aprende acordeón vallenato desde cero — Academia Diego Romero</title>
     <base href="/" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta
       name="description"
       content="Cursos de acordeón vallenato por niveles, con exámenes revisados y certificado verificable."
     />
-    <link rel="icon" href="favicon.ico" />
+    <!--
+      Icono de marca, generado desde el token con `npm run iconos:favicon`. Antes aquí se
+      servía el logotipo de Angular del andamiaje, sin tocar: magenta y morado en cada
+      pestaña, marcador e historial de una marca cuya tinta es el azul rey.
+    -->
+    <link rel="icon" href="favicon.a6a87109.ico" />
+    <link rel="apple-touch-icon" href="apple-touch-icon.png" />
+    <link rel="canonical" href="https://diegoromeroacademia.com/" />
+    <!--
+      Único color literal admitido del proyecto: una etiqueta meta no puede leer una variable
+      CSS. Es el espejo de `--adr-color-noche-azul` de disenio/_tokens.scss — si allí cambia,
+      aquí también. Pinta la barra del navegador en Android para que no corte el héroe.
+    -->
+    <meta name="theme-color" content="#0e1b2e" />
+
+    <!--
+      Vista previa al compartir el enlace. NO es un extra de posicionamiento: el tráfico llega
+      de YouTube y se reenvía por WhatsApp, y sin estas etiquetas el enlace se pega como una
+      línea de texto pelada. Además esto es una SPA sin renderizado en servidor, así que el
+      HTML servido no contiene ni el H1 — para cualquier rastreador que no ejecute JavaScript,
+      el title y estas etiquetas son el 100% del texto disponible.
+
+      La imagen va con URL ABSOLUTA porque los rastreadores no resuelven rutas relativas, y
+      con nombre estable —sin huella de contenido— porque cada enlace ya compartido apunta a
+      ella para siempre.
+    -->
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Academia Diego Romero" />
+    <meta property="og:locale" content="es_CO" />
+    <meta property="og:url" content="https://diegoromeroacademia.com/" />
+    <meta
+      property="og:title"
+      content="Aprende acordeón vallenato desde cero — Academia Diego Romero"
+    />
+    <meta
+      property="og:description"
+      content="Cuatro niveles, un camino. Exámenes revisados por un instructor y certificado por cada nivel aprobado."
+    />
+    <meta property="og:image" content="https://diegoromeroacademia.com/imagenes/og-academia.jpg" />
+    <meta
+      property="og:image:alt"
+      content="Acordeón diatónico Hohner Corona III de fuelle rojo, el instrumento del vallenato."
+    />
+    <meta name="twitter:card" content="summary_large_image" />
 
     <!--
       Tipografias del sistema «Azul rey»: Bricolage Grotesque (titulares) e

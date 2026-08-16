@@ -62,26 +62,42 @@
   background: var(--adr-color-niebla);
 }
 
-// Los controles de ESTA pantalla van mas grandes que los del resto del sitio.
+// El formulario es una TARJETA, no una lista de controles sueltos.
 //
-// No es capricho: al quitar el titular y los dos parrafos, el formulario quedo como un
-// bloque pequenio flotando en una columna ancha. En una pantalla cuyo unico proposito es
-// pulsar un boton, ese boton tiene que pesar.
+// Suelto sobre el fondo, y sin titular ni parrafos que lo enmarcaran, se veia como piezas
+// flotando en media pantalla vacia. Una superficie con borde propio les da un limite: deja
+// de ser «espacio con cosas» y pasa a ser un objeto colocado en su sitio. Es la misma pieza
+// del catalogo que usa el resto de la web para agrupar (docs/04 §3), aplicada aqui.
 //
-// Se sube redefiniendo los TOKENS en este contenedor, no tocando el boton ni el campo.
-// Asi el catalogo se queda intacto —ningun otro sitio cambia— y los dos crecen a la vez y
-// siguen coincidiendo entre si, que es lo que se rompe cuando cada uno se ajusta a mano.
+// Los controles ademas van mas grandes que los del resto del sitio: en una pantalla cuyo
+// unico proposito es pulsar un boton, ese boton tiene que pesar. Se sube redefiniendo los
+// TOKENS en este contenedor y no tocando el boton ni el campo — asi el catalogo se queda
+// intacto, ningun otro sitio cambia, y los dos crecen a la vez y siguen coincidiendo entre
+// si, que es justo lo que se rompe cuando cada control se ajusta a mano.
 .acceso__caja {
-  // 56 en vez de 48. Sigue por encima del minimo tactil de docs/04 §5, que era el motivo
-  // de los 48: subirlo nunca lo incumple, bajarlo si.
-  --adr-altura-control: 56px;
-  --adr-texto-ui: 16px;
+  // 60 en vez de 48. Sigue muy por encima del minimo tactil de docs/04 §5, que era el
+  // motivo de los 48: subirlo nunca lo incumple, bajarlo si.
+  --adr-altura-control: 60px;
+  --adr-texto-ui: 17px;
   --adr-texto-cuerpo: 17px;
 
   width: 100%;
 
-  // La caja acompania a los controles: con 420 y los botones a 56 se ve estrecha de alto.
-  max-width: 480px;
+  // 560 con 48 de acolchado deja los controles en 464, que es el ancho comodo de un
+  // formulario de acceso. Mas anchos, la linea de escritura se hace larga de leer.
+  max-width: 560px;
+  padding: var(--adr-espacio-7);
+  background: var(--adr-color-blanco);
+  border-radius: var(--adr-radio-tarjeta);
+  box-shadow: var(--adr-sombra-tarjeta);
+}
+
+// La marca encabeza la tarjeta. Es lo que sustituye al titular que se retiro: da entrada
+// sin traer de vuelta el texto.
+.acceso__logotipo {
+  width: 72px;
+  height: 72px;
+  margin: 0 auto var(--adr-espacio-6);
 }
 
 adr-alerta {
@@ -157,6 +173,15 @@ adr-alerta {
 
   .acceso__panel {
     padding: var(--adr-espacio-6) var(--adr-espacio-5);
+  }
+
+  // En celular la tarjeta pierde su acolchado grande y su sombra: a 375 px, 48 de aire a
+  // cada lado dejaria los controles en 239 y el formulario se estrecharia justo donde menos
+  // sitio hay. Sin sombra tampoco hace falta el borde, porque ya ocupa el ancho entero.
+  .acceso__caja {
+    padding: var(--adr-espacio-5) 0 0;
+    background: none;
+    box-shadow: none;
   }
 }
 

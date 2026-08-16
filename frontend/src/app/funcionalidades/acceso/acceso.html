@@ -24,6 +24,18 @@
            visible es el afiche y los dos botones, que es lo que se pidió. -->
       <h1 class="adr-solo-lectores">Entra a tu cuenta</h1>
 
+      <!-- El logotipo, no un titular. Da a esta columna algo que la encabece sin traer de
+           vuelta el texto que se pidió quitar, y de paso es la marca la que recibe a quien
+           entra. Va con alt vacío: el nombre ya está en el h1 de arriba. -->
+      <img
+        class="acceso__logotipo"
+        [src]="logotipo"
+        alt=""
+        width="72"
+        height="72"
+        decoding="async"
+      />
+
       @if (estado() === 'error') {
         <adr-alerta tono="error">{{ mensajeError() }}</adr-alerta>
       }

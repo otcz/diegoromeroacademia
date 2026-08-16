@@ -56,6 +56,9 @@ export class Acceso {
    */
   protected readonly afiche = `url(${ACTIVOS.aficheAcademia})`;
 
+  /** El mismo logotipo que la barra y el pie: una sola fuente para la marca. */
+  protected readonly logotipo = ACTIVOS.logotipo;
+
   protected readonly urlGoogle = this.autenticacion.urlProveedor('google');
   protected readonly urlFacebook = this.autenticacion.urlProveedor('facebook');
   protected readonly facebookHabilitado = entorno.loginFacebookHabilitado;

@@ -25,6 +25,22 @@ describe('NavPublica', () => {
     expect(new URL(marca.href).hash).toBe('#inicio');
   });
 
+  it('debe llevar las tres secciones a la portada, no a un ancla suelta', async () => {
+    const fixture = await crear();
+    const enlaces: HTMLAnchorElement[] = Array.from(
+      fixture.nativeElement.querySelectorAll('#menu-principal a'),
+    );
+
+    // Mismo defecto que tenia el logotipo: la barra se usa tambien en /perfil y en la
+    // pagina de no encontrado, donde estas secciones NO existen. Con «#catalogo» a secas el
+    // enlace se limitaba a pegar el ancla a la URL y no pasaba nada.
+    for (const ancla of ['catalogo', 'simulador', 'planes']) {
+      const enlace = enlaces.find((a) => a.href.endsWith(`#${ancla}`));
+      expect(enlace, ancla).toBeDefined();
+      expect(new URL(enlace!.href).pathname, ancla).toBe('/');
+    }
+  });
+
   it('debe ofrecer los tres enlaces de seccion y las dos acciones de cuenta', async () => {
     const fixture = await crear();
 

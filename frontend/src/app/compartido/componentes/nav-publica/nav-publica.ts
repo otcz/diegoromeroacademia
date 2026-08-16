@@ -1,8 +1,8 @@
-import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, DOCUMENT, inject, signal } from '@angular/core';
+import { Router, RouterLink } from '@angular/router';
 import { DESTINO_REGISTRO } from '../../../app.routes';
 import { ACTIVOS } from '../../../disenio/activos';
 import { Boton } from '../boton/boton';
-import { RouterLink } from '@angular/router';
 import { Icono } from '../icono/icono';
 
 /**
@@ -83,11 +83,14 @@ import { Icono } from '../icono/icono';
         </button>
 
         <nav id="menu-principal" class="adr-nav__menu" [class.adr-nav__menu--abierto]="abierto()">
-          <a href="#catalogo" (click)="cerrar()">Cursos</a>
-          <a href="#simulador" (click)="cerrar()">Simulador</a>
+          <!-- Mismo arreglo que el logotipo: eran anclas sueltas, y la barra tambien se usa
+               en /perfil y en la pagina de no encontrado, donde esas secciones no existen.
+               Alli el enlace se limitaba a pegar el ancla a la URL y no pasaba nada. -->
+          <a routerLink="/" fragment="catalogo" (click)="irA('catalogo')">Cursos</a>
+          <a routerLink="/" fragment="simulador" (click)="irA('simulador')">Simulador</a>
           <!-- «Precios» y no «Planes»: el visitante que llega de YouTube no compra software
                por internet, y ademas cabe mejor en el menu colapsado. El ancla no cambia. -->
-          <a href="#planes" (click)="cerrar()">Precios</a>
+          <a routerLink="/" fragment="planes" (click)="irA('planes')">Precios</a>
           <div class="adr-nav__acciones">
             <adr-boton variante="secundario" enlace="/acceso">Entrar</adr-boton>
             <adr-boton variante="primario" [enlace]="destinoRegistro">Registrarme</adr-boton>
@@ -99,6 +102,9 @@ import { Icono } from '../icono/icono';
   styleUrl: './nav-publica.scss',
 })
 export class NavPublica {
+  private readonly router = inject(Router);
+  private readonly documento = inject(DOCUMENT);
+
   protected readonly destinoRegistro = DESTINO_REGISTRO;
   protected readonly logotipo = ACTIVOS.logotipo;
   protected readonly abierto = signal(false);
@@ -108,8 +114,24 @@ export class NavPublica {
     this.abierto.update((valor) => !valor);
   }
 
+  /**
+   * Lleva a una seccion de la portada, este donde este el visitante.
+   *
+   * <p>El salto lo hace `routerLink` con su fragmento; esto solo cubre el caso que el
+   * enrutador deja fuera. Angular IGNORA una navegacion a la URL que ya esta abierta, asi
+   * que al pulsar «Cursos» por segunda vez —despues de haberse desplazado a otro sitio— no
+   * pasaria nada. Un enlace que funciona una vez y luego no es de los defectos que hacen
+   * dudar de la pagina entera.
+   */
+  protected irA(ancla: string): void {
+    this.cerrar();
+    if (this.router.url === `/#${ancla}`) {
+      this.documento.getElementById(ancla)?.scrollIntoView();
+    }
+  }
+
   /** Cierra el menu al elegir un enlace, para que no tape el destino al que se navega. */
-  protected cerrar(): void {
+  private cerrar(): void {
     this.abierto.set(false);
   }
 }

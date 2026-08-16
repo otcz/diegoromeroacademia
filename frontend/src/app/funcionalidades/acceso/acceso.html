@@ -16,11 +16,6 @@
       decoding="async"
     />
 
-    <!-- Dice DONDE se esta, arriba a la izquierda, sin repetir el nombre de la marca ni el
-         titular de abajo. Los tres textos de esta foto reparten trabajo: aqui la escuela,
-         abajo lo que se aprende y como. -->
-    <p class="acceso__kicker">{{ kickerFoto }}</p>
-
     <div class="acceso__foto-texto">
       <!-- La marca vive aquí en móvil y tableta vertical, y en la columna del formulario
            desde tableta horizontal. Son dos copias y solo una se dibuja: la que está oculta
@@ -34,6 +29,12 @@
         </span>
       </div>
 
+      <!-- Kicker encima del titular, en mango. Es la composicion que ya usa el heroe de la
+           portada, y resuelve de paso lo que fallaba: suelto en la esquina se leia como una
+           chapa pegada y quedaba escondido. Aqui forma una unidad con el titular —de donde
+           saca su tamanio— y el velo de abajo, que ya existe para el titular, le garantiza
+           el contraste sin necesidad de ponerle una pastilla propia detras. -->
+      <p class="acceso__kicker">{{ kickerFoto }}</p>
       <h2 class="acceso__titular">{{ titular }}</h2>
       <p class="acceso__bajada">{{ bajada }}</p>
 

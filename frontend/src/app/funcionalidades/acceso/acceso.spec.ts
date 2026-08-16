@@ -1,7 +1,8 @@
 import { provideHttpClient } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
-import { beforeEach, describe, expect, it } from 'vitest';
+import { Router } from '@angular/router';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { Acceso } from './acceso';
 
 describe('Acceso', () => {
@@ -178,6 +179,28 @@ describe('Acceso', () => {
     const alerta: HTMLElement = fixture.nativeElement.querySelector('.adr-alerta--error');
     expect(alerta.textContent).toContain('no coinciden');
     expect(alerta.getAttribute('role')).toBe('alert');
+  });
+
+  it('debe LLEVAR a algun sitio tras entrar, y sin dejar el formulario en el historial', async () => {
+    const fixture = await crear();
+    const router = TestBed.inject(Router);
+    const navegar = vi.spyOn(router, 'navigate').mockResolvedValue(true);
+
+    escribirCredenciales(fixture);
+    await refrescar(fixture);
+    fixture.nativeElement.querySelector('form').dispatchEvent(new Event('submit'));
+    await refrescar(fixture);
+
+    http.expectOne((r) => r.url.endsWith('/acceso/sesion')).flush({ usuario: {} });
+    await refrescar(fixture);
+
+    // Antes solo se apagaba el estado de envio: la contrasena correcta dejaba al alumno en
+    // la misma pantalla, mirando el mismo formulario. Indistinguible de no funcionar.
+    //
+    // `replaceUrl` porque, si no, «atras» devuelve al formulario de ingreso a alguien que
+    // acaba de ingresar. Es la mitad del arreglo — la otra es la guarda de la ruta, que es
+    // la que cubre el ingreso con Google, donde la redireccion la hace el servidor.
+    expect(navegar).toHaveBeenCalledWith(['/'], { replaceUrl: true });
   });
 
   it('debe volver al estado normal tras un acceso correcto', async () => {

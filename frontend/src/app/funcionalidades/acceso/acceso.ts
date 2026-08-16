@@ -1,11 +1,12 @@
 import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
 import { Alerta } from '../../compartido/componentes/alerta/alerta';
 import { Boton } from '../../compartido/componentes/boton/boton';
 import { Campo } from '../../compartido/componentes/campo/campo';
-import { Icono } from '../../compartido/componentes/icono/icono';
 import { AutenticacionServicio } from '../../nucleo/servicios/autenticacion-servicio';
 import { ACTIVOS } from '../../disenio/activos';
+import { DESTINO_TRAS_INGRESAR } from '../../app.routes';
 import { entorno } from '../../../entornos/entorno';
 
 /** Longitud minima de contrasena aceptada por el formulario. La real la impone el backend. */
@@ -26,12 +27,13 @@ type EstadoAcceso = 'inactivo' | 'enviando' | 'error';
 @Component({
   selector: 'adr-acceso',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [Alerta, Boton, Campo, Icono, ReactiveFormsModule],
+  imports: [Alerta, Boton, Campo, ReactiveFormsModule],
   templateUrl: './acceso.html',
   styleUrl: './acceso.scss',
 })
 export class Acceso {
   private readonly autenticacion = inject(AutenticacionServicio);
+  private readonly router = inject(Router);
 
   protected readonly formulario = new FormGroup({
     correo: new FormControl('', {
@@ -80,7 +82,17 @@ export class Acceso {
     this.mensajeError.set('');
 
     this.autenticacion.iniciarSesion(this.formulario.getRawValue()).subscribe({
-      next: () => this.estado.set('inactivo'),
+      // Entrar TIENE que llevar a algun sitio. Antes solo se apagaba el estado de envio: la
+      // contrasena correcta dejaba al alumno en la misma pantalla, mirando el mismo
+      // formulario, sin nada que dijera que habia entrado. Indistinguible de no funcionar.
+      //
+      // Y va reemplazando la entrada del historial: sin eso, «atras» devuelve al formulario
+      // de ingreso a alguien que acaba de ingresar. Con Google no basta —la redireccion la
+      // hace el servidor y `/acceso` ya esta en el historial—, y por eso ademas hay guarda.
+      next: () => {
+        this.estado.set('inactivo');
+        this.router.navigate([DESTINO_TRAS_INGRESAR], { replaceUrl: true });
+      },
       error: (error: Error) => {
         this.estado.set('error');
         this.mensajeError.set(error.message);

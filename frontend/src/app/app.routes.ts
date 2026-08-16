@@ -1,4 +1,5 @@
 import { Routes } from '@angular/router';
+import { sinSesionAbierta } from './nucleo/guardas/sin-sesion-abierta';
 
 /**
  * Rutas de la aplicacion.
@@ -22,6 +23,8 @@ export const rutas: Routes = [
   {
     path: 'acceso',
     title: 'Entrar — Academia Diego Romero',
+    // Quien ya entro no vuelve a ver el formulario, ni pulsando «atras» ni por un marcador.
+    canActivate: [sinSesionAbierta],
     loadComponent: () => import('./funcionalidades/acceso/acceso').then((m) => m.Acceso),
   },
   {
@@ -70,3 +73,15 @@ export const RUTAS_INTERNAS: readonly string[] = rutas
  * `funcionalidades/`, y ArchUnit tiene su equivalente en el backend por la misma razon.
  */
 export const DESTINO_REGISTRO = '/acceso';
+
+/**
+ * A donde va el alumno justo despues de entrar.
+ *
+ * <p>Espejo de `IDENTIDAD_DESTINO_OK` del backend, que es quien redirige tras el ingreso con
+ * Google. Tienen que coincidir: si no, se entra a un sitio distinto segun el metodo usado, y
+ * esa es la clase de diferencia que nadie nota hasta que un alumno la reporta.
+ *
+ * <p>CONDICION DE SALIDA: pasa al panel del alumno el dia que exista. Se cambia AQUI, y
+ * tambien en la variable del backend.
+ */
+export const DESTINO_TRAS_INGRESAR = '/';

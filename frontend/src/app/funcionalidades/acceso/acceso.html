@@ -1,13 +1,19 @@
 <main class="acceso">
   <!-- ==================================================== PANEL DE MARCA -->
-  <!-- Solo la foto, a sangre. Sin una palabra encima: la imagen es lo único que hay aquí y
-       cualquier texto le quitaría sitio en vez de sumarle.
-       Por eso va como fondo y con `aria-hidden`: es decoración. Un lector de pantalla que la
-       anunciara solo añadiría ruido antes de llegar al formulario, que es a lo que se viene.
+  <!-- El afiche del propietario, entero. Sin una palabra nuestra encima: el afiche ya trae
+       la suya y dos textos en la misma columna se pelean.
+       Lleva `role="img"` con rótulo, y NO `aria-hidden`: su rotulación quemada es hoy lo
+       único que nombra la marca en esta pantalla, y un lector de pantalla no puede leer
+       texto que vive dentro de un píxel. El rótulo dice lo que dice el afiche.
        La ruta entra por variable CSS y no escrita en la hoja: las imágenes llevan huella de
        contenido en el nombre, así que el .scss quedaría desactualizado en cuanto se cambiara
-       la foto, y el fallo se vería como un hueco vacío sin error en consola. -->
-  <div class="acceso__marca" aria-hidden="true" [style.--acceso-foto]="fotoDeFondo"></div>
+       la imagen, y el fallo se vería como un hueco vacío sin error en consola. -->
+  <div
+    class="acceso__marca"
+    role="img"
+    aria-label="Academia Diego Romero — aprende a tocar acordeón desde cero"
+    [style.--acceso-foto]="afiche"
+  ></div>
 
   <!-- ====================================================== FORMULARIO -->
   <section class="acceso__panel">

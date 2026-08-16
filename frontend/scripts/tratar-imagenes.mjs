@@ -79,26 +79,26 @@ const TRABAJOS = [
     minimo: 700,
   },
   {
-    // Afiche del propietario: Diego tocando en tarima. Material grafico suyo, de su propia
-    // marca, asi que no hay licencia que resolver.
+    // Afiche del propietario, ENTERO. Material grafico suyo, de su propia marca, asi que no
+    // hay licencia que resolver.
     //
-    // <b>Se recorta la franja fotografica y se deja FUERA todo el texto del afiche.</b> El
-    // original trae rotulado quemado —«ESTUDIO ACADEMICO» arriba, «APRENDE A TOCAR ACORDEON
-    // DESDE CERO» y el logotipo abajo—, y ese texto detras de nuestro titular daria dos
-    // titulares compitiendo en la misma columna. Ademas un texto quemado no escala con el
-    // navegador, no se puede seleccionar y no lo lee un lector de pantalla: en una pagina lo
-    // que vale del afiche es la FOTO.
+    // Primero se recorto para dejar fuera el rotulado quemado, porque el panel llevaba
+    // titular y cifras propios y dos textos se peleaban. Al vaciar el panel esa razon
+    // desaparecio: hoy el afiche no compite con nada y ademas es lo unico que pone el
+    // nombre de la marca en la pantalla de entrada.
     //
-    // Los numeros salen de medir el original (1080x1920): el rotulo de arriba termina hacia
-    // y=270 y el de abajo empieza hacia y=1330. El corte va de 290 a 1320, a ancho completo
-    // para no tirar resolucion — el encuadre fino lo hace `cover` en el panel.
+    // <b>Va CRUDO, sin la receta.</b> El resto de la tabla son fotos de banco y la receta
+    // existe para hermanarlas. Esto no es una foto: es una pieza terminada por el disenador
+    // del propietario. Bajarle la saturacion y meterle velo seria retocar el trabajo de otro
+    // — y ademas el contraste extra ensucia el borde negro de las letras.
     origen: 'afiche-estudio-academico.png',
-    destino: 'diego-en-tarima.jpg',
+    destino: 'afiche-academia.png',
     ancho: 1080,
-    relacion: 1080 / 1030,
-    foco: { x: 0.5, y: 0.419 },
+    relacion: 1080 / 1920,
+    foco: { x: 0.5, y: 0.5 },
     zoom: 1,
     minimo: 1000,
+    crudo: true,
   },
   {
     // Imagen de vista previa al compartir el enlace. 1200x630 es lo que esperan WhatsApp,
@@ -181,16 +181,21 @@ for (const trabajo of TRABAJOS) {
   // capa de color no se reescale con la foto y pierda uniformidad.
   const base = await sharp(bruto).extract(corte).resize(ancho, alto).toBuffer();
 
-  const tratada = await sharp(base)
-    .modulate({ saturation: RECETA.saturacion })
-    .linear(RECETA.contraste.pendiente, RECETA.contraste.corte)
-    .composite([
-      { input: await capa(ancho, alto, TINTE.sombras, RECETA.velo), blend: 'soft-light' },
-      { input: await capa(ancho, alto, TINTE.luces, RECETA.velo / 2), blend: 'overlay' },
-    ])
-    .sharpen(RECETA.nitidez)
-    .jpeg({ quality: RECETA.calidad })
-    .toBuffer();
+  // Una pieza ya terminada no pasa por la receta: se reencuadra y se reescala, nada mas.
+  // Y sale en PNG, sin perdida, porque lo que lleva encima es rotulacion — el JPEG le pone
+  // halo a los bordes duros de las letras.
+  const tratada = trabajo.crudo
+    ? await sharp(base).png().toBuffer()
+    : await sharp(base)
+        .modulate({ saturation: RECETA.saturacion })
+        .linear(RECETA.contraste.pendiente, RECETA.contraste.corte)
+        .composite([
+          { input: await capa(ancho, alto, TINTE.sombras, RECETA.velo), blend: 'soft-light' },
+          { input: await capa(ancho, alto, TINTE.luces, RECETA.velo / 2), blend: 'overlay' },
+        ])
+        .sharpen(RECETA.nitidez)
+        .jpeg({ quality: RECETA.calidad })
+        .toBuffer();
 
   await writeFile(destino, tratada);
   const peso = (await stat(destino)).size;

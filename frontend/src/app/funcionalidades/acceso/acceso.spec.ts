@@ -80,15 +80,20 @@ describe('Acceso', () => {
     }
   });
 
-  it('NO debe poner texto en el panel de la foto: es decoracion y va oculto al lector', async () => {
+  it('NO debe poner texto propio sobre el afiche, y debe darle un rotulo al lector', async () => {
     const fixture = await crear();
     const panel: HTMLElement = fixture.nativeElement.querySelector('.acceso__marca');
 
-    // Cualquier palabra que vuelva aqui queda sobre la foto sin velo que la respalde: su
-    // contraste pasaria a depender de los pixeles que le toquen detras y del tamanio de la
-    // ventana. Si hace falta texto, primero vuelve el velo — no al reves.
+    // Sin texto nuestro: el afiche ya trae el suyo quemado, y dos textos en la misma columna
+    // se pelean. Ademas cualquier palabra que vuelva aqui quedaria sobre la imagen sin velo
+    // detras, con el contraste a merced de los pixeles que le tocaran.
     expect(panel.textContent?.trim()).toBe('');
-    expect(panel.getAttribute('aria-hidden')).toBe('true');
+
+    // Pero NO oculto al lector de pantalla: la rotulacion del afiche es hoy lo unico que
+    // nombra la marca en esta pantalla, y un lector no puede leer letras hechas de pixeles.
+    expect(panel.getAttribute('role')).toBe('img');
+    expect(panel.getAttribute('aria-label')).toContain('Diego Romero');
+    expect(panel.getAttribute('aria-hidden')).toBeNull();
   });
 
   it('debe decir la verdad sobre como se abre una cuenta: entrando con Google', async () => {

@@ -21,16 +21,16 @@
     var(--adr-color-noche-azul);
 }
 
-// Dos capas de la MISMA foto, y esa es toda la idea.
+// Dos capas de la MISMA imagen, y esa es toda la idea.
 //
-// La foto es casi cuadrada (1080x1030) y el panel es vertical. Con `cover` llenaba el hueco
-// pero cortaba por los lados: se perdian el acordeon de la izquierda y el hombro de Diego.
-// Con `contain` se ve entera, pero deja dos bandas vacias arriba y abajo — y un panel medio
-// vacio era justo lo que se querian quitar de encima.
+// Un afiche es una composicion cerrada: se lee entero o no se lee. Recortarlo para llenar el
+// panel le corta el rotulo o el logotipo, que es justo lo que lo hace un afiche. Pero
+// encajarlo entero deja dos bandas vacias a los lados, y un panel medio vacio era lo que se
+// queria quitar de encima.
 //
 // La salida es que las bandas no queden vacias: las llena la misma imagen ampliada y
-// desenfocada. Se lee como una sola fotografia con profundidad, no como un recorte pegado
-// sobre un fondo, y no hace falta ni inventar pixeles ni recortar a nadie.
+// desenfocada. Se lee como una sola pieza con profundidad, no como un recorte pegado sobre
+// un fondo, y no hace falta ni inventar pixeles ni cortarle nada al afiche.
 
 // Capa de atras: rellena el panel, fuera de foco y oscurecida para que no compita.
 .acceso__marca::before {
@@ -38,7 +38,7 @@
   inset: 0;
   content: '';
   background-image: var(--acceso-foto);
-  background-position: 57% center;
+  background-position: center;
   background-size: cover;
   filter: blur(38px) brightness(0.72) saturate(1.15);
 
@@ -47,12 +47,7 @@
   scale: 1.12;
 }
 
-// Capa de delante: la foto ENTERA, sin recortar.
-//
-// No lleva mascara de desvanecido en los bordes, que seria lo obvio para disimular el corte:
-// obligaria a escribir aqui la proporcion del archivo, y el .scss quedaria mintiendo el dia
-// que la foto cambie de forma. No hace falta — arriba y abajo la toma es penumbra de tarima,
-// y contra su propio desenfoque el borde no se distingue.
+// Capa de delante: el afiche ENTERO, sin recortar.
 .acceso__marca::after {
   position: absolute;
   inset: 0;

@@ -30,8 +30,8 @@ export interface ManifiestoActivos {
   readonly losCaminosDeLaVida: RutaActivo;
   /** Detalle de una mano sobre la botonadura, en la sección «dentro de un nivel». 3:2. */
   readonly practicaBotonadura: RutaActivo;
-  /** Diego tocando en tarima, para el panel de marca de la pantalla de acceso. Casi 1:1. */
-  readonly diegoEnTarima: RutaActivo;
+  /** Afiche completo de la academia, para el panel de la pantalla de acceso. Vertical 9:16. */
+  readonly aficheAcademia: RutaActivo;
 }
 
 /**
@@ -66,13 +66,17 @@ export const ACTIVOS: ManifiestoActivos = {
   // piano, y se descartaron: en una academia de vallenato el instrumento equivocado se nota.
   practicaBotonadura: '/imagenes/practica-botonadura.a0cb191f.webp',
 
-  // La ÚNICA foto de Diego que hay hoy en el producto, y por eso manda en la pantalla de
-  // acceso: quien entra a una academia con nombre de persona espera ver a esa persona.
+  // El afiche del propietario, ENTERO y sin retocar. Es la única imagen del producto donde
+  // aparece Diego, y en una marca personal eso manda: quien entra a la academia de Diego
+  // Romero espera ver a Diego, no a un acordeón anónimo.
   //
-  // Sale del afiche que entregó el propietario, recortando la franja fotográfica y dejando
-  // fuera todo el rotulado quemado. El detalle del recorte y su porqué, en
-  // `scripts/tratar-imagenes.mjs`.
-  diegoEnTarima: '/imagenes/diego-en-tarima.dfa3aa5d.webp',
+  // Lleva su propia rotulación quemada —«ESTUDIO ACADÉMICO», el titular y el logotipo DR—,
+  // que en la pantalla de acceso no estorba porque ese panel no tiene texto propio. Es más:
+  // hoy es lo único que pone el nombre de la marca en esa pantalla.
+  //
+  // Va crudo, sin la receta de `imagenes:tratar`: es una pieza de diseño terminada, no una
+  // foto de banco que haya que hermanar con las demás.
+  aficheAcademia: '/imagenes/afiche-academia.0dda596a.webp',
 
   // Sigue en null a propósito: ninguna de las imágenes entregadas es una captura del
   // simulador, y el diagrama de botones que dibuja <adr-marco-imagen> con CSS y tokens

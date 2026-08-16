@@ -48,13 +48,13 @@ export class Acceso {
   protected readonly mensajeError = signal('');
 
   /**
-   * Fondo del panel de marca: Diego tocando.
+   * El afiche que ocupa el panel izquierdo, entero.
    *
    * <p>Antes iba el Hohner Corona, una foto de banco del instrumento. Cambia porque esto es
    * una marca personal: quien entra a la academia de Diego Romero espera a Diego, no a un
    * acordeon anonimo. El instrumento solo no distingue esta academia de ninguna otra.
    */
-  protected readonly fotoDeFondo = `url(${ACTIVOS.diegoEnTarima})`;
+  protected readonly afiche = `url(${ACTIVOS.aficheAcademia})`;
 
   protected readonly urlGoogle = this.autenticacion.urlProveedor('google');
   protected readonly urlFacebook = this.autenticacion.urlProveedor('facebook');

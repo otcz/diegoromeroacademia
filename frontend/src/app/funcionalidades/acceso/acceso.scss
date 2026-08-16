@@ -3,24 +3,33 @@
 // La proporcion del afiche. Es lo unico del archivo que esta hoja necesita saber, y esta
 // aqui una sola vez: si el material grafico cambia de forma, se cambia este numero.
 .acceso {
-  --acceso-proporcion-afiche: calc(1440 / 1920);
+  // Proporcion del afiche: hoy cuadrado. Es lo unico del archivo que esta hoja necesita
+  // saber, y esta aqui una sola vez.
+  --acceso-proporcion-afiche: 1;
+
+  // Lo que el formulario necesita para seguir siendo usable: su ancho maximo (420 px) mas
+  // el acolchado del panel a los dos lados (24) mas aire. Es la unica razon legitima para
+  // recortar la columna de la imagen, asi que es lo que la recorta.
+  --acceso-formulario-minimo: 520px;
 
   // La columna de la imagen mide LO QUE MIDE EL AFICHE a la altura de la ventana.
   //
-  // Antes era una fraccion fija —5 de 12— y el afiche, que es vertical 9:16, no encajaba
-  // nunca: o se le recortaba el rotulo, o sobraban dos bandas a los lados que habia que
-  // disimular con un desenfoque. Pero disimular el hueco es tratar el sintoma; el hueco era
-  // el problema. Con la columna a la medida no sobra nada que tapar ni falta nada que
-  // recortar, y por eso no hace falta ningun efecto.
+  // Antes era una fraccion fija —5 de 12— y el afiche no encajaba nunca: o se le recortaba
+  // el rotulo, o sobraban bandas que habia que disimular con un desenfoque. Pero disimular
+  // el hueco es tratar el sintoma; el hueco era el problema. Con la columna a la medida no
+  // sobra nada que tapar ni falta nada que recortar, y no hace falta ningun efecto.
   //
-  // El tope de 50vw es para las ventanas mas altas que anchas, donde la cuenta pediria una
-  // columna que se comeria el formulario. Alli el afiche se centra y lo que queda es azul
-  // noche liso — un margen, no un borron. Cincuenta y no cuarenta y cinco: a 3:4 la cuenta
-  // pide 675 px en una ventana de 1440x900 y un tope de 45vw la habria recortado a 648,
-  // devolviendo las bandas justo en la medida de pantalla mas comun.
+  // <b>El tope sale del formulario, no de un porcentaje.</b> Antes era 50vw, elegido a ojo:
+  // con el afiche cuadrado ese numero recortaba la columna a 960 px en una ventana de
+  // 1920x1080 cuando la imagen pedia 1080, y devolvia las bandas —arriba y abajo— justo en
+  // la medida de pantalla mas comun. La pregunta real no es «cuanto ancho puede ocupar la
+  // imagen» sino «cuanto necesita el formulario para no estrecharse», y eso si es un dato.
   display: grid;
   grid-template-columns:
-    min(50vw, calc(100dvh * var(--acceso-proporcion-afiche)))
+    min(
+      calc(100dvh * var(--acceso-proporcion-afiche)),
+      calc(100% - var(--acceso-formulario-minimo))
+    )
     minmax(0, 1fr);
   min-height: 100dvh;
 }
@@ -133,18 +142,30 @@ adr-alerta {
     min-height: auto;
   }
 
-  // En celular el panel de marca se reduce a una cabecera: la pantalla debe abrir con el
-  // formulario a la vista, no obligar a desplazarse para llegar a el. Deja de estar anclado
-  // y de medir la ventana — aqui es una franja, no una columna.
+  // En celular el panel deja de estar anclado y de medir la ventana: aqui es una cabecera,
+  // no una columna.
   //
-  // En 190 px de alto el afiche entero se veria como un sello diminuto, asi que aqui SI
-  // manda el recorte, encuadrado mas abajo que el centro: a lo apaisado el centro deja fuera
-  // el acordeon y arriba solo queda techo de tarima.
+  // <b>Y el afiche entra ENTERO, no recortado.</b> Antes era una franja de 190 px con
+  // `cover`, y el recorte partia «APRENDE A TOCAR» por la mitad: se veia la mitad de arriba
+  // de las letras. Media palabra cortada no se lee como un encuadre, se lee como que la
+  // pagina esta rota. O la frase se ve completa o no se ve — y con `cover` no hay altura que
+  // garantice lo primero, porque el recorte depende de la proporcion de cada telefono.
+  //
+  // La caja toma la proporcion del afiche, asi que `contain` lo llena exacto y no hay ni
+  // recorte ni bandas. El tope de 60dvh es para el telefono en horizontal, donde la cuenta
+  // pediria una cabecera de pantalla entera; alli el afiche se centra, completo.
   .acceso__marca {
     position: static;
-    height: 190px;
-    background-position: center 42%;
-    background-size: cover;
+
+    // El ancho se fija a proposito. Con solo `aspect-ratio` y `max-height`, el telefono en
+    // horizontal recortaba la caja por el ANCHO para conservar la proporcion: el afiche
+    // quedaba como un cuadrado pequenio pegado a la izquierda, con media pantalla de fondo
+    // al lado. Fijando el ancho, el tope solo recorta el alto y el afiche se centra dentro.
+    width: 100%;
+    aspect-ratio: var(--acceso-proporcion-afiche);
+    height: auto;
+    max-height: 60dvh;
+    background-size: contain;
   }
 
   .acceso__panel {

@@ -30,7 +30,7 @@ export interface ManifiestoActivos {
   readonly losCaminosDeLaVida: RutaActivo;
   /** Detalle de una mano sobre la botonadura, en la sección «dentro de un nivel». 3:2. */
   readonly practicaBotonadura: RutaActivo;
-  /** Afiche completo de la academia, para el panel de la pantalla de acceso. Vertical 3:4. */
+  /** Afiche completo de la academia, para el panel de la pantalla de acceso. Cuadrado. */
   readonly aficheAcademia: RutaActivo;
 }
 
@@ -77,9 +77,9 @@ export const ACTIVOS: ManifiestoActivos = {
   // Va crudo, sin la receta de `imagenes:tratar`: es una pieza de diseño terminada, no una
   // foto de banco que haya que hermanar con las demás.
   //
-  // Es la versión 3:4 que extendió el propietario. El 9:16 original sigue en
-  // `activos/originales/` como maestro. El porqué de la proporción, en el script.
-  aficheAcademia: '/imagenes/afiche-academia.b243d724.webp',
+  // Cuadrado, del maestro a 3840×3840 que entregó el propietario. El porqué de la
+  // proporción y del tamaño de entrega, en `scripts/tratar-imagenes.mjs`.
+  aficheAcademia: '/imagenes/afiche-academia.1b783bd9.webp',
 
   // Sigue en null a propósito: ninguna de las imágenes entregadas es una captura del
   // simulador, y el diagrama de botones que dibuja <adr-marco-imagen> con CSS y tokens

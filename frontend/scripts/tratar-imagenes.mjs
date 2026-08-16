@@ -92,18 +92,23 @@ const TRABAJOS = [
     // del propietario. Bajarle la saturacion y meterle velo seria retocar el trabajo de otro
     // — y ademas el contraste extra ensucia el borde negro de las letras.
     //
-    // <b>Se usa la version 3:4 y no el 9:16 original</b>, que sigue en la carpeta como
-    // maestro. El propietario extendio el fondo a los lados por su cuenta, y esa extension
-    // hecha en el afiche es mejor que la que hacia la pagina con un desenfoque en CSS: la
-    // controla quien diseño la pieza. A 3:4 la columna vuelve a medir el 42% de una pantalla
-    // 16:9, que es la proporcion con la que nacio esta pantalla.
+    // <b>Cuadrado, del maestro a 3840x3840.</b> El propietario extendio el fondo a los lados
+    // por su cuenta: esa extension, hecha dentro del afiche por quien lo diseño, es mejor
+    // que la que hacia la pagina con un desenfoque en CSS.
     //
-    // Existe tambien una version 1:1. Se descarto porque a la altura de la ventana pediria
-    // el 56% del ancho: la imagen dejaria de acompaniar al formulario y pasaria a taparlo.
-    origen: 'afiche-academia-3x4.png',
+    // A 1:1 la columna mide el 56% de una pantalla 16:9 — mas de lo que pedia la version
+    // 3:4, que daba el 42%. Es una eleccion del propietario y cambia el equilibrio de la
+    // pantalla, no solo la imagen: quien decide cuanto pesa la marca frente al formulario es
+    // el. Lo que si obligo es a cambiar el tope de la columna, que ahora sale de lo que el
+    // formulario necesita para seguir siendo usable (ver `acceso.scss`).
+    //
+    // Se entrega a 1600 px de lado y no a los 3840 del maestro: la columna nunca pasa de
+    // ~1080 px de CSS, y 1600 cubre eso con margen para pantallas de doble densidad sin
+    // triplicar el peso.
+    origen: 'afiche-academia.png',
     destino: 'afiche-academia.png',
-    ancho: 1440,
-    relacion: 1440 / 1920,
+    ancho: 1600,
+    relacion: 1,
     foco: { x: 0.5, y: 0.5 },
     zoom: 1,
     minimo: 1000,

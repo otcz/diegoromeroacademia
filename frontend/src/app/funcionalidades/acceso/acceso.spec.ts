@@ -80,6 +80,24 @@ describe('Acceso', () => {
     }
   });
 
+  it('debe meter TODO el texto de marca dentro del cuerpo, que es lo que lleva el velo', async () => {
+    const fixture = await crear();
+    const cuerpo = fixture.nativeElement.querySelector('.acceso__marca-cuerpo');
+
+    // El contraste sobre la foto no se consigue midiendo la imagen —cambia en cada pixel—
+    // sino tapandola donde hay letra, y el velo que la tapa es el fondo de ESTE bloque. Un
+    // texto colgado fuera queda sobre la foto limpia: legible o no segun la toma y segun el
+    // alto de la ventana. Paso de verdad con el pie de instrumentos, que estaba suelto.
+    for (const parte of ['titulo', 'cifras', 'procedencia', 'pie']) {
+      const clase = parte === 'cifras' ? '.acceso__cifras' : `.acceso__marca-${parte}`;
+      const elemento = fixture.nativeElement.querySelector(
+        parte === 'procedencia' ? '.acceso__procedencia' : clase,
+      );
+      expect(elemento, parte).not.toBeNull();
+      expect(cuerpo.contains(elemento), parte).toBe(true);
+    }
+  });
+
   it('debe decir la verdad sobre como se abre una cuenta: entrando con Google', async () => {
     const fixture = await crear();
     const texto: string = fixture.nativeElement.textContent;

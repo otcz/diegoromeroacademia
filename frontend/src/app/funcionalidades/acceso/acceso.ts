@@ -53,18 +53,24 @@ export class Acceso {
   protected readonly mensajeError = signal('');
 
   /**
+   * Fondo del panel de marca: Diego tocando.
+   *
+   * <p>Antes iba el Hohner Corona, una foto de banco del instrumento. Cambia porque esto es
+   * una marca personal: quien entra a la academia de Diego Romero espera a Diego, no a un
+   * acordeon anonimo. El instrumento solo no distingue esta academia de ninguna otra.
+   */
+  protected readonly fotoDeFondo = `url(${ACTIVOS.diegoEnTarima})`;
+
+  /**
    * Las mismas tres cifras que la landing, y de la misma fuente.
    *
-   * <p>Se toman de  en vez de repetirlas: si Diego llega a 30.000
+   * <p>Se toman de `landing.contenido` en vez de repetirlas: si Diego llega a 30.000
    * seguidores, se cambia en un sitio. Dos copias del mismo numero divergen siempre, y la
    * que se queda vieja es justo la que menos gente revisa.
    *
    * <p>Se dejan tres de las cuatro: «100% examenes revisados» es un argumento de venta y
    * aqui no se vende, se entra.
    */
-  /** Fondo del panel de marca: el Hohner Corona, el acordeon del vallenato. */
-  protected readonly fotoDeFondo = `url(${ACTIVOS.practicaBotonadura})`;
-
   protected readonly cifras = CIFRAS.slice(0, 3);
   protected readonly procedencia = PROCEDENCIA_CIFRAS;
   protected readonly instrumentos = INSTRUMENTOS;

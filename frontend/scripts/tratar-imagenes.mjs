@@ -79,6 +79,28 @@ const TRABAJOS = [
     minimo: 700,
   },
   {
+    // Afiche del propietario: Diego tocando en tarima. Material grafico suyo, de su propia
+    // marca, asi que no hay licencia que resolver.
+    //
+    // <b>Se recorta la franja fotografica y se deja FUERA todo el texto del afiche.</b> El
+    // original trae rotulado quemado —«ESTUDIO ACADEMICO» arriba, «APRENDE A TOCAR ACORDEON
+    // DESDE CERO» y el logotipo abajo—, y ese texto detras de nuestro titular daria dos
+    // titulares compitiendo en la misma columna. Ademas un texto quemado no escala con el
+    // navegador, no se puede seleccionar y no lo lee un lector de pantalla: en una pagina lo
+    // que vale del afiche es la FOTO.
+    //
+    // Los numeros salen de medir el original (1080x1920): el rotulo de arriba termina hacia
+    // y=270 y el de abajo empieza hacia y=1330. El corte va de 290 a 1320, a ancho completo
+    // para no tirar resolucion — el encuadre fino lo hace `cover` en el panel.
+    origen: 'afiche-estudio-academico.png',
+    destino: 'diego-en-tarima.jpg',
+    ancho: 1080,
+    relacion: 1080 / 1030,
+    foco: { x: 0.5, y: 0.419 },
+    zoom: 1,
+    minimo: 1000,
+  },
+  {
     // Imagen de vista previa al compartir el enlace. 1200x630 es lo que esperan WhatsApp,
     // Facebook y X; por debajo, recortan por su cuenta y suele salir mal.
     //

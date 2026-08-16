@@ -163,3 +163,56 @@ El backend **no expone ningún controlador**: `POST /api/acceso/sesion` devuelve
 La landing ya no promete lo que no existe, pero **ninguna mejora de esta página convierte una
 visita en alumno** hasta que exista el módulo `identidad`. Es el siguiente trabajo real, y no
 es trabajo de frontend.
+
+---
+
+## 8. La pantalla de acceso, 2026-08-15
+
+Dos correcciones de fondo, una que no estaba en el código.
+
+### El logotipo de Google no era de Google
+
+El botón dibujaba la «G» de **Phosphor duotone**, teñida con `currentColor`. Un logotipo
+aproximado en la pantalla que pide credenciales es la primera señal que enseña a desconfiar,
+y además incumple la norma del proveedor. Resuelto separando **iconos** de **marcas** —
+[ADR 0010](../adr/0010-marcas-de-terceros-fuera-del-sistema-de-iconos.md).
+
+### El navegador estaba repintando la página
+
+`getComputedStyle` daba `#f6f8fb` de fondo y `#16212e` de tinta; en la pantalla del
+propietario salía azul noche con letra blanca. Era el **tema oscuro automático de Chrome**:
+sin `color-scheme` declarado, invierte la paleta cuando el sistema está en oscuro.
+
+Consecuencia real: **las medidas del ADR 0009 no valían para lo que él estaba viendo.** Se
+declaró `color-scheme: only light`.
+
+### La foto: del acordeón anónimo a Diego
+
+Iba un Hohner Corona de banco al 28% de opacidad y con `mix-blend-mode: luminosity`, o sea
+en gris. En una marca personal eso no distingue nada. Ahora va el afiche del propietario,
+recortando la franja fotográfica y **dejando fuera todo el rotulado quemado** — un texto
+dentro de una imagen no escala, no se selecciona y no lo lee un lector de pantalla.
+
+### El contraste sobre foto se mide, no se estima
+
+El texto se agrupó abajo y el velo se ancló **al bloque de texto**, no a un porcentaje del
+panel. La primera versión repartía el degradado en porcentajes medidos a 900 px de alto: a
+640 el bloque sube y el titular caía sobre la zona clara. Legible en la ventana donde se
+midió y no en la de al lado.
+
+Se midió componiendo foto y velo en un lienzo y recorriendo píxel a píxel la caja de cada
+texto. Peor caso por elemento:
+
+| Texto | Antes | Ahora | Mínimo |
+|---|---|---|---|
+| «Diego Romero» | 2,36:1 | 12,9:1 | 3:1 (texto grande) |
+| «ACADEMIA» | — | 7,2:1 | 4,5:1 |
+| Titular | 4,3:1 | 10,1:1 | 3:1 |
+| Cifras | — | 17,3:1 | 3:1 |
+| Rótulos y procedencia | — | 7,9:1 | 4,5:1 |
+| Logotipo en celular | 3,5:1 | 10,7:1 | 3:1 |
+
+Verificado a 375, 1280×640, 1440×900 y 1920×1080. Con el velo anclado al bloque, todo el
+texto de la columna cae sobre noche azul **opaco**: el contraste deja de depender de la foto
+y de la ventana. Lo garantiza `acceso.spec.ts`, que comprueba que ningún texto de marca
+cuelgue fuera del bloque velado.

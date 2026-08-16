@@ -30,6 +30,8 @@ export interface ManifiestoActivos {
   readonly losCaminosDeLaVida: RutaActivo;
   /** Detalle de una mano sobre la botonadura, en la sección «dentro de un nivel». 3:2. */
   readonly practicaBotonadura: RutaActivo;
+  /** Diego tocando en tarima, para el panel de marca de la pantalla de acceso. Casi 1:1. */
+  readonly diegoEnTarima: RutaActivo;
 }
 
 /**
@@ -63,6 +65,14 @@ export const ACTIVOS: ManifiestoActivos = {
   // DIATÓNICO de botones — el vallenato. Las otras dos eran un cromático europeo y uno de
   // piano, y se descartaron: en una academia de vallenato el instrumento equivocado se nota.
   practicaBotonadura: '/imagenes/practica-botonadura.a0cb191f.webp',
+
+  // La ÚNICA foto de Diego que hay hoy en el producto, y por eso manda en la pantalla de
+  // acceso: quien entra a una academia con nombre de persona espera ver a esa persona.
+  //
+  // Sale del afiche que entregó el propietario, recortando la franja fotográfica y dejando
+  // fuera todo el rotulado quemado. El detalle del recorte y su porqué, en
+  // `scripts/tratar-imagenes.mjs`.
+  diegoEnTarima: '/imagenes/diego-en-tarima.dfa3aa5d.webp',
 
   // Sigue en null a propósito: ninguna de las imágenes entregadas es una captura del
   // simulador, y el diagrama de botones que dibuja <adr-marco-imagen> con CSS y tokens

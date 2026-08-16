@@ -30,9 +30,11 @@
       </dl>
 
       <p class="acceso__procedencia">{{ procedencia }}</p>
-    </div>
 
-    <p class="acceso__marca-pie">{{ instrumentos.join(' · ') }}</p>
+      <!-- Dentro del cuerpo, no suelto al final del panel: así el velo que garantiza el
+           contraste va pegado al bloque de texto y lo tapa entero, mida lo que mida. -->
+      <p class="acceso__marca-pie">{{ instrumentos.join(' · ') }}</p>
+    </div>
   </section>
 
   <!-- ====================================================== FORMULARIO -->

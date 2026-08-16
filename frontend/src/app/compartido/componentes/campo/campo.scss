@@ -71,3 +71,46 @@
 .adr-campo__ayuda {
   color: var(--adr-color-texto-atenuado);
 }
+
+// Envoltorio del control, para poder colgar el ojo dentro del campo.
+.adr-campo__caja {
+  position: relative;
+}
+
+// Deja sitio al boton para que el texto no pase por debajo del icono.
+.adr-campo__control--con-ojo {
+  padding-right: calc(var(--adr-espacio-7) + var(--adr-espacio-2));
+}
+
+// Mostrar u ocultar la contrasena. Es un boton de verdad —no un icono con click— para que
+// se alcance con el tabulador y los lectores de pantalla lo anuncien con su estado.
+.adr-campo__ojo {
+  position: absolute;
+  top: 50%;
+  right: var(--adr-espacio-3);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  // 44px: objetivo tactil comodo sin llegar al minimo de 48 del control, que aqui haria
+  // que el boton sobresaliera del propio campo.
+  width: 44px;
+  height: 44px;
+  padding: 0;
+
+  color: var(--adr-color-texto-atenuado);
+  cursor: pointer;
+  background: transparent;
+  border: 0;
+  border-radius: var(--adr-radio-pastilla);
+  transform: translateY(-50%);
+
+  &:hover {
+    color: var(--adr-color-tinta);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--adr-color-azul-rey);
+    outline-offset: 2px;
+  }
+}

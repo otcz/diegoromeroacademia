@@ -1,6 +1,7 @@
-import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, input, signal } from '@angular/core';
 import { toObservable, toSignal } from '@angular/core/rxjs-interop';
 import { FormControl, ReactiveFormsModule, ValidationErrors } from '@angular/forms';
+import { Icono } from '../icono/icono';
 import { switchMap } from 'rxjs';
 
 export type TipoCampo = 'text' | 'email' | 'password' | 'tel';
@@ -35,21 +36,36 @@ const MENSAJES: Record<string, (error: ValidationErrors[string]) => string> = {
 @Component({
   selector: 'adr-campo',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [ReactiveFormsModule],
+  imports: [Icono, ReactiveFormsModule],
   template: `
     <label class="adr-campo__rotulo" [for]="idCampo">{{ etiqueta() }}</label>
 
-    <input
-      class="adr-campo__control"
-      [class.adr-campo__control--invalido]="mostrarError()"
-      [id]="idCampo"
-      [type]="tipo()"
-      [formControl]="control()"
-      [attr.autocomplete]="autocompletado()"
-      [attr.placeholder]="marcador()"
-      [attr.aria-invalid]="mostrarError()"
-      [attr.aria-describedby]="mostrarError() ? idError : idAyuda"
-    />
+    <div class="adr-campo__caja">
+      <input
+        class="adr-campo__control"
+        [class.adr-campo__control--invalido]="mostrarError()"
+        [class.adr-campo__control--con-ojo]="esContrasena()"
+        [id]="idCampo"
+        [type]="tipoEfectivo()"
+        [formControl]="control()"
+        [attr.autocomplete]="autocompletado()"
+        [attr.placeholder]="marcador()"
+        [attr.aria-invalid]="mostrarError()"
+        [attr.aria-describedby]="mostrarError() ? idError : idAyuda"
+      />
+
+      @if (esContrasena()) {
+        <button
+          type="button"
+          class="adr-campo__ojo"
+          [attr.aria-label]="visible() ? 'Ocultar contraseña' : 'Mostrar contraseña'"
+          [attr.aria-pressed]="visible()"
+          (click)="alternarVisibilidad()"
+        >
+          <adr-icono [nombre]="visible() ? 'eye-slash' : 'eye'" [tamanio]="20" />
+        </button>
+      }
+    </div>
 
     @if (mostrarError()) {
       <p class="adr-campo__error" [id]="idError" role="alert">{{ mensajeError() }}</p>
@@ -72,6 +88,26 @@ export class Campo {
   readonly ayuda = input('');
   readonly marcador = input('');
   readonly autocompletado = input<string | null>(null);
+
+  /**
+   * Si la contrasena se esta viendo en claro.
+   *
+   * <p>Un campo de contrasena sin forma de verla es la causa numero uno de que alguien la
+   * escriba mal tres veces y acabe bloqueado por el freno de intentos fallidos. Empieza
+   * oculta: quien lo necesite la muestra, no al reves.
+   */
+  protected readonly visible = signal(false);
+
+  protected readonly esContrasena = computed(() => this.tipo() === 'password');
+
+  /** El tipo real del input. Cambiarlo es lo que muestra u oculta el texto. */
+  protected readonly tipoEfectivo = computed(() =>
+    this.esContrasena() && this.visible() ? 'text' : this.tipo(),
+  );
+
+  protected alternarVisibilidad(): void {
+    this.visible.update((actual) => !actual);
+  }
 
   /** Mensajes propios del formulario, que ganan sobre los de por defecto. */
   readonly mensajes = input<Record<string, string>>({});

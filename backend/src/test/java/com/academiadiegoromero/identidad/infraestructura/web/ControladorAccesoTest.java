@@ -4,7 +4,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import com.academiadiegoromero.compartido.dominio.modelo.Correo;
-import com.academiadiegoromero.identidad.aplicacion.casouso.EstablecerContrasena;
 import com.academiadiegoromero.identidad.aplicacion.casouso.IniciarSesionConCorreo;
 import com.academiadiegoromero.identidad.aplicacion.dto.RespuestaAcceso;
 import com.academiadiegoromero.identidad.aplicacion.dto.SolicitudAcceso;
@@ -68,8 +67,6 @@ class ControladorAccesoTest {
 
         controlador = new ControladorAcceso(
                 new IniciarSesionConCorreo(usuarios, credenciales, cifrador, intentos),
-                new EstablecerContrasena(usuarios, credenciales, cifrador),
-                usuarios,
                 new AbridorDeSesion());
 
         Usuario usuario = usuarios.poner(usuario());

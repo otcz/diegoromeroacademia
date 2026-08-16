@@ -1,0 +1,54 @@
+<adr-nav-publica />
+
+<section class="adr-seccion perfil">
+  <div class="adr-contenedor perfil__caja">
+    @if (estado() === 'cargando') {
+      <p class="adr-texto-secundario">Cargando tu cuenta…</p>
+    } @else {
+      <p class="adr-kicker adr-kicker--azul">Tu cuenta</p>
+      <h1 class="adr-titulo-seccion">Tu contraseña.</h1>
+
+      @if (usuario(); as alumno) {
+        <p class="adr-texto-secundario perfil__quien">
+          Entraste como <strong>{{ alumno.correo }}</strong>
+        </p>
+      }
+
+      <!-- Se dice por qué existe esto. Sin la explicación, alguien que ya entra con Google
+           no entiende para qué querría una contraseña, y no la pone. -->
+      <p class="adr-texto-secundario perfil__motivo">
+        Entraste con Google, así que todavía no tienes contraseña. Ponla si quieres entrar
+        también con tu correo — o si algún día pierdes el acceso a esa cuenta de Google.
+      </p>
+
+      @if (estado() === 'guardada') {
+        <adr-alerta tono="exito">
+          Contraseña guardada. Ya puedes entrar con tu correo.
+        </adr-alerta>
+      }
+
+      @if (estado() === 'error') {
+        <adr-alerta tono="error">{{ mensajeError() }}</adr-alerta>
+      }
+
+      <form class="perfil__formulario" [formGroup]="formulario" (ngSubmit)="enviar()">
+        <adr-campo
+          etiqueta="Nueva contraseña"
+          tipo="password"
+          autocompletado="new-password"
+          ayuda="Mínimo 12 caracteres. No pedimos mayúsculas ni símbolos: la longitud protege más."
+          [control]="formulario.controls.contrasena"
+        />
+
+        <adr-boton
+          tipo="submit"
+          variante="primario"
+          [anchoCompleto]="true"
+          [cargando]="estado() === 'guardando'"
+        >
+          {{ estado() === 'guardando' ? 'Guardando…' : 'Guardar contraseña' }}
+        </adr-boton>
+      </form>
+    }
+  </div>
+</section>

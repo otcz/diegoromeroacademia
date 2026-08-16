@@ -59,7 +59,8 @@ class ConfiguracionSeguridad {
     SecurityFilterChain cadenaDeIngresoExterno(
             HttpSecurity http,
             ManejadorIngresoExitoso ingresoExitoso,
-            ManejadorIngresoFallido ingresoFallido)
+            ManejadorIngresoFallido ingresoFallido,
+            RespuestaSinSesion sinSesion)
             throws Exception {
 
         return http
@@ -80,6 +81,10 @@ class ConfiguracionSeguridad {
                         .redirectionEndpoint(e -> e.baseUri(BASE_REDIRECCION))
                         .successHandler(ingresoExitoso)
                         .failureHandler(ingresoFallido))
+
+                // La API responde 401 en vez de redirigir a Google: una llamada de la
+                // aplicacion no puede seguir una redireccion a otro origen.
+                .exceptionHandling(e -> e.authenticationEntryPoint(sinSesion))
 
                 .logout(l -> l
                         .logoutUrl("/api/acceso/salir")

@@ -25,6 +25,11 @@ export const rutas: Routes = [
     loadComponent: () => import('./funcionalidades/acceso/acceso').then((m) => m.Acceso),
   },
   {
+    path: 'perfil',
+    title: 'Tu cuenta — Academia Diego Romero',
+    loadComponent: () => import('./funcionalidades/perfil/perfil').then((m) => m.Perfil),
+  },
+  {
     path: 'login',
     pathMatch: 'full',
     redirectTo: 'acceso',

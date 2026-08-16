@@ -31,6 +31,9 @@ const ICONOS_USADOS = [
   // Aprendizaje
   'lock',
   'lock-open',
+  // Formularios: mostrar u ocultar la contrasena al escribirla
+  'eye',
+  'eye-slash',
   'check-circle',
   'play-circle',
   'star',

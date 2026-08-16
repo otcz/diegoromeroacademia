@@ -1,0 +1,29 @@
+@use 'mixins' as m;
+
+.perfil {
+  background: var(--adr-color-niebla);
+  min-height: 70vh;
+}
+
+// Columna estrecha: un formulario de un solo campo estirado a lo ancho de la pantalla se
+// lee como un error de maquetacion, no como una pantalla terminada.
+.perfil__caja {
+  max-width: 480px;
+}
+
+.perfil__quien {
+  margin-bottom: var(--adr-espacio-4);
+}
+
+.perfil__motivo {
+  margin-bottom: var(--adr-espacio-6);
+}
+
+.perfil__formulario {
+  display: grid;
+  gap: var(--adr-espacio-5);
+  margin-top: var(--adr-espacio-6);
+  padding: var(--adr-espacio-6);
+
+  @include m.tarjeta;
+}

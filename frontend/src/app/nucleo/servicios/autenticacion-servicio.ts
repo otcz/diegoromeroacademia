@@ -1,6 +1,6 @@
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Injectable, inject, signal } from '@angular/core';
-import { Observable, catchError, tap, throwError } from 'rxjs';
+import { Observable, catchError, of, tap, throwError } from 'rxjs';
 import { entorno } from '../../../entornos/entorno';
 import {
   CODIGOS_ERROR_ACCESO,
@@ -53,6 +53,39 @@ export class AutenticacionServicio {
   iniciarSesion(solicitud: SolicitudAcceso): Observable<RespuestaAcceso> {
     return this.http.post<RespuestaAcceso>(`${this.base}/sesion`, solicitud).pipe(
       tap((respuesta) => this.usuarioActual.set(respuesta.usuario)),
+      catchError((error: HttpErrorResponse) => throwError(() => new Error(this.traducir(error)))),
+    );
+  }
+
+  /**
+   * Pregunta al backend quien tiene la sesion abierta.
+   *
+   * <p>Hace falta porque el ingreso con Google termina en una REDIRECCION: la aplicacion se
+   * recarga desde cero y no sabe que alguien acaba de entrar. Sin esto, el usuario solo
+   * existe para el frontend cuando el ingreso paso por su propio formulario, y cualquier
+   * pantalla que dependa de la sesion funcionaria por un camino y no por el otro.
+   *
+   * <p>Un 401 no es un error a mostrar: significa «no hay sesion», que es una respuesta
+   * legitima. Por eso se traduce a nulo en vez de propagarse.
+   */
+  sesionActual(): Observable<UsuarioSesion | null> {
+    return this.http.get<UsuarioSesion>(`${this.base}/sesion`).pipe(
+      tap((usuario) => this.usuarioActual.set(usuario)),
+      catchError(() => {
+        this.usuarioActual.set(null);
+        return of(null);
+      }),
+    );
+  }
+
+  /**
+   * Pone o cambia la contrasena de la cuenta con sesion abierta.
+   *
+   * <p>El backend exige ademas que el correo este verificado. Quien entro por un proveedor
+   * externo ya cumple: el proveedor lo verifico.
+   */
+  establecerContrasena(contrasena: string): Observable<void> {
+    return this.http.post<void>(`${this.base}/contrasena`, { contrasena }).pipe(
       catchError((error: HttpErrorResponse) => throwError(() => new Error(this.traducir(error)))),
     );
   }

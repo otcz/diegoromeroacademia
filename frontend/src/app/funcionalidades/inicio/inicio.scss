@@ -1,3 +1,5 @@
+@use 'mixins' as m;
+
 :host {
   display: block;
 }
@@ -170,19 +172,66 @@
 // ----------------------------------------------------------------- columnas
 .inicio__columnas {
   display: grid;
-  // 1.6fr / 1fr: la ruta es lo que se lee y el lateral lo que se consulta.
-  grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr);
+  // Dos columnas iguales y sin `align-items: start`: los dos paneles miden lo mismo. Uno más
+  // ancho o más alto que el otro insinúa una jerarquía que no existe — la ruta y el taller
+  // son la misma pregunta mirada hacia atrás y hacia delante.
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: var(--adr-espacio-4);
-  align-items: start;
 }
 
-.inicio__lateral {
-  display: flex;
-  flex-direction: column;
-  gap: var(--adr-espacio-4);
+.inicio__taller {
+  adr-boton {
+    // El panel iguala su alto con el de la ruta, así que sobra sitio debajo del texto. Sin
+    // esto la acción queda flotando a media altura con un hueco vacío bajo ella.
+    margin-top: auto;
+  }
 }
 
 // ---------------------------------------------------------------- carrusel
+.inicio__cabecera-acciones {
+  display: flex;
+  gap: var(--adr-espacio-4);
+  align-items: center;
+}
+
+.inicio__flechas {
+  display: flex;
+  gap: var(--adr-espacio-2);
+}
+
+.inicio__flecha {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 30px;
+  height: 30px;
+
+  color: var(--adr-texto-3);
+  cursor: pointer;
+
+  background: transparent;
+  border: 1px solid var(--adr-borde);
+  border-radius: var(--adr-radio-pastilla);
+  transition:
+    background-color 0.15s ease,
+    color 0.15s ease;
+
+  @include m.foco-visible;
+
+  &:hover:not(:disabled) {
+    color: var(--adr-texto-1);
+    background: var(--adr-relleno-1);
+  }
+
+  // Se apaga en el extremo, pero NO se esconde: una flecha que desaparece al llegar al final
+  // desplaza la otra de sitio y el siguiente clic cae en el vacío.
+  &:disabled {
+    cursor: default;
+    opacity: 0.4;
+  }
+}
+
 .inicio__carrusel {
   display: flex;
   gap: var(--adr-espacio-4);
@@ -197,7 +246,12 @@
 }
 
 .inicio__carrusel-item {
-  flex: 0 0 232px;
+  // Crece para llenar la fila cuando la colección es corta —si no, el panel queda con medio
+  // ancho vacío a la derecha— pero NO encoge: al no caber, la fila se desplaza en vez de
+  // apretar seis tarjetas ilegibles. El tope evita que dos compras se conviertan en dos
+  // carteles.
+  flex: 1 0 232px;
+  max-width: 300px;
   scroll-snap-align: start;
 }
 

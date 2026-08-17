@@ -304,6 +304,104 @@ const TUTORIALES: readonly Tutorial[] = [
     recursos: [],
     pisadas: PISADAS_EJEMPLO,
   },
+  // Los tres siguientes son colección del alumno y existen para que el carrusel de Inicio se
+  // vea DESPLAZÁNDOSE en la demostración: con dos tarjetas cabía todo y el comportamiento
+  // —que es justo lo que hay que revisar— no se podía enseñar. Salen con el resto de datos
+  // simulados el día que responda `GET /tutoriales`.
+  {
+    id: 't7',
+    titulo: 'Bajos del paseo',
+    resumen: 'El acompañamiento de bajos del paseo, tempo a tempo, hasta soltarlo sin pensar.',
+    portada: ACTIVOS.cursoCompleto,
+    duracionSegundos: 2040,
+    totalPartes: 3,
+    comprado: true,
+    nuevo: false,
+    avance: 40,
+    precioCentavos: 3_200_000,
+    partes: [
+      {
+        id: 'p1',
+        numero: 1,
+        titulo: 'Bajo y contrabajo',
+        detalle: '11:20 · vista',
+        estado: 'completado',
+      },
+      {
+        id: 'p2',
+        numero: 2,
+        titulo: 'Cambio de acorde',
+        detalle: 'Viendo ahora',
+        estado: 'viendo',
+      },
+      { id: 'p3', numero: 3, titulo: 'A tempo real', detalle: '10:40', estado: 'enCurso' },
+    ],
+    recursos: [{ id: 'tr4', titulo: 'Pista sin acordeón', detalle: 'MP3 · 92 BPM', tipo: 'pista' }],
+    pisadas: PISADAS_EJEMPLO,
+  },
+  {
+    id: 't8',
+    titulo: 'El aire de la puya',
+    resumen: 'Por qué la puya no es un paseo rápido: qué cambia de verdad en la mano izquierda.',
+    portada: ACTIVOS.heroe,
+    duracionSegundos: 1920,
+    totalPartes: 2,
+    comprado: true,
+    nuevo: false,
+    avance: 100,
+    precioCentavos: 3_600_000,
+    partes: [
+      {
+        id: 'p1',
+        numero: 1,
+        titulo: 'El aire y su acento',
+        detalle: '16:00 · vista',
+        estado: 'completado',
+      },
+      {
+        id: 'p2',
+        numero: 2,
+        titulo: 'Subir el tempo',
+        detalle: '16:00 · vista',
+        estado: 'completado',
+      },
+    ],
+    recursos: [
+      {
+        id: 'tr5',
+        titulo: 'Partitura del ejercicio',
+        detalle: 'PDF · 3 páginas',
+        tipo: 'partitura',
+      },
+    ],
+    pisadas: PISADAS_EJEMPLO,
+  },
+  {
+    id: 't9',
+    titulo: 'Cumbia en acordeón',
+    resumen: 'La cumbia con acordeón diatónico: el patrón, los adornos y los errores típicos.',
+    portada: ACTIVOS.diegoTocando,
+    duracionSegundos: 2760,
+    totalPartes: 4,
+    comprado: true,
+    nuevo: false,
+    avance: 0,
+    precioCentavos: 4_100_000,
+    partes: [
+      { id: 'p1', numero: 1, titulo: 'El patrón base', detalle: '12:30', estado: 'enCurso' },
+      {
+        id: 'p2',
+        numero: 2,
+        titulo: 'Adornos de la melodía',
+        detalle: '14:00',
+        estado: 'bloqueado',
+      },
+      { id: 'p3', numero: 3, titulo: 'Cambios de acorde', detalle: '09:30', estado: 'bloqueado' },
+      { id: 'p4', numero: 4, titulo: 'Pieza completa', detalle: '10:00', estado: 'bloqueado' },
+    ],
+    recursos: [],
+    pisadas: PISADAS_EJEMPLO,
+  },
 ];
 
 /** Tutoriales del catalogo que el alumno todavia no tiene. Se compran una vez. */
@@ -360,6 +458,21 @@ export class CatalogoServicio {
   /** Tutoriales que el alumno ya compro, mas el que esta de estreno. */
   tutoriales(): Observable<readonly Tutorial[]> {
     return of(TUTORIALES);
+  }
+
+  /**
+   * Solo los tutoriales que el alumno pago.
+   *
+   * <p>Vive aqui y no en cada pantalla porque «mi coleccion» lo preguntan dos —Inicio y
+   * Tutoriales— y con el filtro repetido bastaba con que una se olvidara para ensenar un
+   * boton de «Comprar» bajo el titulo «Tutoriales que compraste». Paso: el panel de Inicio
+   * listaba los tres del catalogo.
+   *
+   * <p>La compra suelta da acceso PERMANENTE (no negociable 5), asi que esta lista no
+   * depende del estado de la suscripcion.
+   */
+  tutorialesComprados(): Observable<readonly Tutorial[]> {
+    return of(TUTORIALES.filter((tutorial) => tutorial.comprado));
   }
 
   /** Sugerencias de compra para el nivel del alumno. */

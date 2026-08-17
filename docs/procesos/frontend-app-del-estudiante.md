@@ -116,6 +116,52 @@ todo de la portada en tema oscuro, que es la variante que nadie diseñó.
 
 ---
 
+## 5.1 Revisión del propietario sobre el panel de inicio (2026-08-16)
+
+La revisión visual que quedaba pendiente se hizo sobre `/inicio` y produjo cuatro cambios. Tres
+son de disposición; el cuarto es un fallo de contenido que la revisión destapó.
+
+| Qué se pidió | Qué se hizo |
+|---|---|
+| La ruta del nivel y la clase en vivo, una al lado de la otra y **del mismo tamaño** | Dos columnas iguales (`repeat(2, minmax(0, 1fr))`) sin `align-items: start`, para que los dos paneles compartan alto. La acción del taller baja al fondo con `margin-top: auto` |
+| Quitar «Tu suscripción» del panel | Fuera. El plan sigue en la barra lateral —que está en las trece pantallas— y en `/suscripcion` |
+| Los tutoriales comprados, en tarjetas que se muevan de izquierda a derecha | El carrusel ya existía; le faltaba **cómo moverlo con un ratón de una sola rueda**. Se le añadieron dos flechas |
+| El historial de compras | Sin cambios |
+
+**El fallo que destapó la revisión.** El panel listaba `tutoriales()` completo bajo el título
+«Tutoriales que compraste», y uno del catálogo tiene `comprado: false`: bajo ese título aparecía
+una tarjeta con etiqueta «Nuevo» y su botón de **Comprar**. `/tutoriales` sí filtraba, con un
+`computed` propio. El filtro se subió a `CatalogoServicio.tutorialesComprados()` y ahora las dos
+pantallas preguntan lo mismo al mismo sitio — que es lo que evita que vuelva a divergir.
+
+**Decisiones que valen para el próximo carrusel:**
+
+- **Las flechas solo existen si hay desborde.** Dos botones apagados sobre una fila que no se
+  puede mover no informan de nada. Con desborde aparecen las dos, y se apaga —no se esconde— la
+  del extremo en el que ya está: una flecha que desaparece corre a la otra de sitio y el
+  siguiente clic cae en el vacío.
+- **La posición se LEE del DOM, no se lleva en un contador.** El desplazamiento también lo mueven
+  el arrastre en móvil, la rueda y el teclado; un contador en la clase se desfasa con los tres.
+  `medirCarrusel()` se dispara con el evento `scroll` y con el cambio de ancho de ventana.
+- **El paso se mide, no se escribe.** Es el ancho real de la primera tarjeta más el `column-gap`
+  calculado. Un número copiado a mano se desincroniza en el primer retoque del `.scss` y deja
+  media tarjeta cortada.
+- **La tarjeta crece pero no encoge** (`flex: 1 0 232px` con tope de 300 px): con una colección
+  corta llena la fila en vez de dejar medio panel vacío, y cuando no cabe, la fila se desplaza en
+  lugar de apretar seis tarjetas ilegibles.
+
+**Datos simulados.** La colección tenía dos tutoriales comprados, que caben de sobra en la fila:
+el carrusel no se podía enseñar moviéndose. Se añadieron tres comprados (`t7`, `t8`, `t9` — los
+identificadores `t4` a `t6` ya los usaba `RECOMENDADOS`). Salen con el resto de datos simulados
+el día que responda `GET /tutoriales`.
+
+**Verificación.** Seis pruebas nuevas en `inicio.spec.ts` (310 en total, 93,2 % de líneas). En el
+navegador, sobre el servidor de desarrollo: los dos paneles miden 478 × 307 px exactos, la fila
+desborda (921 visibles de 1224) y las flechas se apagan en cada extremo. A menos de 1100 px las
+columnas se apilan y no hay desborde horizontal.
+
+---
+
 ## 6. Qué falta
 
 - Revisión visual de las trece pantallas y de la portada oscura.

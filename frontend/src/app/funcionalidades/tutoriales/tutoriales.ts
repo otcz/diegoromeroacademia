@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { RouterLink } from '@angular/router';
 import { EstadoVacio } from '../../compartido/componentes/estado-vacio/estado-vacio';
@@ -23,11 +23,13 @@ import { CatalogoServicio } from '../../nucleo/servicios/catalogo-servicio';
 export class Tutoriales {
   private readonly catalogo = inject(CatalogoServicio);
 
-  private readonly todos = toSignal(this.catalogo.tutoriales(), { initialValue: [] });
-
   protected readonly recomendados = toSignal(this.catalogo.tutorialesRecomendados(), {
     initialValue: [],
   });
 
-  protected readonly coleccion = computed(() => this.todos().filter((t) => t.comprado));
+  // Quien decide que es «mi coleccion» es el servicio, no la pantalla: Inicio ensena la misma
+  // lista y dos filtros separados se desincronizan en cuanto uno de los dos cambie.
+  protected readonly coleccion = toSignal(this.catalogo.tutorialesComprados(), {
+    initialValue: [],
+  });
 }

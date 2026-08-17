@@ -493,22 +493,29 @@
   --adr-anillo-punto: #0b0a1c;
 
   // La banda, levantada sobre la pagina en vez de hundida. Los dos extremos del degradado
-  // estan elegidos por su LUMINANCIA, no a ojo: dan 1,39:1 y 1,55:1 contra el fondo.
+  // estan elegidos por su LUMINANCIA, no a ojo: dan 1,50:1 y 1,78:1 contra el fondo.
   //
-  // El primer intento fue #14121f → #121a33, que daba 1,09:1 y 1,17:1. Sobre el papel era un
-  // escalon; en pantalla el propietario lo vio «muy timido» y tenia razon. Un 9% de
-  // luminancia se calcula pero no se percibe — menos aun repartido en una banda de 600 px de
-  // alto, donde el ojo no tiene el borde cerca con el que comparar. Se triplico.
+  // Se llego aqui en tres pasos, y los dos primeros valen como aviso:
   //
-  // El techo lo pone el texto, que va blanco encima: el peor caso —#202f5c con el texto suave
-  // al 65%— da 6,4:1, holgado sobre el 4,5 de docs/04 §5. Si hiciera falta subir otro escalon,
-  // el siguiente medido es #302b4a → #26386c: 1,50:1 y 1,78:1 de banda, 5,8:1 de texto.
+  //   #14121f → #121a33   1,09 / 1,17   el propietario lo vio «muy timido». Un 9% de
+  //                                     luminancia se calcula pero no se percibe.
+  //   #2a2640 → #202f5c   1,39 / 1,55   mejor, todavia corto a su juicio.
+  //   #302b4a → #26386c   1,50 / 1,78   el actual.
+  //
+  // <b>Queda UN escalon disponible, no mas.</b> El techo no es estetico: lo pone el texto
+  // suave —blanco al 65%— que va encima de la banda y tiene que conservar 4,5:1 (docs/04 §5).
+  //
+  //   #3a3459 → #2e4382   1,73 / 2,14   texto 5,01:1   <- ultimo que cumple
+  //   #443d68 → #364e99   2,02 / 2,59   texto 4,33:1   <- ya NO cumple
+  //
+  // Subir por encima de ese ultimo obliga a tocar tambien el texto de la banda, y eso ya no
+  // es ajustar un tono: es rediseniar la seccion.
   //
   // Se conserva el halo azul del handoff: es lo que evita que la banda parezca un rectangulo
   // gris pegado, y es el mismo gesto que ya usan el area de contenido y la pantalla de acceso.
   --adr-fondo-banda:
     radial-gradient(900px 620px at 82% -8%, var(--adr-halo-azul), transparent 62%),
-    linear-gradient(170deg, #2a2640, #202f5c);
+    linear-gradient(170deg, #302b4a, #26386c);
   --adr-banda-filo: var(--adr-borde);
 
   // Le dice al navegador de que color son las barras de desplazamiento, los campos

@@ -142,19 +142,28 @@ La corrección es un token propio, `--adr-fondo-banda`:
 | Tema | Valor | Contra la página |
 |---|---|---|
 | Claro | `--adr-color-noche-azul` — idéntico a lo aprobado | 18,86:1 |
-| Oscuro | degradado `#2a2640 → #202f5c` + el halo azul | 1,39:1 a 1,55:1 |
+| Oscuro | degradado `#302b4a → #26386c` + el halo azul | 1,50:1 a 1,78:1 |
 
 Más `--adr-banda-filo`: transparente en claro, `--adr-borde` en oscuro. Va como sombra
 **interior** y no como `border` porque dos bordes de 1px sumarían alto a cada banda y moverían
 la portada aprobada aunque en claro el filo sea invisible.
 
-El texto claro sigue legible sobre la banda levantada: 6,4:1 en el peor caso, que es el texto
+El texto claro sigue legible sobre la banda levantada: 5,8:1 en el peor caso, que es el texto
 suave al 65 % sobre la parada más clara.
 
-**El primer valor se quedó corto y lo dijo la revisión.** Se probó con `#14121f → #121a33`
-—1,09:1 y 1,17:1— y sobre el papel era un escalón; en pantalla el propietario lo vio «muy
-tímido». Un 9 % de luminancia se calcula pero no se percibe, y menos repartido en una banda de
-600 px de alto donde el ojo no tiene el borde cerca con el que comparar. Se triplicó.
+**El valor se ajustó dos veces, y las dos por revisión visual, no por medida.** Es la parte de
+esto que no se puede automatizar:
+
+| Intento | Banda | Veredicto |
+|---|---|---|
+| `#14121f → #121a33` | 1,09 / 1,17 | «muy tímido» — un 9 % de luminancia se calcula pero no se percibe |
+| `#2a2640 → #202f5c` | 1,39 / 1,55 | mejor, aún corto |
+| `#302b4a → #26386c` | 1,50 / 1,78 | el vigente |
+
+**Y queda un solo escalón disponible.** El techo no es estético: lo pone el texto suave que va
+encima de la banda, que tiene que conservar 4,5:1. `#3a3459 → #2e4382` (1,73 / 2,14) da 5,01:1
+y es el último que cumple; el siguiente ya baja a 4,33:1. Subir más obliga a tocar también el
+texto de la banda, y eso deja de ser ajustar un tono para ser rediseñar la sección.
 
 `contraste.spec.ts` gana dos comprobaciones — que la banda se distinga del fondo en ambos temas
 y que el texto encima siga cumpliendo AA. El umbral es **1,25:1**, y también sale de la revisión: no hay norma para esto, y la primera

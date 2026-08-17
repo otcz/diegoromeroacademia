@@ -142,18 +142,24 @@ La corrección es un token propio, `--adr-fondo-banda`:
 | Tema | Valor | Contra la página |
 |---|---|---|
 | Claro | `--adr-color-noche-azul` — idéntico a lo aprobado | 18,86:1 |
-| Oscuro | degradado `#14121f → #121a33` + el halo azul | 1,09:1 a 1,17:1 |
+| Oscuro | degradado `#2a2640 → #202f5c` + el halo azul | 1,39:1 a 1,55:1 |
 
 Más `--adr-banda-filo`: transparente en claro, `--adr-borde` en oscuro. Va como sombra
 **interior** y no como `border` porque dos bordes de 1px sumarían alto a cada banda y moverían
 la portada aprobada aunque en claro el filo sea invisible.
 
-El texto claro sigue legible sobre la banda levantada: 12,6:1 en el peor caso.
+El texto claro sigue legible sobre la banda levantada: 6,4:1 en el peor caso, que es el texto
+suave al 65 % sobre la parada más clara.
+
+**El primer valor se quedó corto y lo dijo la revisión.** Se probó con `#14121f → #121a33`
+—1,09:1 y 1,17:1— y sobre el papel era un escalón; en pantalla el propietario lo vio «muy
+tímido». Un 9 % de luminancia se calcula pero no se percibe, y menos repartido en una banda de
+600 px de alto donde el ojo no tiene el borde cerca con el que comparar. Se triplicó.
 
 `contraste.spec.ts` gana dos comprobaciones — que la banda se distinga del fondo en ambos temas
-y que el texto encima siga cumpliendo AA. El umbral de 1,08:1 no es de accesibilidad (una banda
-no es texto) sino el escalón por debajo del cual dos superficies contiguas dejan de verse como
-dos.
+y que el texto encima siga cumpliendo AA. El umbral es **1,25:1**, y también sale de la revisión: no hay norma para esto, y la primera
+versión cumplía 1,09 — o sea que un suelo de 1,08 dejaba pasar justo el defecto que la prueba
+existe para atrapar.
 
 ---
 

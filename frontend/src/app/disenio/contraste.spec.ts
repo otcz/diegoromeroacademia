@@ -200,12 +200,14 @@ describe('Contraste de la capa semantica', () => {
    * simplemente la portada dejaba de tener capitulos y pasaba a ser una losa continua. Es el
    * tipo de defecto que solo se ve mirando, y por eso hay que medirlo.
    *
-   * <p>El umbral es 1,08:1. No es un minimo de accesibilidad —una banda no es texto— sino el
-   * escalon por debajo del cual dos superficies contiguas dejan de distinguirse. El valor de
-   * hoy queda holgado por encima en los dos temas.
+   * <p><b>El umbral sale de una revision, no de una norma.</b> No hay minimo de accesibilidad
+   * para esto: una banda no es texto. La primera version cumplia 1,09:1 y el propietario la
+   * vio «muy timida» al abrirla — o sea que 1,08 como suelo dejaba pasar justo el defecto que
+   * la prueba existe para atrapar. Se sube a 1,25, por debajo del valor actual (1,39) pero por
+   * encima de lo que ya se comprobo que no se percibe.
    */
   it('debe distinguirse la banda de ritmo del fondo de la pagina, en ambos temas', () => {
-    const MINIMO_BANDA = 1.08;
+    const MINIMO_BANDA = 1.25;
 
     for (const { nombre, tema } of TEMAS) {
       const pagina = aColor(resolver('--adr-fondo', tema));

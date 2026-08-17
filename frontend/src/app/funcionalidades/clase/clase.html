@@ -2,7 +2,7 @@
   <div class="clase">
     <header class="clase__cabecera">
       <a class="adr-volver" routerLink="/mis-cursos">
-        <adr-icono nombre="arrow-left" [tamanio]="16" />
+        <adr-icono nombre="arrow-left" [tamanio]="20" />
         Volver al curso
       </a>
       <div class="clase__identidad">
@@ -74,7 +74,7 @@
                        aún no se pueden descargar en vez de dar un enlace roto. -->
                   <div class="clase__recurso">
                     <span class="clase__recurso-icono">
-                      <adr-icono [nombre]="iconoRecurso[recurso.tipo]" [tamanio]="20" />
+                      <adr-icono [nombre]="iconoRecurso[recurso.tipo]" [tamanio]="24" />
                     </span>
                     <span class="clase__recurso-texto">
                       <span class="clase__recurso-titulo">{{ recurso.titulo }}</span>
@@ -120,7 +120,7 @@
                       </p>
                       <p class="comentario__texto">{{ comentario.texto }}</p>
                       <p class="comentario__votos">
-                        <adr-icono nombre="thumbs-up" [tamanio]="16" />
+                        <adr-icono nombre="thumbs-up" [tamanio]="20" />
                         {{ comentario.votos }}
                       </p>
                     </div>

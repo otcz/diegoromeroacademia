@@ -12,7 +12,8 @@ import { MARCAS, NombreMarca } from '../../../disenio/iconos/marcas';
  * que la regla se cumpla sola (ADR 0010).
  *
  * <p>Cada marca trae su propio `viewBox` porque cada titular dibuja en la rejilla que quiere;
- * forzarlas a la de Phosphor las deformaria, y una marca deformada no se puede usar.
+ * forzarlas a la rejilla de Material Symbols las deformaria, y una marca deformada no se
+ * puede usar.
  *
  * <p>Siempre va acompanada de texto visible («Continuar con Google»), asi que se oculta a
  * los lectores de pantalla: anunciarla repetiria la palabra dos veces seguidas.

@@ -26,7 +26,7 @@
           <span class="curso__nivel">NIVEL {{ curso.nivel }}</span>
           @if (curso.estado === 'bloqueado') {
             <span class="curso__candado">
-              <adr-icono nombre="lock" [tamanio]="20" etiqueta="Curso bloqueado" />
+              <adr-icono nombre="lock" [tamanio]="24" etiqueta="Curso bloqueado" />
             </span>
           } @else {
             <adr-etiqueta
@@ -49,7 +49,7 @@
             <!-- El motivo del bloqueo se dice con palabras, no solo con el candado. Un
                  candado sin explicación deja al alumno sin saber qué le falta. -->
             <p class="curso__bloqueo">
-              <adr-icono nombre="lock" [tamanio]="16" />
+              <adr-icono nombre="lock" [tamanio]="20" />
               {{ curso.motivoBloqueo }}
             </p>
           } @else {
@@ -96,7 +96,7 @@
   <!-- Clases particulares. Deshabilitado: no hay agenda ni disponibilidad real que consultar. -->
   <section class="adr-panel adr-panel--azul cursos__particulares">
     <span class="cursos__particulares-icono">
-      <adr-icono nombre="video-camera" [tamanio]="24" />
+      <adr-icono nombre="video-camera" [tamanio]="32" />
     </span>
     <div>
       <h2 class="adr-panel__titulo">Clases particulares con Diego</h2>

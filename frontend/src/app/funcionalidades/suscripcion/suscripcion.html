@@ -2,7 +2,7 @@
   <div class="suscripcion">
     <header class="suscripcion__cabecera">
       <a class="adr-volver" routerLink="/inicio">
-        <adr-icono nombre="arrow-left" [tamanio]="16" />
+        <adr-icono nombre="arrow-left" [tamanio]="20" />
         Inicio
       </a>
       <div>
@@ -31,11 +31,11 @@
 
       <div class="estado__datos">
         <p class="adr-panel__dato">
-          <adr-icono nombre="calendar-blank" [tamanio]="16" />
+          <adr-icono nombre="calendar-blank" [tamanio]="20" />
           Próximo cobro: <strong>{{ plan.proximoCobro }}</strong> ({{ plan.diasRestantes }} días)
         </p>
         <p class="adr-panel__dato">
-          <adr-icono nombre="credit-card" [tamanio]="16" />
+          <adr-icono nombre="credit-card" [tamanio]="20" />
           {{ plan.medioPago }}
         </p>
       </div>
@@ -51,7 +51,7 @@
         <adr-boton variante="secundario" [deshabilitado]="true">Cancelar renovación</adr-boton>
       </div>
       <p class="suscripcion__nota">
-        <adr-icono nombre="info" [tamanio]="16" />
+        <adr-icono nombre="info" [tamanio]="20" />
         Los cambios de plan y de medio de pago todavía se gestionan por WhatsApp.
       </p>
     </section>
@@ -161,7 +161,7 @@
           aria-labelledby="regalo-titulo"
         >
           <span class="suscripcion__regalo-icono">
-            <adr-icono nombre="gift" [tamanio]="20" />
+            <adr-icono nombre="gift" [tamanio]="24" />
           </span>
           <h2 id="regalo-titulo" class="adr-panel__titulo">Regala esta suscripción a alguien</h2>
           <adr-boton variante="secundario" [anchoCompleto]="true" enlace="/regalar">

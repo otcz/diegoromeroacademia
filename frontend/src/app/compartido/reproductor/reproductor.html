@@ -23,7 +23,7 @@
       (click)="alternarReproduccion()"
       [attr.aria-label]="playing() ? 'Pausar' : 'Reproducir'"
     >
-      <adr-icono [nombre]="playing() ? 'pause' : 'play'" [tamanio]="32" />
+      <adr-icono [nombre]="playing() ? 'pause' : 'play'" [tamanio]="40" />
     </button>
 
     @if (simulador() && pisadas().length > 0) {
@@ -64,12 +64,12 @@
           (click)="alternarReproduccion()"
           [attr.aria-label]="playing() ? 'Pausar' : 'Reproducir'"
         >
-          <adr-icono [nombre]="playing() ? 'pause' : 'play'" [tamanio]="16" />
+          <adr-icono [nombre]="playing() ? 'pause' : 'play'" [tamanio]="20" />
         </button>
 
         @if (esEjercicio()) {
           <button type="button" class="repro__boton repro__boton--texto" (click)="retroceder()">
-            <adr-icono nombre="repeat" [tamanio]="16" />
+            <adr-icono nombre="repeat" [tamanio]="20" />
             Repetir
           </button>
 
@@ -81,7 +81,7 @@
               [disabled]="bpm() <= BPM_MINIMO"
               aria-label="Bajar el metrónomo"
             >
-              <adr-icono nombre="minus" [tamanio]="16" />
+              <adr-icono nombre="minus" [tamanio]="20" />
             </button>
             <span class="repro__bpm-valor" aria-live="polite">{{ bpm() }} BPM</span>
             <button
@@ -90,7 +90,7 @@
               [disabled]="bpm() >= BPM_MAXIMO"
               aria-label="Subir el metrónomo"
             >
-              <adr-icono nombre="plus" [tamanio]="16" />
+              <adr-icono nombre="plus" [tamanio]="20" />
             </button>
           </div>
         } @else {
@@ -100,7 +100,7 @@
             (click)="retroceder()"
             aria-label="Retroceder 15 segundos"
           >
-            <adr-icono nombre="rewind" [tamanio]="16" />
+            <adr-icono nombre="rewind" [tamanio]="20" />
           </button>
           <button
             type="button"
@@ -108,10 +108,10 @@
             (click)="avanzar()"
             aria-label="Avanzar 15 segundos"
           >
-            <adr-icono nombre="fast-forward" [tamanio]="16" />
+            <adr-icono nombre="fast-forward" [tamanio]="20" />
           </button>
           <button type="button" class="repro__boton" aria-label="Volumen">
-            <adr-icono nombre="speaker-high" [tamanio]="16" />
+            <adr-icono nombre="speaker-high" [tamanio]="20" />
           </button>
         }
 
@@ -123,7 +123,7 @@
           (click)="siguienteVelocidad()"
           [attr.aria-label]="'Velocidad ' + rotuloVelocidad() + '. Pulsa para cambiar'"
         >
-          <adr-icono nombre="sliders-horizontal" [tamanio]="16" />
+          <adr-icono nombre="sliders-horizontal" [tamanio]="20" />
           {{ rotuloVelocidad() }}
         </button>
 
@@ -134,13 +134,13 @@
           (click)="alternarSimulador()"
           [attr.aria-pressed]="simulador()"
         >
-          <adr-icono nombre="music-notes" [tamanio]="16" />
+          <adr-icono nombre="music-notes" [tamanio]="20" />
           Simulador
         </button>
 
         @if (!esEjercicio()) {
           <button type="button" class="repro__boton" aria-label="Subtítulos">
-            <adr-icono nombre="closed-captioning" [tamanio]="16" />
+            <adr-icono nombre="closed-captioning" [tamanio]="20" />
           </button>
         }
 
@@ -150,7 +150,7 @@
           (click)="alternarPantallaCompleta()"
           [attr.aria-label]="completa() ? 'Salir de pantalla completa' : 'Pantalla completa'"
         >
-          <adr-icono [nombre]="completa() ? 'corners-in' : 'corners-out'" [tamanio]="16" />
+          <adr-icono [nombre]="completa() ? 'corners-in' : 'corners-out'" [tamanio]="20" />
         </button>
       </div>
     </div>

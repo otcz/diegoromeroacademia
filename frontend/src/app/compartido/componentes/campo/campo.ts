@@ -68,7 +68,7 @@ const MENSAJES: Record<string, (error: ValidationErrors[string]) => string> = {
           [attr.aria-pressed]="visible()"
           (click)="alternarVisibilidad()"
         >
-          <adr-icono [nombre]="visible() ? 'eye-slash' : 'eye'" [tamanio]="20" />
+          <adr-icono [nombre]="visible() ? 'eye-slash' : 'eye'" [tamanio]="24" />
         </button>
       }
     </div>

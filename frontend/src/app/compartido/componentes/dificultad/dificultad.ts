@@ -27,7 +27,7 @@ const NIVEL_MAXIMO = 5;
       @for (posicion of posiciones; track posicion) {
         <adr-icono
           nombre="star"
-          [tamanio]="16"
+          [tamanio]="20"
           class="adr-dificultad__estrella"
           [class.adr-dificultad__estrella--llena]="posicion <= nivelSeguro()"
         />

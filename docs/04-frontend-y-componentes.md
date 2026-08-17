@@ -172,15 +172,23 @@ simulador vertical 236px.
 
 ## 2. Iconografía
 
-**Phosphor duotone, exclusivamente** (regla 12, ADR 0005).
+**Material Symbols Rounded, peso 400, exclusivamente** (regla 12,
+[ADR 0014](adr/0014-iconografia-material-symbols.md), que sustituye al 0005).
 
-- SVG **inline**, con `fill="currentColor"` — el icono se tiñe solo con el color del texto y
-  respeta el tema sin código extra.
-- Tamaños permitidos: **16 · 20 · 24 · 32 px**. Nada intermedio.
-- Se consumen siempre por el componente `<adr-icono nombre="lock" tamanio="20">`, nunca
+- SVG **inline** desde `@material-symbols/svg-400`, con `fill="currentColor"` — el icono se
+  tiñe solo con el color del texto y respeta el tema sin código extra. **No se carga la fuente
+  variable de Google**: sería una petición a un tercero en cada visita.
+- Tamaños permitidos: **20 · 24 · 32 · 40 px**. Nada intermedio. El defecto es 24.
+- Se consumen siempre por el componente `<adr-icono nombre="lock" [tamanio]="20">`, nunca
   pegando un `<svg>` suelto en una plantilla.
-- Los iconos usados se registran en `frontend/src/app/disenio/iconos/`, para que el bundle
-  incluya solo los que existen.
+- El registro se **genera**: `npm run iconos:generar` lee el mapa de
+  `scripts/generar-iconos.mjs` y escribe `disenio/iconos/registro-iconos.ts`. Nunca se edita a
+  mano, y solo entra al paquete lo que está en la lista.
+
+**El mapa tiene dos columnas y eso es deliberado.** A la izquierda, el nombre del proyecto
+—`caret-down`, `magnifying-glass`— que es lo que escriben las plantillas. A la derecha, el de
+Google —`keyboard_arrow_down`, `search`—. Ese desacople es lo que permitió cambiar toda la
+librería tocando un archivo en vez de las cien plantillas que consumen iconos.
 
 **Prohibido:** emojis, iconos de otra librería, iconos como imagen `.png`, e iconos como único
 portador de significado (siempre `aria-label` o texto acompañante).
@@ -212,24 +220,31 @@ inventa uno, y el nuestro está diseñado y medido.
 ### Equivalencia de iconos con el handoff de la aplicación
 
 El handoff de la app dibuja iconos de trazo tipo Lucide de 13 a 20 px. **Gana la regla 12**: se
-traducen a su equivalente Phosphor duotone y a los tamaños permitidos. El resultado no es
+traducen a su equivalente de Material Symbols y a los tamaños permitidos. El resultado no es
 idéntico a la maqueta, y es deliberado — mezclar dos librerías se nota inmediatamente aunque
 nadie sepa decir por qué. La lista completa está en `scripts/generar-iconos.mjs`; una muestra:
 
-| Handoff | Phosphor duotone |
-|---|---|
-| casa | `house` |
-| birrete / libro | `graduation-cap` |
-| pesas | `barbell` |
-| bolsa de tienda | `storefront` |
-| play en círculo | `play-circle` · `play` · `pause` |
-| retroceder / avanzar 15 s | `rewind` · `fast-forward` |
-| pantalla completa | `corners-out` · `corners-in` |
-| subtítulos | `closed-captioning` |
-| velocidad | `sliders-horizontal` |
-| regalo | `gift` |
-| llama de racha | `fire` |
-| diana del reto | `target` |
+| Handoff | Nombre del proyecto | Material Symbols |
+|---|---|---|
+| casa | `house` | `home` |
+| birrete / libro | `graduation-cap` | `school` |
+| pesas | `barbell` | `fitness_center` |
+| bolsa de tienda | `storefront` | `storefront` |
+| play en círculo | `play-circle` · `play` · `pause` | `play_circle` · `play_arrow` · `pause` |
+| retroceder / avanzar 15 s | `rewind` · `fast-forward` | `fast_rewind` · `fast_forward` |
+| pantalla completa | `corners-out` · `corners-in` | `fullscreen` · `fullscreen_exit` |
+| subtítulos | `closed-captioning` | `closed_caption` |
+| velocidad | `sliders-horizontal` | `tune` |
+| regalo | `gift` | `redeem` |
+| llama de racha | `fire` | `local_fire_department` |
+| diana del reto | `target` | `target` |
+
+**Dos casos donde Material no tiene equivalente literal**, y por qué se resolvieron así:
+
+| Antes | Ahora | Por qué |
+|---|---|---|
+| `whatsapp-logo`, `linkedin-logo` | `<adr-marca>` | Google retiró las marcas de su catálogo. Y una marca no era un icono desde el principio: es lo que ya decía el [ADR 0010](adr/0010-marcas-de-terceros-fuera-del-sistema-de-iconos.md) |
+| `sparkle` en «Consejo de Diego» | `lightbulb` | El destello era decoración; la bombilla dice que eso es una idea útil |
 
 ---
 
@@ -244,8 +259,8 @@ agrega al catálogo — no se improvisa localmente.
 | Componente | Selector | Variantes / estados |
 |---|---|---|
 | Botón | `<adr-boton>` | `primario`, `secundario`, `proveedor`, `fantasma`, `sobre-oscuro`, `peligro` · estados: normal, hover, foco, activo, deshabilitado, cargando |
-| Icono | `<adr-icono>` | Phosphor duotone, 16/20/24/32 |
-| Marca de tercero | `<adr-marca>` | `google`, `facebook` — colores del titular, ADR 0010 |
+| Icono | `<adr-icono>` | Material Symbols Rounded, 20/24/32/40 |
+| Marca de tercero | `<adr-marca>` | `google`, `facebook`, `whatsapp`, `linkedin`, `tiktok`, `instagram`, `youtube` — colores del titular, ADR 0010 |
 | Etiqueta | `<adr-etiqueta>` | Tintes: azul, mango, verde, neutro |
 | Tarjeta | `<adr-tarjeta>` | Con y sin encabezado, con y sin pie |
 | Campo de texto | `<adr-campo>` | Rótulo, ayuda, error, requerido, deshabilitado |
@@ -275,7 +290,7 @@ agrega al catálogo — no se improvisa localmente.
 |---|---|---|
 | Tarjeta de curso | `<adr-tarjeta-curso>` | Foto 170px, progreso, radio 14px |
 | Tarjeta de plan | `<adr-tarjeta-plan>` | Variante destacada: borde azul 2px + `--adr-sombra-destacado` + etiqueta mango flotante a -13px |
-| Ítem de nivel | `<adr-item-nivel>` | Estados: `completado`, `actual`, `bloqueado` (candado Phosphor) |
+| Ítem de nivel | `<adr-item-nivel>` | Estados: `completado`, `actual`, `bloqueado` (candado de Material Symbols) |
 | Ítem de clase | `<adr-item-clase>` | Marca de vista con check verde |
 | Estrellas de dificultad | `<adr-dificultad>` | Estrellas mango sobre 5 |
 | Botón flotante de WhatsApp | `<adr-whatsapp-flotante>` | Fijo abajo-derecha, mensaje precargado |

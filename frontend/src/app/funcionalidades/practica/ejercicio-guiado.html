@@ -2,7 +2,7 @@
   <div class="guiado">
     <header class="guiado__cabecera">
       <a class="adr-volver" routerLink="/practica">
-        <adr-icono nombre="arrow-left" [tamanio]="16" />
+        <adr-icono nombre="arrow-left" [tamanio]="20" />
         Zona Ejercicios
       </a>
       <div class="guiado__identidad">
@@ -57,7 +57,7 @@
                   >
                     <span class="guiado__paso-marca">
                       @if ($index < pasosHechos()) {
-                        <adr-icono nombre="check" [tamanio]="16" />
+                        <adr-icono nombre="check" [tamanio]="20" />
                       } @else {
                         {{ $index + 1 }}
                       }
@@ -92,7 +92,7 @@
 
         <section class="adr-panel adr-panel--dorado" aria-labelledby="consejo-titulo">
           <h2 id="consejo-titulo" class="adr-panel__vivo">
-            <adr-icono nombre="sparkle" [tamanio]="16" />
+            <adr-icono nombre="sparkle" [tamanio]="20" />
             CONSEJO DE DIEGO
           </h2>
           <p class="guiado__consejo">{{ pieza.consejo }}</p>

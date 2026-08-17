@@ -60,7 +60,7 @@ Construidos y probados:
 
 | Componente | Selector | Qué cubre |
 |---|---|---|
-| Icono | `<adr-icono>` | Phosphor duotone, 16/20/24/32 px, `currentColor` |
+| Icono | `<adr-icono>` | Material Symbols Rounded, 20/24/32/40 px, `currentColor` |
 | Botón | `<adr-boton>` | primario · secundario · fantasma · sobre-oscuro · peligro |
 | Etiqueta | `<adr-etiqueta>` | tintes azul · mango · verde · neutro |
 | Barra de progreso | `<adr-barra-progreso>` | valor recortado a 0–100, accesible |
@@ -90,9 +90,15 @@ nunca dentro de la pantalla (regla 11).
 
 ## Añadir un icono
 
-1. Buscarlo en [phosphoricons.com](https://phosphoricons.com) (peso **duotone**).
-2. Añadir su nombre a `ICONOS_USADOS` en `scripts/generar-iconos.mjs`.
+1. Buscarlo en [fonts.google.com/icons](https://fonts.google.com/icons), estilo **Rounded**.
+2. Añadir la pareja `nombre-del-proyecto: 'nombre_material'` al mapa `ICONOS_USADOS` de
+   `scripts/generar-iconos.mjs`.
 3. `npm run iconos:generar`.
 
-Si el nombre no existe, el script falla en vez de generar un hueco silencioso. Solo se
-empaquetan los iconos de la lista.
+Si el nombre de Google no existe, el script falla en vez de generar un hueco silencioso. Solo
+se empaquetan los iconos de la lista.
+
+**Por qué el mapa tiene dos columnas.** La izquierda es el vocabulario del proyecto —lo que
+escriben las plantillas— y la derecha, el nombre que le da Google. Ese desacople es lo que
+permitió cambiar de Phosphor a Material Symbols tocando un archivo y no las cien plantillas
+que consumen iconos ([ADR 0014](../docs/adr/0014-iconografia-material-symbols.md)).

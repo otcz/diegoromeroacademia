@@ -1,7 +1,7 @@
 <div class="perfil">
   <header class="perfil__cabecera">
     <a class="adr-volver" routerLink="/inicio">
-      <adr-icono nombre="arrow-left" [tamanio]="16" />
+      <adr-icono nombre="arrow-left" [tamanio]="20" />
       Inicio
     </a>
     <div class="perfil__identidad">
@@ -119,7 +119,7 @@
           @default {
             @if (usuario(); as sesion) {
               <p class="perfil__sesion">
-                <adr-icono nombre="shield-check" [tamanio]="16" />
+                <adr-icono nombre="shield-check" [tamanio]="20" />
                 Sesión iniciada como {{ sesion.correo }}
               </p>
             }

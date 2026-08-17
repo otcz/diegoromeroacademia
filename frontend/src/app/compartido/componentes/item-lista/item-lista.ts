@@ -22,7 +22,7 @@ import { Icono } from '../icono/icono';
     <div class="item" [class]="'item--' + item().estado">
       <span class="item__marca">
         @if (iconoEstado(); as nombre) {
-          <adr-icono [nombre]="nombre" [tamanio]="16" />
+          <adr-icono [nombre]="nombre" [tamanio]="20" />
         } @else {
           {{ item().numero }}
         }

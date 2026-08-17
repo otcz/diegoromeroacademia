@@ -16,7 +16,7 @@
       (click)="regalado.emit()"
       [attr.aria-label]="'Regalar ' + producto().nombre"
     >
-      <adr-icono nombre="gift" [tamanio]="16" />
+      <adr-icono nombre="gift" [tamanio]="20" />
     </button>
   </div>
 
@@ -25,7 +25,7 @@
     <h3 class="producto__nombre">{{ producto().nombre }}</h3>
 
     <p class="producto__resenias">
-      <adr-icono nombre="star" [tamanio]="16" />
+      <adr-icono nombre="star" [tamanio]="20" />
       {{ calificacion() }} · {{ producto().resenias }} reseñas
     </p>
 

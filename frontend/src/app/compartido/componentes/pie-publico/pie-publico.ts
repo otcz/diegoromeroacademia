@@ -30,7 +30,7 @@ import { Boton } from '../boton/boton';
           @if (numeroWhatsapp()) {
             <adr-boton
               variante="sobre-oscuro"
-              icono="whatsapp-logo"
+              marca="whatsapp"
               [enlace]="'https://api.whatsapp.com/send?phone=' + numeroWhatsapp()"
               [nuevaPestania]="true"
             >

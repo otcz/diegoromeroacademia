@@ -30,7 +30,7 @@ import { ACCESO } from '../landing.contenido';
           @for (modalidad of texto.modalidades; track modalidad.clave) {
             <article class="acceso__tarjeta">
               <span class="acceso__marca" aria-hidden="true">
-                <adr-icono [nombre]="modalidad.icono" [tamanio]="24" />
+                <adr-icono [nombre]="modalidad.icono" [tamanio]="32" />
               </span>
               <h3 class="acceso__nombre">{{ modalidad.nombre }}</h3>
               <p class="acceso__incluye">{{ modalidad.queIncluye }}</p>
@@ -41,7 +41,7 @@ import { ACCESO } from '../landing.contenido';
 
         <p class="acceso__garantia">
           <span class="acceso__marca acceso__marca--franja" aria-hidden="true">
-            <adr-icono [nombre]="texto.iconoGarantia" [tamanio]="24" />
+            <adr-icono [nombre]="texto.iconoGarantia" [tamanio]="32" />
           </span>
           <span>{{ texto.garantia }}</span>
         </p>

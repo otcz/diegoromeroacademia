@@ -162,6 +162,74 @@ columnas se apilan y no hay desborde horizontal.
 
 ---
 
+## 5.2 Cambio de iconografía a Material Symbols (2026-08-16)
+
+Segunda petición del propietario sobre las pantallas ya publicadas: **«iconos más profesionales
+de Google y más grandes»**. Es exactamente lo que la regla 12 nombra en primer lugar —«la
+biblioteca de Google u otra igual de profesional»— y lo que el [ADR 0005](../adr/0005-iconografia-phosphor.md)
+había resuelto por la segunda mitad de la frase, porque el handoff ya venía con Phosphor.
+
+La decisión y sus alternativas están en el [ADR 0014](../adr/0014-iconografia-material-symbols.md),
+que **sustituye al 0005**. Aquí queda lo que costó y lo que enseñó.
+
+**El cambio cabía en cinco archivos, y esa es la noticia.** El sistema tenía la indirección
+correcta desde el principio: las plantillas escriben `<adr-icono nombre="caret-down">` y un
+generador traduce ese nombre a un SVG. Cambiar la librería fue reescribir la traducción.
+
+| Archivo | Qué cambió |
+|---|---|
+| `scripts/generar-iconos.mjs` | La lista de nombres pasó a ser un MAPA `nuestro → material` |
+| `registro-iconos.ts` | Regenerado. 84 iconos → 64 |
+| `icono.ts` | `viewBox` de `0 0 256 256` a `0 -960 960 960`; escala y defecto |
+| `marcas.ts` | Entran WhatsApp y LinkedIn |
+| 33 plantillas | Solo el número del tamaño |
+
+**Se conservó el vocabulario del proyecto en vez de renombrar a los nombres de Google.**
+`magnifying-glass` sigue diciéndose así aunque por dentro sea `search`. Renombrar habría tocado
+cien plantillas para no ganar nada, y habría destruido justamente la indirección que hizo barato
+este cambio. `<adr-icono nombre="...">` es API pública del catálogo; perseguir con ella el
+nombre de una librería es acoplarse a lo que se acaba de demostrar que puede cambiar.
+
+**La escala subió entera, no solo «los iconos».** De 16/20/24/32 a 20/24/32/40, con 24 por
+defecto. No es capricho: el duotone de Phosphor llevaba una capa rellena al 20 % detrás del
+trazo, y Material no la tiene. Al mismo número de píxeles pesa visualmente menos, así que
+mantener la escala anterior habría entregado iconos **más pobres** que los de partida — lo
+contrario de lo que se pidió.
+
+**Dos cosas que Material no tiene, y por qué el hueco resultó ser útil:**
+
+- **Logotipos de marcas.** Google los retiró de su catálogo, así que `whatsapp-logo` y
+  `linkedin-logo` no tenían adónde ir. Pasaron a `marcas.ts` y se consumen con `<adr-marca>`,
+  que es donde el [ADR 0010](../adr/0010-marcas-de-terceros-fuera-del-sistema-de-iconos.md)
+  decía desde el principio que debían estar: una marca identifica a su dueño y lleva sus
+  colores, no `currentColor`. **El cambio de librería solo adelantó una corrección pendiente.**
+- El botón flotante de WhatsApp no necesitó una versión monocroma: el círculo verde del logotipo
+  y el token `--adr-color-whatsapp` valen los dos `#25D366`, así que el círculo se funde con la
+  pastilla y queda el auricular blanco — que es la forma que la marca aprueba sobre su verde.
+
+**Y una sustitución que mejoró la interfaz.** El destello (`sparkle`) de «Consejo de Diego» no
+existe en Material. Pasó a `lightbulb`: el destello era decoración, la bombilla dice que eso es
+una idea útil.
+
+**Se retiraron 18 iconos declarados y nunca usados**, y con ellos el paquete
+`@phosphor-icons/core`. `strictTemplates` es lo que hizo esto seguro: `NombreIcono` es una unión
+de literales, así que cualquier plantilla que citara un nombre retirado **no compila**. El
+compilador encontró el único caso real —`item-nivel.ts`, que calculaba su tamaño con un ternario
+fuera de la escala nueva—.
+
+**Un efecto colateral que valía la pena.** Al añadir los tres tutoriales comprados (§5.1),
+`catalogo-servicio.ts` pasó de 400 líneas y el linter lo paró. Los datos simulados se llevaron a
+`catalogo-datos.ts`, y la separación resultó ser la correcta por sí misma: **el servicio es la
+pieza que se queda** —su firma es el puerto que consumen las pantallas— y los datos son relleno
+de prototipo que se borra entero el día que responda la API. Juntos, ese día habría que separar
+a mano lo que se borra de lo que se conserva. El servicio quedó en 75 líneas.
+
+**Verificación.** 311 pruebas en verde (una nueva en `marca.spec.ts` para los dos logotipos que
+se mudaron), `ng build` y `npm run lint` sin avisos, y en el navegador: los 22 iconos de Ajustes
+comparten el `viewBox` de Material y el menú de cuenta pasó de 20/16 px a 24/20 px.
+
+---
+
 ## 6. Qué falta
 
 - Revisión visual de las trece pantallas y de la portada oscura.

@@ -87,7 +87,7 @@ export class ItemNivel {
 
   protected readonly icono = computed(() => ASPECTO[this.estado()].icono);
 
-  protected readonly tamanioIcono = computed<TamanioIcono>(() => (this.compacta() ? 16 : 24));
+  protected readonly tamanioIcono = computed<TamanioIcono>(() => (this.compacta() ? 20 : 32));
 
   protected readonly textoEstado = computed(() => ASPECTO[this.estado()].texto);
 

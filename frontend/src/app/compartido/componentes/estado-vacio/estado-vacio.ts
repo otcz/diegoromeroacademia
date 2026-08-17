@@ -20,7 +20,7 @@ import { Icono } from '../icono/icono';
   template: `
     <div class="vacio">
       <span class="vacio__icono">
-        <adr-icono [nombre]="icono()" [tamanio]="24" />
+        <adr-icono [nombre]="icono()" [tamanio]="32" />
       </span>
       <p class="vacio__titulo">{{ titulo() }}</p>
       @if (explicacion()) {

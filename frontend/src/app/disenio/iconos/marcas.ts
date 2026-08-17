@@ -1,11 +1,15 @@
 // Marcas de terceros. NO es el sistema de iconos del proyecto — ver ADR 0010.
 //
 // Un icono comunica una idea y por eso se tine con `currentColor` y sale de una sola
-// libreria (Phosphor, ADR 0005). Una marca IDENTIFICA a su dueno: su forma y sus colores
-// los fija el titular, no nosotros. Google exige su «G» de cuatro colores, sin recolorear
-// y sin sustituir, en cualquier boton que diga «Continuar con Google».
+// libreria (Material Symbols Rounded, ADR 0014). Una marca IDENTIFICA a su dueno: su forma y
+// sus colores los fija el titular, no nosotros. Google exige su «G» de cuatro colores, sin
+// recolorear y sin sustituir, en cualquier boton que diga «Continuar con Google».
 //
 // Por eso viven aparte, se escriben a mano y no pasan por `npm run iconos:generar`.
+//
+// Y ademas no queda alternativa: Material Symbols RETIRO los logotipos de su catalogo, asi
+// que WhatsApp y LinkedIn —que antes entraban como iconos de Phosphor— tuvieron que venirse
+// aqui. El cambio de libreria solo adelanto lo que el ADR 0010 ya decia que era correcto.
 
 /** Una marca: su dibujo y el sistema de coordenadas en que fue dibujada. */
 export interface Marca {
@@ -64,6 +68,22 @@ export const MARCAS = {
       '<stop offset=".6" stop-color="#9C27B0"/><stop offset="1" stop-color="#3F51B5"/>' +
       '</linearGradient></defs>' +
       '<path fill="url(#adr-instagram)" d="M7.5 2h9A5.5 5.5 0 0 1 22 7.5v9a5.5 5.5 0 0 1-5.5 5.5h-9A5.5 5.5 0 0 1 2 16.5v-9A5.5 5.5 0 0 1 7.5 2zm0 2A3.5 3.5 0 0 0 4 7.5v9A3.5 3.5 0 0 0 7.5 20h9a3.5 3.5 0 0 0 3.5-3.5v-9A3.5 3.5 0 0 0 16.5 4h-9zm9.75 1.5a1.25 1.25 0 1 1 0 2.5 1.25 1.25 0 0 1 0-2.5zM12 7a5 5 0 1 1 0 10 5 5 0 0 1 0-10zm0 2a3 3 0 1 0 0 6 3 3 0 0 0 0-6z"/>',
+  },
+  // Fuente: identidad oficial de WhatsApp. Verde de marca sobre el auricular blanco.
+  whatsapp: {
+    viewBox: '0 0 24 24',
+    titular: 'WhatsApp',
+    contenido:
+      '<path fill="#25D366" d="M12.04 2a9.9 9.9 0 0 0-8.5 14.93L2 22l5.2-1.5A9.9 9.9 0 1 0 12.04 2z"/>' +
+      '<path fill="#FFF" d="M9.2 7.3c-.2-.45-.4-.46-.58-.47h-.5c-.17 0-.45.06-.69.32-.24.26-.9.88-.9 2.15s.93 2.5 1.06 2.67c.13.17 1.79 2.87 4.42 3.91 2.18.86 2.63.69 3.1.65.48-.05 1.53-.63 1.75-1.23.21-.6.21-1.12.15-1.23-.07-.1-.24-.17-.5-.3-.26-.13-1.53-.76-1.77-.84-.24-.09-.41-.13-.58.13-.18.26-.67.84-.82 1.01-.15.18-.3.2-.56.07a7.1 7.1 0 0 1-2.08-1.29 7.83 7.83 0 0 1-1.44-1.8c-.15-.25-.02-.4.11-.53.12-.12.26-.3.39-.46.13-.15.17-.26.26-.44.09-.17.04-.33-.02-.46-.07-.13-.57-1.4-.8-1.92z"/>',
+  },
+  // Fuente: identidad oficial de LinkedIn. El azul es la marca; en gris no se reconoce.
+  linkedin: {
+    viewBox: '0 0 24 24',
+    titular: 'LinkedIn',
+    contenido:
+      '<path fill="#0A66C2" d="M20.45 2H3.55A1.53 1.53 0 0 0 2 3.51v16.98A1.53 1.53 0 0 0 3.55 22h16.9A1.53 1.53 0 0 0 22 20.49V3.51A1.53 1.53 0 0 0 20.45 2z"/>' +
+      '<path fill="#FFF" d="M7.94 18.5H5V9.53h2.94V18.5zM6.47 8.3a1.7 1.7 0 1 1 0-3.41 1.7 1.7 0 0 1 0 3.41zM18.5 18.5h-2.93v-4.36c0-1.04-.02-2.38-1.45-2.38-1.45 0-1.67 1.13-1.67 2.3v4.44H9.52V9.53h2.81v1.23h.04a3.08 3.08 0 0 1 2.77-1.52c2.97 0 3.52 1.95 3.52 4.5v4.76z"/>',
   },
   // Fuente: identidad oficial de YouTube. El boton de reproduccion, con su rojo de marca.
   youtube: {

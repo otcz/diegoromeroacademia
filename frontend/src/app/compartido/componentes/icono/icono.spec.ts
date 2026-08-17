@@ -14,19 +14,21 @@ describe('Icono', () => {
   }
 
   it('debe dibujar el svg con viewBox unico para que todos los iconos queden alineados', async () => {
+    // La rejilla de Material Symbols. Un icono con otro viewBox se dibuja a otra escala
+    // dentro del mismo hueco, y eso es exactamente lo que hace ver una fila desalineada.
     const fixture = await crear({ nombre: 'lock' });
 
     const svg: SVGElement = fixture.nativeElement.querySelector('svg');
-    expect(svg.getAttribute('viewBox')).toBe('0 0 256 256');
+    expect(svg.getAttribute('viewBox')).toBe('0 -960 960 960');
     expect(svg.getAttribute('fill')).toBe('currentColor');
   });
 
-  it('debe usar 20px cuando no se indica tamanio', async () => {
+  it('debe usar 24px cuando no se indica tamanio', async () => {
     const fixture = await crear({ nombre: 'user' });
 
     const svg: SVGElement = fixture.nativeElement.querySelector('svg');
-    expect(svg.getAttribute('width')).toBe('20');
-    expect(svg.getAttribute('height')).toBe('20');
+    expect(svg.getAttribute('width')).toBe('24');
+    expect(svg.getAttribute('height')).toBe('24');
   });
 
   it('debe aplicar el tamanio pedido', async () => {

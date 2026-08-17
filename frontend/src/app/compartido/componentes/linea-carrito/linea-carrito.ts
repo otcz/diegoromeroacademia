@@ -37,7 +37,7 @@ import { Icono } from '../icono/icono';
           (click)="cambio.emit(-1)"
           [attr.aria-label]="'Quitar uno de ' + linea().producto.nombre"
         >
-          <adr-icono nombre="minus" [tamanio]="16" />
+          <adr-icono nombre="minus" [tamanio]="20" />
         </button>
         <span class="linea__numero">{{ linea().cantidad }}</span>
         <button
@@ -45,7 +45,7 @@ import { Icono } from '../icono/icono';
           (click)="cambio.emit(1)"
           [attr.aria-label]="'Añadir uno de ' + linea().producto.nombre"
         >
-          <adr-icono nombre="plus" [tamanio]="16" />
+          <adr-icono nombre="plus" [tamanio]="20" />
         </button>
       </span>
     </div>

@@ -1,158 +1,160 @@
 /**
- * Genera el registro de iconos a partir de los SVG duotone de Phosphor.
+ * Genera el registro de iconos a partir de los SVG de Material Symbols Rounded.
  *
- * Regla 12: Phosphor duotone es la unica fuente de iconos. Copiar SVG a mano termina
- * siempre en iconos de otras librerias colandose sin que nadie lo note; este script hace
- * que agregar un icono sea editar una lista y ejecutar un comando.
+ * Regla 12 y ADR 0014: Material Symbols Rounded, peso 400, es la unica fuente de iconos.
+ * Copiar SVG a mano termina siempre en iconos de otras librerias colandose sin que nadie lo
+ * note; este script hace que agregar un icono sea editar una lista y ejecutar un comando.
  *
  *   npm run iconos:generar
  *
- * Para agregar uno: buscarlo en https://phosphoricons.com, anadir su nombre a ICONOS_USADOS
- * y volver a ejecutar. Si el nombre no existe, el script falla en vez de generar un hueco.
+ * PARA AGREGAR UNO: buscarlo en https://fonts.google.com/icons (estilo Rounded), anadir la
+ * pareja `nombre-del-proyecto: 'nombre_material'` al mapa y volver a ejecutar. Si el nombre de
+ * Material no existe, el script falla en vez de generar un hueco.
+ *
+ * POR QUE EL MAPA. La izquierda es el vocabulario del proyecto —lo que escriben las plantillas
+ * en `<adr-icono nombre="...">`— y la derecha, el nombre que le da Google. Mantenerlos
+ * separados es lo que permitio cambiar de Phosphor a Material tocando ESTE archivo y no las
+ * cien plantillas que consumen iconos. Ese desacople se conserva a proposito.
  */
 import { readFileSync, writeFileSync, existsSync } from 'node:fs';
 import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const RAIZ = join(dirname(fileURLToPath(import.meta.url)), '..');
-const ORIGEN = join(RAIZ, 'node_modules', '@phosphor-icons', 'core', 'assets', 'duotone');
+const ORIGEN = join(RAIZ, 'node_modules', '@material-symbols', 'svg-400', 'rounded');
 const DESTINO = join(RAIZ, 'src', 'app', 'disenio', 'iconos', 'registro-iconos.ts');
 
-/** Iconos efectivamente usados. Mantener ordenado y sin sobrantes: cada uno pesa en el bundle. */
-const ICONOS_USADOS = [
+/**
+ * Iconos efectivamente usados: nombre del proyecto → nombre en Material Symbols.
+ *
+ * Mantener ordenado y sin sobrantes: cada uno pesa en el paquete que descarga el visitante.
+ *
+ * Los logotipos de terceros NO estan aqui. Material Symbols no incluye marcas —Google las
+ * retiro de su catalogo— y ademas una marca no es un icono: identifica a su dueno y lleva sus
+ * colores. Viven en `disenio/iconos/marcas.ts` y se consumen con `<adr-marca>` (ADR 0010).
+ */
+const ICONOS_USADOS = {
   // Navegacion y estructura
-  'list',
-  'x',
-  'caret-right',
-  'caret-down',
-  'arrow-right',
-  'arrow-left',
-  'magnifying-glass',
+  list: 'menu',
+  x: 'close',
+  'caret-right': 'chevron_right',
+  'caret-left': 'chevron_left',
+  'caret-down': 'keyboard_arrow_down',
+  'arrow-left': 'arrow_back',
+  'magnifying-glass': 'search',
+
   // Aprendizaje
-  'lock',
-  'lock-open',
+  lock: 'lock',
+  'lock-open': 'lock_open',
+  'check-circle': 'check_circle',
+  'play-circle': 'play_circle',
+  star: 'star',
+  certificate: 'workspace_premium',
+  clock: 'schedule',
+  'download-simple': 'download',
+
   // Formularios: mostrar u ocultar la contrasena al escribirla
-  'eye',
-  'eye-slash',
-  'check-circle',
-  'play-circle',
-  'star',
-  'certificate',
-  'clock',
-  'download-simple',
+  eye: 'visibility',
+  'eye-slash': 'visibility_off',
+
   // Estado y avisos
-  'info',
-  'warning-circle',
-  'x-circle',
-  'seal-check',
+  info: 'info',
+  'warning-circle': 'error',
+  'x-circle': 'cancel',
+  'seal-check': 'verified',
+
   // Cuenta y comercio
-  'user',
-  'user-circle',
-  'shopping-cart',
-  'credit-card',
-  'package',
-  // Marcas
-  'whatsapp-logo',
-  'google-logo',
-  'facebook-logo',
+  user: 'person',
+  'user-circle': 'account_circle',
+  'shopping-cart': 'shopping_cart',
+  'credit-card': 'credit_card',
+  package: 'inventory_2',
 
   // ------------------------------------------------------------------------
   // Aplicacion del estudiante (handoff docs/handoff-disenio/app-estudiante).
-  //
-  // El handoff dibuja iconos de trazo tipo Lucide de 13 a 20 px. Aqui van sus
-  // equivalentes Phosphor duotone: la regla 12 y el ADR 0005 mandan sobre la maqueta,
-  // y mezclar dos librerias se nota inmediatamente aunque nadie sepa decir por que.
-  // La tabla de equivalencias esta en docs/04 §2.
+  // La tabla de equivalencias completa esta en docs/04 §2.
   // ------------------------------------------------------------------------
 
   // Navegacion principal y barra superior
-  'house',
-  'graduation-cap',
-  'barbell',
-  'storefront',
-  'gear',
-  'bell',
-  'sun',
-  'moon',
-  'sign-out',
-  'caret-left',
-  'caret-up',
+  house: 'home',
+  'graduation-cap': 'school',
+  barbell: 'fitness_center',
+  storefront: 'storefront',
+  gear: 'settings',
+  bell: 'notifications',
+  sun: 'light_mode',
+  moon: 'dark_mode',
+  'sign-out': 'logout',
 
   // Reproductor
-  'play',
-  'pause',
-  'rewind',
-  'fast-forward',
-  'speaker-high',
-  'closed-captioning',
-  'corners-out',
-  'corners-in',
-  'sliders-horizontal',
-  'repeat',
-  'metronome',
+  play: 'play_arrow',
+  pause: 'pause',
+  rewind: 'fast_rewind',
+  'fast-forward': 'fast_forward',
+  'speaker-high': 'volume_up',
+  'closed-captioning': 'closed_caption',
+  'corners-out': 'fullscreen',
+  'corners-in': 'fullscreen_exit',
+  'sliders-horizontal': 'tune',
+  repeat: 'repeat',
 
   // Aprendizaje y practica
-  'fire',
-  'target',
-  'list-checks',
-  'music-notes',
-  'book-open-text',
-  'file-pdf',
-  'image-square',
-  'note-pencil',
-  'broadcast',
-  'video-camera',
-  'chart-line',
+  fire: 'local_fire_department',
+  target: 'target',
+  'music-notes': 'music_note',
+  'file-pdf': 'picture_as_pdf',
+  'image-square': 'image',
+  'video-camera': 'videocam',
 
   // Comunidad
-  'chat-circle',
-  'users-three',
-  'paper-plane-tilt',
-  'thumbs-up',
+  'users-three': 'group',
+  'thumbs-up': 'thumb_up',
 
   // Comercio, cuenta y regalos
-  'gift',
-  'receipt',
-  'wallet',
-  'ticket',
-  'plus',
-  'minus',
-  'trash',
-  'camera',
-  'key',
-  'shield-check',
-  'translate',
-  'calendar-blank',
-  'crown-simple',
-  'link-simple',
-  'linkedin-logo',
-  'check',
-  'arrow-clockwise',
-  'sparkle',
-];
+  gift: 'redeem',
+  wallet: 'account_balance_wallet',
+  ticket: 'confirmation_number',
+  plus: 'add',
+  minus: 'remove',
+  camera: 'photo_camera',
+  'shield-check': 'verified_user',
+  'calendar-blank': 'calendar_month',
+  'crown-simple': 'military_tech',
+  check: 'check',
+  // «Consejo de Diego»: la bombilla dice «esto es una idea util» sin adornos. El destello de
+  // Phosphor era decoracion; en Material su equivalente literal ni siquiera existe.
+  sparkle: 'lightbulb',
+};
 
-const faltantes = ICONOS_USADOS.filter(
-  (nombre) => !existsSync(join(ORIGEN, `${nombre}-duotone.svg`)),
-);
+const parejas = Object.entries(ICONOS_USADOS);
+
+const faltantes = parejas.filter(([, material]) => !existsSync(join(ORIGEN, `${material}.svg`)));
 if (faltantes.length > 0) {
-  console.error(`No existen en Phosphor duotone: ${faltantes.join(', ')}`);
+  const detalle = faltantes.map(([nuestro, material]) => `${nuestro} → ${material}`).join(', ');
+  console.error(`No existen en Material Symbols Rounded: ${detalle}`);
   process.exit(1);
 }
 
-const entradas = ICONOS_USADOS.map((nombre) => {
-  const svg = readFileSync(join(ORIGEN, `${nombre}-duotone.svg`), 'utf8');
-  // Solo el contenido interno: el componente adr-icono aporta el <svg> con su viewBox,
-  // para que todos los iconos compartan tamanio y alineacion sin excepciones.
-  const contenido = svg.replace(/^[\s\S]*?<svg[^>]*>/, '').replace(/<\/svg>\s*$/, '').trim();
-  return `  '${nombre}': '${contenido.replace(/'/g, "\\'")}',`;
-}).join('\n');
+const entradas = parejas
+  .map(([nuestro, material]) => {
+    const svg = readFileSync(join(ORIGEN, `${material}.svg`), 'utf8');
+    // Solo el contenido interno: el componente adr-icono aporta el <svg> con su viewBox,
+    // para que todos los iconos compartan tamanio y alineacion sin excepciones.
+    const contenido = svg
+      .replace(/^[\s\S]*?<svg[^>]*>/, '')
+      .replace(/<\/svg>\s*$/, '')
+      .trim();
+    return `  '${nuestro}': '${contenido.replace(/'/g, "\\'")}',`;
+  })
+  .join('\n');
 
 const salida = `// ARCHIVO GENERADO — no editar a mano.
 // Regenerar con: npm run iconos:generar   (ver scripts/generar-iconos.mjs)
 //
-// Fuente: Phosphor Icons, peso duotone, licencia MIT (https://phosphoricons.com).
-// El contenido va sin el envoltorio <svg>: lo aporta el componente adr-icono, para que
-// todos compartan viewBox 0 0 256 256 y se tinan con currentColor.
+// Fuente: Material Symbols Rounded, peso 400, licencia Apache-2.0
+// (https://fonts.google.com/icons). El contenido va sin el envoltorio <svg>: lo aporta el
+// componente adr-icono, para que todos compartan viewBox 0 -960 960 960 y se tinan con
+// currentColor.
 
 export const ICONOS = {
 ${entradas}
@@ -165,4 +167,4 @@ export const NOMBRES_ICONO = Object.keys(ICONOS) as NombreIcono[];
 `;
 
 writeFileSync(DESTINO, salida, 'utf8');
-console.warn(`Generados ${ICONOS_USADOS.length} iconos en ${DESTINO}`);
+console.warn(`Generados ${parejas.length} iconos en ${DESTINO}`);

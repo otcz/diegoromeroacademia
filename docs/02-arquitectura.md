@@ -82,7 +82,7 @@ diegoromeroacademia/
     ├── package.json
     ├── eslint.config.js
     ├── scripts/
-    │   └── generar-iconos.mjs   ← regenera el registro de iconos Phosphor
+    │   └── generar-iconos.mjs   ← regenera el registro de iconos Material Symbols
     └── src/
         ├── index.html
         ├── main.ts

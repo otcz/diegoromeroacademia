@@ -1,8 +1,13 @@
 # ADR 0005 · Iconografía Phosphor duotone
 
-**Estado:** aceptado
+**Estado:** SUSTITUIDO por el [ADR 0014](0014-iconografia-material-symbols.md) el 2026-08-16
 **Fecha:** 2026-08-14
 **Deciden:** Oscar Tomás Carrillo Zuleta
+
+> **No aplicar.** Este ADR eligió Phosphor duotone sobre maquetas. Al revisar las pantallas ya
+> construidas, el propietario pidió los iconos de Google —lo que la regla 12 nombra en primer
+> lugar— y más grandes. El porqué del cambio está en el ADR 0014; esto se conserva para que se
+> entienda de dónde venía la decisión anterior.
 
 ---
 

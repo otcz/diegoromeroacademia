@@ -97,7 +97,7 @@ const RUTA_API = `${new URL(entorno.urlApi, 'http://base.invalida').pathname.rep
   styleUrl: './boton.scss',
 })
 export class Boton {
-  protected readonly tamanioIcono: TamanioIcono = 20;
+  protected readonly tamanioIcono: TamanioIcono = 24;
 
   readonly variante = input<VarianteBoton>('primario');
   readonly tipo = input<TipoBoton>('button');

@@ -27,7 +27,7 @@ import { PASOS_NIVEL, PRACTICA_NIVEL } from '../landing.contenido';
           @for (paso of pasos; track paso.titulo) {
             <div class="nivel__paso">
               <span class="nivel__marca" aria-hidden="true">
-                <adr-icono [nombre]="paso.icono" [tamanio]="24" />
+                <adr-icono [nombre]="paso.icono" [tamanio]="32" />
               </span>
               <div>
                 <h3 class="nivel__paso-titulo">{{ paso.titulo }}</h3>

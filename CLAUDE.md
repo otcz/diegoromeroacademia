@@ -37,7 +37,7 @@ corregir este archivo.
 | Pruebas | JUnit 5 + Testcontainers (backend) · **Vitest** (frontend) |
 | Arquitectura | Monolito modular + hexagonal (puertos y adaptadores) |
 | Repositorio | Monorepo: `backend/`, `frontend/`, `docs/` |
-| Iconos | Phosphor duotone, SVG inline con `currentColor` |
+| Iconos | **Material Symbols Rounded**, peso 400, SVG inline con `currentColor` |
 | Sistema visual | «Azul rey» — tokens en `frontend/src/app/disenio/_tokens.scss` |
 
 Razonamiento en `docs/adr/0001-stack-tecnologico.md`. Las versiones se corrigieron en
@@ -59,7 +59,7 @@ soporte y no reciben parches de seguridad.
 9. **Estrategias profesionales**: patrones conocidos y justificados, nunca invención propia.
 10. **Cobertura de tests ≥ 80%**, verificada por JaCoCo — el build falla por debajo.
 11. **Componentes estandarizados**: paneles, modales y tarjetas salen del catálogo compartido.
-12. **Iconos Phosphor duotone**. Sin emojis, sin iconos sueltos de otras librerías.
+12. **Iconos Material Symbols Rounded** (Google). Sin emojis, sin iconos sueltos de otras librerías.
 13. **Pensado para escala**: 1000 alumnos concurrentes como línea base de diseño.
 14. **Todo proceso queda documentado** al terminarlo, no después.
 15. **Paleta y tipografía ya definidas** — se usan tokens, nunca valores literales.
@@ -131,7 +131,7 @@ cd frontend && npm test
 ```
 
 `npm test` incluye cobertura y falla bajo el umbral. `npm run lint` para el linter y
-`npm run iconos:generar` para regenerar el registro de iconos Phosphor.
+`npm run iconos:generar` para regenerar el registro de iconos Material Symbols.
 
 ---
 

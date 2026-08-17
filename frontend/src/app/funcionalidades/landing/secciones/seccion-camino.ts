@@ -43,7 +43,7 @@ import { CAMINO } from '../landing.contenido';
 
                 @if (paso.seRepite) {
                   <p class="camino__repeticion">
-                    <adr-icono nombre="arrow-left" [tamanio]="16" />
+                    <adr-icono nombre="arrow-left" [tamanio]="20" />
                     {{ texto.repeticion }}
                   </p>
                 }

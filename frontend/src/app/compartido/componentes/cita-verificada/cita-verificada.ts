@@ -31,7 +31,7 @@ import { Icono } from '../icono/icono';
             target="_blank"
             rel="noopener noreferrer"
           >
-            <adr-icono nombre="seal-check" [tamanio]="16" />
+            <adr-icono nombre="seal-check" [tamanio]="20" />
             <span>{{ textoSello() }}</span>
           </a>
         </div>

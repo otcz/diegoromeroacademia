@@ -26,7 +26,7 @@ const ICONOS: Record<TonoAlerta, NombreIcono> = {
   imports: [Icono],
   template: `
     <div [class]="clases()" [attr.role]="esUrgente() ? 'alert' : 'status'">
-      <adr-icono [nombre]="icono()" [tamanio]="20" />
+      <adr-icono [nombre]="icono()" [tamanio]="24" />
       <div class="adr-alerta__texto">
         @if (titulo()) {
           <p class="adr-alerta__titulo">{{ titulo() }}</p>

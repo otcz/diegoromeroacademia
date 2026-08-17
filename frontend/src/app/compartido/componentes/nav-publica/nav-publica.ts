@@ -76,7 +76,7 @@ import { Icono } from '../icono/icono';
           aria-label="Abrir menú"
           (click)="alternar()"
         >
-          <adr-icono [nombre]="abierto() ? 'x' : 'list'" [tamanio]="24" />
+          <adr-icono [nombre]="abierto() ? 'x' : 'list'" [tamanio]="32" />
         </button>
 
         <nav id="menu-principal" class="adr-nav__menu" [class.adr-nav__menu--abierto]="abierto()">

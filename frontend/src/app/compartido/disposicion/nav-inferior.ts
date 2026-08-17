@@ -29,7 +29,7 @@ import { NAVEGACION_MOVIL } from './navegacion';
           [attr.aria-current]="activo.isActive ? 'page' : null"
         >
           <span class="inferior__indicador" aria-hidden="true"></span>
-          <adr-icono [nombre]="entrada.icono" [tamanio]="20" />
+          <adr-icono [nombre]="entrada.icono" [tamanio]="24" />
           <span class="inferior__rotulo">{{ entrada.etiquetaCorta }}</span>
         </a>
       }

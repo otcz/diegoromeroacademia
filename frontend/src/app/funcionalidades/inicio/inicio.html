@@ -9,7 +9,7 @@
     </div>
     @if (suscripcion(); as plan) {
       <p class="inicio__estado" [class]="'inicio__estado--' + plan.estado">
-        <adr-icono nombre="seal-check" [tamanio]="16" />
+        <adr-icono nombre="seal-check" [tamanio]="20" />
         <span
           >Suscripción
           {{
@@ -31,7 +31,7 @@
       <img [src]="poster" alt="" width="480" height="270" fetchpriority="high" />
       <span class="continuar__velo" aria-hidden="true"></span>
       <span class="continuar__play" aria-hidden="true">
-        <adr-icono nombre="play-circle" [tamanio]="32" />
+        <adr-icono nombre="play-circle" [tamanio]="40" />
       </span>
       <span class="continuar__duracion">{{ continuar.duracion }}</span>
     </div>
@@ -96,10 +96,10 @@
       <h2 id="taller-titulo" class="adr-panel__titulo">{{ taller.titulo }}</h2>
       <p class="adr-panel__contexto">{{ taller.cuando }}</p>
       <p class="adr-panel__dato">
-        <adr-icono nombre="clock" [tamanio]="16" />{{ taller.duracion }}
+        <adr-icono nombre="clock" [tamanio]="20" />{{ taller.duracion }}
       </p>
       <p class="adr-panel__dato">
-        <adr-icono nombre="users-three" [tamanio]="16" />{{ taller.cupos }}
+        <adr-icono nombre="users-three" [tamanio]="20" />{{ taller.cupos }}
       </p>
       <!-- Deshabilitado: no hay backend de reservas ni cupos reales que descontar. Un
            botón que dijera «reservado» sin reservar nada es peor que no tenerlo. -->
@@ -132,7 +132,7 @@
                 aria-label="Ver los tutoriales anteriores"
                 (click)="desplazar(-1)"
               >
-                <adr-icono nombre="caret-left" [tamanio]="16" />
+                <adr-icono nombre="caret-left" [tamanio]="20" />
               </button>
               <button
                 type="button"
@@ -141,7 +141,7 @@
                 aria-label="Ver más tutoriales"
                 (click)="desplazar(1)"
               >
-                <adr-icono nombre="caret-right" [tamanio]="16" />
+                <adr-icono nombre="caret-right" [tamanio]="20" />
               </button>
             </span>
           }
@@ -185,7 +185,7 @@
           <tr>
             <td>
               <span class="adr-tabla__producto">
-                <adr-icono [nombre]="iconoPedido[pedido.estado]" [tamanio]="16" />
+                <adr-icono [nombre]="iconoPedido[pedido.estado]" [tamanio]="20" />
                 {{ pedido.producto }}
               </span>
             </td>

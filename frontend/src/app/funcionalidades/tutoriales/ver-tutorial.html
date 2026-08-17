@@ -2,7 +2,7 @@
   <div class="ver">
     <header class="ver__cabecera">
       <a class="adr-volver" routerLink="/tutoriales">
-        <adr-icono nombre="arrow-left" [tamanio]="16" />
+        <adr-icono nombre="arrow-left" [tamanio]="20" />
         Mis tutoriales
       </a>
       <div class="ver__identidad">
@@ -15,7 +15,7 @@
         <!-- La promesa que distingue la compra suelta de la suscripción, dicha aquí y no
              solo cumplida en la base de datos. -->
         <span class="ver__permanente">
-          <adr-icono nombre="seal-check" [tamanio]="16" />
+          <adr-icono nombre="seal-check" [tamanio]="20" />
           Comprado · acceso de por vida
         </span>
       }
@@ -40,7 +40,7 @@
               @for (recurso of pieza.recursos; track recurso.id) {
                 <div class="ver__recurso">
                   <span class="ver__recurso-icono">
-                    <adr-icono [nombre]="iconoRecurso[recurso.tipo]" [tamanio]="20" />
+                    <adr-icono [nombre]="iconoRecurso[recurso.tipo]" [tamanio]="24" />
                   </span>
                   <span class="ver__recurso-texto">
                     <span class="ver__recurso-titulo">{{ recurso.titulo }}</span>

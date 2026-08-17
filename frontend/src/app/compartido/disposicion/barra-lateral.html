@@ -20,7 +20,7 @@
         #activo="routerLinkActive"
         [attr.aria-current]="activo.isActive ? 'page' : null"
       >
-        <adr-icono [nombre]="entrada.icono" [tamanio]="20" />
+        <adr-icono [nombre]="entrada.icono" [tamanio]="24" />
         <span>{{ entrada.etiqueta }}</span>
       </a>
     }
@@ -49,7 +49,7 @@
       routerLink="/ajustes"
       routerLinkActive="lateral__enlace--activo"
     >
-      <adr-icono nombre="gear" [tamanio]="20" />
+      <adr-icono nombre="gear" [tamanio]="24" />
       <span>Ajustes</span>
     </a>
     <!--
@@ -61,7 +61,7 @@
       estas pantallas consuman la API real.
     -->
     <a class="lateral__enlace lateral__enlace--pie" href="/">
-      <adr-icono nombre="sign-out" [tamanio]="20" />
+      <adr-icono nombre="sign-out" [tamanio]="24" />
       <span>Salir</span>
     </a>
   </div>

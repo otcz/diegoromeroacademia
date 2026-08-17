@@ -79,7 +79,8 @@ de la API y en el frontend. Sin sinónimos.
 | 2 | Nomenclatura en español, sin tildes ni ñ | 2026-08-14 | [0002](adr/0002-idioma-de-nomenclatura.md) |
 | 3 | Monolito modular con arquitectura hexagonal | 2026-08-14 | [0003](adr/0003-arquitectura-hexagonal-modular.md) |
 | 4 | Monorepo con `backend/`, `frontend/` y `docs/` | 2026-08-14 | [0004](adr/0004-monorepo.md) |
-| 5 | Iconografía Phosphor duotone | 2026-08-14 | [0005](adr/0005-iconografia-phosphor.md) |
+| 5 | ~~Iconografía Phosphor duotone~~ — sustituido | 2026-08-14 | [0005](adr/0005-iconografia-phosphor.md) |
+| 5b | **Iconografía Material Symbols Rounded**, escala 20/24/32/40 | 2026-08-16 | [0014](adr/0014-iconografia-material-symbols.md) |
 | 6 | Sistema visual «Azul rey» aprobado | 2026-08-14 | Handoff de diseño |
 | 6b | Doble tema claro/oscuro en todo el sitio, sobre capa semántica de tokens | 2026-08-16 | [0012](adr/0012-doble-tema-en-todo-el-sitio.md) |
 | 6c | Rutas de la aplicación del estudiante: manda la especificación, armazón en ruta padre | 2026-08-16 | [0013](adr/0013-rutas-de-la-aplicacion-del-estudiante.md) |
@@ -173,3 +174,4 @@ configuración, no código. Ver `docs/03-configuracion.md`.
 | 2026-08-16 | Doble tema claro/oscuro en todo el sitio sobre una capa semántica de tokens ([ADR 0012](adr/0012-doble-tema-en-todo-el-sitio.md)); rutas de la aplicación cerradas ([ADR 0013](adr/0013-rutas-de-la-aplicacion-del-estudiante.md)) |
 | 2026-08-16 | Las 13 pantallas publicadas en la demostración. Verificadas en `diegoromeroacademia.com`: enrutado, doble tema con persistencia, carrito, simulador y barra inferior en móvil. **No es producción** — producción sigue siendo Cloud Run y no existe todavía |
 | 2026-08-16 | Primera revisión del propietario sobre `/inicio`: ruta y taller igualados, «Tu suscripción» retirada del panel y carrusel de tutoriales con flechas. Destapó que el panel listaba tutoriales SIN comprar bajo «Tutoriales que compraste» ([proceso §5.1](procesos/frontend-app-del-estudiante.md)) |
+| 2026-08-16 | Iconografía cambiada a **Material Symbols Rounded** con la escala un escalón arriba ([ADR 0014](adr/0014-iconografia-material-symbols.md), sustituye al 0005). WhatsApp y LinkedIn pasan a `<adr-marca>`: Google retiró las marcas de su catálogo ([proceso §5.2](procesos/frontend-app-del-estudiante.md)) |

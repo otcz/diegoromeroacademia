@@ -23,7 +23,7 @@ export type TonoMosaico = 'azul' | 'dorado' | 'morado' | 'verde';
     <div class="mosaico" [class]="'mosaico--' + tono()">
       <div class="mosaico__cabecera">
         <span class="mosaico__icono">
-          <adr-icono [nombre]="icono()" [tamanio]="16" />
+          <adr-icono [nombre]="icono()" [tamanio]="20" />
         </span>
         <span class="mosaico__rotulo">{{ rotulo() }}</span>
       </div>

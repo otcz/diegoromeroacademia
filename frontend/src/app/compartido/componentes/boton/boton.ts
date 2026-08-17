@@ -19,12 +19,7 @@ import { NombreMarca } from '../../../disenio/iconos/marcas';
  * de Google encima, eso es exactamente lo que su identidad no permite.
  */
 export type VarianteBoton =
-  | 'primario'
-  | 'secundario'
-  | 'proveedor'
-  | 'fantasma'
-  | 'sobre-oscuro'
-  | 'peligro';
+  'primario' | 'secundario' | 'proveedor' | 'fantasma' | 'sobre-oscuro' | 'peligro';
 
 export type TipoBoton = 'button' | 'submit';
 

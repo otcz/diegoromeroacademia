@@ -69,11 +69,7 @@ import { ESTACIONES, HEROE, INSTRUMENTOS } from '../landing.contenido';
 
         <adr-panel-cristal variante="oscuro" class="heroe__panel">
           <p class="adr-kicker heroe__panel-titulo">Tu ruta</p>
-          <adr-ruta-niveles
-            [estaciones]="estaciones"
-            [compacta]="true"
-            [sobreOscuro]="true"
-          />
+          <adr-ruta-niveles [estaciones]="estaciones" [compacta]="true" [sobreOscuro]="true" />
           <p class="heroe__panel-pie">{{ texto.resumenRuta }}</p>
         </adr-panel-cristal>
       </div>

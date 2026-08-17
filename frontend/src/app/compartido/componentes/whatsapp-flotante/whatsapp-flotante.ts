@@ -39,6 +39,7 @@ export class WhatsappFlotante {
   readonly etiqueta = input('Escríbenos');
 
   protected readonly enlace = computed(
-    () => `https://api.whatsapp.com/send?phone=${this.numero()}&text=${encodeURIComponent(this.mensaje())}`,
+    () =>
+      `https://api.whatsapp.com/send?phone=${this.numero()}&text=${encodeURIComponent(this.mensaje())}`,
   );
 }

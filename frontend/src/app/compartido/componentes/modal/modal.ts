@@ -48,12 +48,7 @@ let contadorModales = 0;
         >
           <header class="adr-modal__encabezado">
             <h2 class="adr-modal__titulo" [id]="idTitulo">{{ titulo() }}</h2>
-            <button
-              type="button"
-              class="adr-modal__cerrar"
-              aria-label="Cerrar"
-              (click)="cerrar()"
-            >
+            <button type="button" class="adr-modal__cerrar" aria-label="Cerrar" (click)="cerrar()">
               <adr-icono nombre="x" [tamanio]="20" />
             </button>
           </header>

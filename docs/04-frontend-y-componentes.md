@@ -3,10 +3,11 @@
 **Cubre las reglas 11, 12 y 15 del proyecto.**
 
 El sistema visual **«Azul rey»** está aprobado. Los valores de esta página son finales: no se
-proponen colores, tamaños ni radios nuevos sin un ADR. La landing pública ya está diseñada en
-alta fidelidad y se recrea en Angular píxel a píxel.
+proponen colores, tamaños ni radios nuevos sin un ADR.
 
-Fuente: handoff de diseño (`Landing Azul.dc.html`, tablero «2b Azul rey»).
+Fuentes: handoff de la portada (`docs/handoff-disenio`, tablero «2b Azul rey») y handoff de la
+aplicación del estudiante (`docs/handoff-disenio/app-estudiante`). Los dos están recreados en
+Angular; lo que se apartó de cada maqueta, y por qué, está en el LEEME de cada carpeta.
 
 ---
 
@@ -18,50 +19,85 @@ variable CSS. Un `#1D6BF3` escrito a mano en un `.scss` es un defecto de revisi�
 Los tokens viven en `frontend/src/app/disenio/_tokens.scss` y se exponen como propiedades
 personalizadas con prefijo `--adr-`.
 
-### Color
+### La paleta — nombres de COLOR, valores fijos
+
+Esta capa **no cambia con el tema**. Es la materia prima.
 
 ```scss
 :root {
   /* Superficies */
-  --adr-color-niebla:            #F6F8FB;  /* fondo de página */
-  --adr-color-blanco:            #FFFFFF;  /* tarjetas */
-  --adr-color-noche-azul:        #0E1B2E;  /* héroe, simulador, pie */
+  --adr-color-niebla:            #F6F8FB;  /* fondo claro */
+  --adr-color-blanco:            #FFFFFF;
+  --adr-color-noche-azul:        #080614;  /* ADR 0011: era #0E1B2E */
 
-  /* Texto */
-  --adr-color-tinta:             #16212E;  /* texto principal */
-  --adr-color-texto-secundario:  #4A5A6E;  /* párrafos sobre claro */
-  --adr-color-texto-atenuado:    #6E7E92;  /* metadatos, captions */
+  /* Texto — la tinta también es el RELLENO del botón secundario, por eso sigue fija */
+  --adr-color-tinta:             #16212E;
 
   /* Acción */
   --adr-color-azul-rey:          #1D6BF3;  /* ÚNICA tinta de acción */
-  --adr-color-azul-profundo:     #1552C4;  /* hover, enlaces de texto */
+  --adr-color-azul-profundo:     #1552C4;  /* hover */
+  --adr-color-azul-cta-a/-b:     #1273D4 / #2F66F5;  /* degradado de CTA */
+  --adr-color-enlace-oscuro:     #7FA9FF;  /* enlace sobre oscuro */
+
+  /* Foco — un solo par para toda la aplicación, igual en ambos temas */
+  --adr-color-foco:              #3B82F6;
+  --adr-anillo-foco:             0 0 0 4px rgba(59,130,246,0.18);
 
   /* Acento y estado */
   --adr-color-mango:             #FFB01F;  /* solo chispa, NUNCA botones */
   --adr-color-exito:             #1F9D66;  /* progreso, aprobado */
-  --adr-color-whatsapp:          #25D366;
-  --adr-color-whatsapp-hover:    #1DA851;
+  --adr-color-whatsapp:          #25D366;  /* hover #1DA851 */
 
-  /* Bordes */
-  --adr-color-borde-divisor:     #DCE3EC;
-  --adr-color-borde-suave:       #C0CBD9;
-
-  /* Tintes de etiqueta: fondo / texto */
-  --adr-tinte-azul-fondo:        #E3EDFE;
-  --adr-tinte-azul-texto:        #134BB8;
-  --adr-tinte-mango-fondo:       #FFF3D6;
-  --adr-tinte-mango-texto:       #8A5F04;
-  --adr-tinte-verde-fondo:       #DFF0E8;
-  --adr-tinte-verde-texto:       #17603F;
-  --adr-color-pista-barra:       #E4EAF2;
-
-  /* Sobre fondo oscuro */
+  /* Sobre superficies oscuras en AMBOS temas: reproductor, tarjeta de regalo, héroe */
   --adr-oscuro-texto-fuerte:     rgba(255,255,255,0.85);
   --adr-oscuro-texto-suave:      rgba(255,255,255,0.65);
   --adr-oscuro-borde:            rgba(255,255,255,0.12);
   --adr-oscuro-borde-fuerte:     rgba(255,255,255,0.40);
 }
 ```
+
+Los nombres que aquí figuraban con valor literal y hoy son **alias de la capa semántica**
+—`--adr-color-texto-secundario`, `--adr-color-texto-atenuado`, `--adr-color-borde-divisor`,
+`--adr-color-borde-suave`, `--adr-color-pista-barra`, `--adr-sombra-tarjeta` y los
+`--adr-tinte-*`— están en la tabla de abajo. Ya nombraban un papel, no un color.
+
+### La capa semántica — es la que consume una pantalla
+
+Desde el [ADR 0012](adr/0012-doble-tema-en-todo-el-sitio.md), `_tokens.scss` tiene **dos capas**:
+
+- **Paleta** (`--adr-color-*`): nombres de COLOR. Valores fijos, no cambian con el tema.
+- **Semántica**: nombres de PAPEL. **Conmutan** con `data-theme`.
+
+**Una pantalla consume la capa semántica.** Escribir `--adr-color-niebla` en un componente lo
+deja clavado en claro, y eso es lo que produce un tema oscuro a medias: la mitad de la interfaz
+obedece al interruptor y la otra mitad no. La paleta se usa solo donde el color **es** el
+mensaje — el mango del subrayado, el verde de WhatsApp, los colores de Google, el papel del
+certificado y las superficies oscuras en ambos temas (el reproductor, la tarjeta de regalo).
+
+| Papel | Token | Claro | Oscuro |
+|---|---|---|---|
+| Fondo de página | `--adr-fondo` | `#F6F8FB` | `#080614` |
+| Cara de tarjeta | `--adr-superficie` | `#FFFFFF` | blanco 4 % |
+| Segunda superficie | `--adr-superficie-2` | `#FAFBFF` | blanco 3 % |
+| Sombra de tarjeta | `--adr-sombra-superficie` | `0 1px 3px …` | **ninguna** |
+| Relleno sutil | `--adr-relleno-1..3`, `--adr-relleno-hover` | grises fríos | velos de blanco |
+| Divisor | `--adr-linea` | `#E4E7F2` | blanco 7 % |
+| Borde | `--adr-borde`, `--adr-borde-tenue`, `--adr-borde-fuerte` | `#E4E7F2`… | blanco 6–16 % |
+| Texto 1–5 | `--adr-texto-1` … `--adr-texto-5` | `#0E1230` → `#5F6F86` | blanco 100 % → 50 % |
+| Enlace | `--adr-enlace`, `--adr-enlace-hover` | `#1D4FD7` | `#7FA9FF` |
+| Estado | `--adr-estado-{azul,verde,dorado,rojo,morado}-{fondo,borde,texto,icono}` | tintes claros | velos sobre oscuro |
+
+**Cinco escalones de texto, no once.** El handoff trae once y siete de borde; se condensaron.
+Once niveles no son una jerarquía: nadie distingue `.72` de `.70` y el segundo acaba usándose por
+accidente. Una prueba verifica que los cinco bajan de contraste en orden, en ambos temas.
+
+**Los nombres anteriores son alias.** `--adr-color-tinta`, `--adr-color-borde-divisor`,
+`--adr-color-pista-barra`, `--adr-sombra-tarjeta` y los tintes de etiqueta **apuntan** a la capa
+semántica. Siguen funcionando; **no se usan en código nuevo**.
+
+**El contraste está probado, no revisado a ojo.** `disenio/contraste.spec.ts` mide cada escalón
+sobre cada superficie donde se usa, compuesto sobre su pila real, en los dos temas. El mínimo es
+el 4,5:1 de §5 y la medida más justa hoy es 4,54.
 
 ### Las cuatro reglas de color
 
@@ -108,10 +144,11 @@ Se usa **una vez por pantalla como máximo**. Repetido pierde todo su efecto.
 --adr-radio-tarjeta-curso:  14px;
 --adr-radio-pastilla:       999px;   /* todos los botones y etiquetas */
 
---adr-sombra-tarjeta:       0 2px 12px rgba(14,27,46,0.06);
---adr-sombra-tarjeta-alta:  0 2px 12px rgba(14,27,46,0.08);
+/* --adr-sombra-tarjeta y -alta son ALIAS de --adr-sombra-superficie: en oscuro no hay
+   sombra que dar, porque no hay luz que bloquear. */
 --adr-sombra-destacado:     0 8px 28px rgba(29,107,243,0.18);
 --adr-sombra-flotante:      0 6px 20px rgba(14,27,46,0.25);
+--adr-sombra-cta:           0 8px 18px rgba(18,115,212,0.30);
 
 --adr-contenedor-max:       1200px;
 --adr-contenedor-padding:   48px;
@@ -120,6 +157,10 @@ Se usa **una vez por pantalla como máximo**. Repetido pierde todo su efecto.
 
 **Escala de espaciado** (base 4px — derivada del diseño aprobado, no explícita en el handoff):
 `4 · 8 · 12 · 16 · 24 · 32 · 48 · 64 · 88`. No se usan valores fuera de la escala.
+
+**Medidas de la aplicación del estudiante** (estructura, no color: no cambian con el tema):
+barra lateral 246px · riel de tableta 84px · barra inferior 76px · panel del carrito 384px ·
+simulador vertical 236px.
 
 ---
 
@@ -154,11 +195,35 @@ con `currentColor` incumple su norma además de delatar la pantalla como poco fi
 
 ### Esquema de color
 
-`global.scss` declara `color-scheme: only light`. Sin esa línea, el **tema oscuro automático de
-Chrome** invierte la paleta por su cuenta cuando el sistema está en oscuro: el panel niebla sale
-azul noche, la tinta sale blanca y las medidas de contraste del ADR 0009 dejan de valer, porque
-se tomaron sobre los colores reales. El día que exista un modo oscuro propio se diseña, se mide
-y se cambia esa línea.
+Aquí decía que `global.scss` declaraba `color-scheme: only light` para renunciar al **tema
+oscuro automático de Chrome** —el que invierte la paleta por su cuenta— y que la línea cambiaría
+«el día que exista un modo oscuro propio». Ese día es el [ADR 0012](adr/0012-doble-tema-en-todo-el-sitio.md).
+
+Ahora `color-scheme` lo fija **cada tema** en `_tokens.scss`: `light` en `:root` y `dark` en
+`[data-theme='oscuro']`. El navegador siempre recibe un esquema explícito, así que nunca se
+inventa uno, y el nuestro está diseñado y medido.
+
+### Equivalencia de iconos con el handoff de la aplicación
+
+El handoff de la app dibuja iconos de trazo tipo Lucide de 13 a 20 px. **Gana la regla 12**: se
+traducen a su equivalente Phosphor duotone y a los tamaños permitidos. El resultado no es
+idéntico a la maqueta, y es deliberado — mezclar dos librerías se nota inmediatamente aunque
+nadie sepa decir por qué. La lista completa está en `scripts/generar-iconos.mjs`; una muestra:
+
+| Handoff | Phosphor duotone |
+|---|---|
+| casa | `house` |
+| birrete / libro | `graduation-cap` |
+| pesas | `barbell` |
+| bolsa de tienda | `storefront` |
+| play en círculo | `play-circle` · `play` · `pause` |
+| retroceder / avanzar 15 s | `rewind` · `fast-forward` |
+| pantalla completa | `corners-out` · `corners-in` |
+| subtítulos | `closed-captioning` |
+| velocidad | `sliders-horizontal` |
+| regalo | `gift` |
+| llama de racha | `fire` |
+| diana del reto | `target` |
 
 ---
 
@@ -208,6 +273,41 @@ agrega al catálogo — no se improvisa localmente.
 | Ítem de clase | `<adr-item-clase>` | Marca de vista con check verde |
 | Estrellas de dificultad | `<adr-dificultad>` | Estrellas mango sobre 5 |
 | Botón flotante de WhatsApp | `<adr-whatsapp-flotante>` | Fijo abajo-derecha, mensaje precargado |
+
+### De la aplicación del estudiante
+
+Del handoff `docs/handoff-disenio/app-estudiante`. Ver
+[ADR 0013](adr/0013-rutas-de-la-aplicacion-del-estudiante.md).
+
+| Componente | Selector | Nota |
+|---|---|---|
+| Pastilla de filtro | `<adr-chip>` | `<button>` con `aria-pressed`. Nunca un `div` con `click` |
+| Interruptor | `<adr-interruptor>` | `role="switch"` + `aria-checked`. Etiqueta obligatoria |
+| Estado vacío | `<adr-estado-vacio>` | La acción va por contenido proyectado, no por entradas |
+| Mosaico de cifra | `<adr-mosaico-cifra>` | Número y complemento separados; cifras tabulares |
+| Ítem de lista | `<adr-item-lista>` | Cuatro estados con cuatro FORMAS, no cuatro colores |
+| Tarjeta de tutorial | `<adr-tarjeta-tutorial>` | La acción depende de si está comprado |
+| Tarjeta de ejercicio | `<adr-tarjeta-ejercicio>` | BPM primero: es lo que dice si está a tu alcance |
+| Tarjeta de producto | `<adr-tarjeta-producto>` | Añadir + regalar. El botón dice cuántos hay en el carrito |
+| Línea de carrito | `<adr-linea-carrito>` | Emite el delta; no toca el carrito |
+| Tarjeta de regalo | `<adr-tarjeta-regalo>` | Vista previa en vivo; oscura en ambos temas |
+| Reproductor | `<adr-reproductor>` | 16:9 con tope. Modos `clase`, `tutorial`, `ejercicio` |
+| Simulador de pisadas | `<adr-simulador-pisadas>` | 10/11/10 pitos + 12 bajos. Lectura textual obligatoria |
+
+**Piezas de clase, no componentes** (`disenio/_paneles.scss`): `.adr-panel` y su cabecera,
+`.adr-panel__pastilla`, `.adr-tabla`, `.adr-cabecera`, `.adr-volver`, `.adr-filtros`,
+`.adr-rejilla`. Son forma sin comportamiento ni estado; un `<adr-panel>` con seis entradas para
+cubrir los casos sería más código para menos libertad.
+
+### Armazón — `compartido/disposicion/`
+
+`<adr-shell>` compone barra lateral (246 px), barra superior pegajosa, contenido, navegación
+inferior de móvil (76 px, 5 pestañas) y panel del carrito (384 px). Es el componente de una ruta
+padre, así que hay **una sola instancia** para las trece pantallas: al navegar no se recrea el
+menú ni se cierra el carrito.
+
+Las tres disposiciones son la MISMA marca con reglas de ancho distintas, no tres plantillas: con
+plantillas separadas por dispositivo, el arreglo que se hace en una no llega a las otras.
 
 ---
 
@@ -282,6 +382,8 @@ No es un extra: gran parte de la audiencia llega desde YouTube en celulares mode
 
 **Mobile first** — la mayoría del tráfico llega desde YouTube en celular (especificación §14.1).
 
+**Portada y páginas públicas:**
+
 | Punto de quiebre | Comportamiento |
 |---|---|
 | `<768px` | Una columna. Los grids de 3 y 4 colapsan. Menú colapsable. Modales anclados abajo |
@@ -289,6 +391,20 @@ No es un extra: gran parte de la audiencia llega desde YouTube en celulares mode
 | `≥1200px` | Diseño completo. Contenedor 1200px, padding lateral 48px |
 
 El botón flotante de WhatsApp está **siempre visible**, en todos los tamaños.
+
+**Aplicación del estudiante** (del handoff, verificados en su prototipo):
+
+| Punto de quiebre | Qué cambia |
+|---|---|
+| `≥1460px` y alto `≥760px` | Barra lateral + simulador **vertical** flotando junto al vídeo |
+| `1024–1459px` | Barra lateral + simulador en **franja horizontal** |
+| `<1024px` | Barra lateral oculta → **barra inferior**; el contenido deja 76px abajo |
+| `<1100px` | Las columnas laterales de clase, tutorial y ejercicio se apilan |
+| `<620px` | Cabecera y márgenes compactos; se oculta el nombre junto al avatar |
+
+Las rejillas usan `repeat(auto-fit, minmax(min(Npx, 100%), 1fr))`: las columnas las decide el
+ancho disponible, no un punto de quiebre escrito a mano por pantalla. El `min(…, 100%)` es lo
+que impide el desborde — `rejillas.spec.ts` vigila que ninguna pista use `fr` desnudo.
 
 ---
 

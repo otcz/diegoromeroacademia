@@ -81,6 +81,8 @@ de la API y en el frontend. Sin sinónimos.
 | 4 | Monorepo con `backend/`, `frontend/` y `docs/` | 2026-08-14 | [0004](adr/0004-monorepo.md) |
 | 5 | Iconografía Phosphor duotone | 2026-08-14 | [0005](adr/0005-iconografia-phosphor.md) |
 | 6 | Sistema visual «Azul rey» aprobado | 2026-08-14 | Handoff de diseño |
+| 6b | Doble tema claro/oscuro en todo el sitio, sobre capa semántica de tokens | 2026-08-16 | [0012](adr/0012-doble-tema-en-todo-el-sitio.md) |
+| 6c | Rutas de la aplicación del estudiante: manda la especificación, armazón en ruta padre | 2026-08-16 | [0013](adr/0013-rutas-de-la-aplicacion-del-estudiante.md) |
 | 7 | Marca personal en vez de marca institucional | 2026-08-09 | Especificación §2.1 |
 | 7b | **`diegoromeroacademia.com` es el dominio del proyecto** | 2026-08-15 | Decisión de Diego + Tomás |
 | 8 | Fase 1 solo con acordeón | 2026-08-09 | Especificación §3.3 |
@@ -120,7 +122,7 @@ configuración, no código. Ver `docs/03-configuracion.md`.
 | Fase | Contenido | Estado |
 |---|---|---|
 | 0 | Reglas, arquitectura y documentación base | **En curso** |
-| 1 | Autenticación, catálogo de acordeón, reproductor, pagos, panel, landing | Pendiente |
+| 1 | Autenticación, catálogo de acordeón, reproductor, pagos, panel, landing | **Frontend construido; sin backend salvo `identidad`** |
 | 2 | Exámenes, certificados, compra de tutoriales sueltos | Pendiente |
 | 3 | Simulador de pisadas y editor interno de secuencias | Pendiente |
 | 4 | Tienda física, inventario, pedidos y guías | Pendiente |
@@ -142,6 +144,8 @@ configuración, no código. Ver `docs/03-configuracion.md`.
 | El servidor de demostración no tiene acceso fuera de banda confirmado | Alto | Solo se llega por Tailscale, tras NAT. Si `tailscaled` o la red no levantan tras un reinicio, hace falta ir físicamente. El servidor tiene iLO 4 (`/dev/ipmi0` presente), pero **falta confirmar si su puerto está cableado y con IP** |
 | El servidor no tiene cortafuegos activo | Medio | `ufw` está instalado pero con `ENABLED=no`; el unit figura «active» solo por ser `oneshot`. Lo que protege los servicios es enlazarlos a `127.0.0.1`, no un filtro. Publicar algo en `0.0.0.0` lo sirve a toda la red de la oficina |
 | **La landing no puede convertir: el backend no expone ningún controlador** | Alto | Medido el 2026-08-15: `POST /api/acceso/sesion` devuelve 403 y en `backend/src/main` no hay un solo `@RestController`. Hoy no se puede entrar ni registrarse. La landing ya dejó de prometer lo que no existe («— próximamente»), pero **ninguna mejora de la página convierte una visita en alumno** hasta que exista el módulo `identidad`. Es el siguiente trabajo real |
+| **La aplicación del estudiante está construida pero vacía por dentro** | Alto | Las 13 pantallas se dibujan con datos simulados: solo `identidad` tiene backend. Cada acción sin respaldo va deshabilitada y con su explicación, y el reproductor lo dice con un rótulo — la interfaz no finge. El riesgo es de EXPECTATIVA: enseñar una tienda y un reproductor completos puede hacer creer que el producto está más cerca de lo que está. La tabla de qué funciona y qué no está en [el proceso](procesos/frontend-app-del-estudiante.md) §4 |
+| **La portada en tema oscuro no la diseñó nadie** | Medio | El [ADR 0012](adr/0012-doble-tema-en-todo-el-sitio.md) llevó el doble tema a todo el sitio por decisión del propietario, pero el handoff solo diseñó la variante oscura de la aplicación. La de la portada se deriva de los mismos tokens y cumple contraste medido, pero está pendiente de revisión visual |
 | Una imagen cambiada conservando el nombre queda cacheada | Medio | Pasó de verdad: sustituir un acordeón por otro dejó a Cloudflare sirviendo el anterior durante horas, y el propietario veía la página sin cambios. Mitigado con huella de contenido en el nombre (`imagenes:optimizar`) y una prueba que falla si falta. `index.html` va con `Cache-Control: no-cache` |
 | `/data` del servidor no tiene ningún respaldo | Medio | No hay restic, borg ni equivalente. Solo existe un volcado lógico de la base de otro proyecto, y vive en el mismo sistema de archivos que protegería. Aplica a `/data/academia/postgres` cuando el catálogo se cargue a mano |
 
@@ -164,3 +168,6 @@ configuración, no código. Ver `docs/03-configuracion.md`.
 | 2026-08-15 | Auditoría multiagente de la landing (10 agentes). 10 correcciones aplicadas — la más grave: los 8 CTA apuntaban a `/registro`, que no existía |
 | 2026-08-15 | Segunda auditoría (58 agentes, 23 hallazgos verificados). Destapado el héroe, borrada la ruta duplicada, retiradas las promesas sin respaldo |
 | 2026-08-15 | Establecido el registro de procedencia de imágenes con licencia, y la huella de contenido en el nombre de archivo |
+| 2026-08-16 | Recibido el handoff de la aplicación del estudiante: 14 pantallas en web, tablet y móvil |
+| 2026-08-16 | Construidas las 13 pantallas tras iniciar sesión, con armazón, reproductor y simulador de pisadas. 302 pruebas, 93 % de cobertura ([proceso](procesos/frontend-app-del-estudiante.md)) |
+| 2026-08-16 | Doble tema claro/oscuro en todo el sitio sobre una capa semántica de tokens ([ADR 0012](adr/0012-doble-tema-en-todo-el-sitio.md)); rutas de la aplicación cerradas ([ADR 0013](adr/0013-rutas-de-la-aplicacion-del-estudiante.md)) |

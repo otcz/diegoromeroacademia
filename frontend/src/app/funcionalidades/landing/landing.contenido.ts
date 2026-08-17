@@ -99,7 +99,8 @@ export const CIFRAS: readonly Cifra[] = [
   { valor: '100%', rotulo: 'Exámenes revisados' },
 ];
 
-export const PROCEDENCIA_CIFRAS = 'Seguidores, del canal @DiegoRomeroAcordeon. Niveles y clases, del temario de la academia.';
+export const PROCEDENCIA_CIFRAS =
+  'Seguidores, del canal @DiegoRomeroAcordeon. Niveles y clases, del temario de la academia.';
 
 // ------------------------------------------------------------------ cómo funciona
 
@@ -172,7 +173,11 @@ export interface PasoNivel {
 export const PASOS_NIVEL: readonly PasoNivel[] = [
   { icono: 'play-circle', titulo: 'Ves la clase', detalle: 'Video, partitura y pista.' },
   { icono: 'download-simple', titulo: 'Practicas', detalle: 'Con la pista de la clase.' },
-  { icono: 'seal-check', titulo: 'Apruebas', detalle: 'Grabas tu examen y un instructor te dice qué ajustar.' },
+  {
+    icono: 'seal-check',
+    titulo: 'Apruebas',
+    detalle: 'Grabas tu examen y un instructor te dice qué ajustar.',
+  },
 ];
 
 /**
@@ -321,8 +326,7 @@ export const ACCESO = {
     },
   ] as readonly ModalidadAcceso[],
   iconoGarantia: 'seal-check' as NombreIcono,
-  garantia:
-    'Pase lo que pase, conservas tus tutoriales comprados, tus certificados y tu progreso.',
+  garantia: 'Pase lo que pase, conservas tus tutoriales comprados, tus certificados y tu progreso.',
 } as const;
 
 // --------------------------------------------------------------------- planes

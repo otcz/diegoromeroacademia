@@ -64,11 +64,7 @@ import { Icono } from '../icono/icono';
 
              «Empezar» y no «Registrarme»: medido, quedan ~92 px útiles entre la marca y la
              hamburguesa, y «Registrarme» (137 px) empuja la marca a tres líneas. -->
-        <adr-boton
-          class="adr-nav__cta-movil"
-          variante="primario"
-          [enlace]="destinoRegistro"
-        >
+        <adr-boton class="adr-nav__cta-movil" variante="primario" [enlace]="destinoRegistro">
           Empezar
         </adr-boton>
 

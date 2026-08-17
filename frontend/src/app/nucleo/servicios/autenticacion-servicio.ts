@@ -122,9 +122,11 @@ export class AutenticacionServicio {
    * externo ya cumple: el proveedor lo verifico.
    */
   establecerContrasena(contrasena: string): Observable<void> {
-    return this.http.post<void>(`${this.base}/contrasena`, { contrasena }).pipe(
-      catchError((error: HttpErrorResponse) => throwError(() => new Error(this.traducir(error)))),
-    );
+    return this.http
+      .post<void>(`${this.base}/contrasena`, { contrasena })
+      .pipe(
+        catchError((error: HttpErrorResponse) => throwError(() => new Error(this.traducir(error)))),
+      );
   }
 
   /**

@@ -12,6 +12,16 @@ no recuerda por qué tomó cada decisión.
 
 ---
 
+## Procesos documentados
+
+| Proceso | Archivo | Módulo | Fecha |
+|---|---|---|---|
+| Rediseño de la portada | [`frontend-redisenio-landing.md`](frontend-redisenio-landing.md) | frontend | 2026-08-15 |
+| Correcciones de la portada | [`frontend-correcciones-landing.md`](frontend-correcciones-landing.md) | frontend | 2026-08-15 |
+| Aplicación del estudiante: 13 pantallas y doble tema | [`frontend-app-del-estudiante.md`](frontend-app-del-estudiante.md) | frontend | 2026-08-16 |
+
+---
+
 ## Procesos pendientes de implementar y documentar
 
 | Proceso | Archivo previsto | Módulo | Fase |
@@ -29,7 +39,7 @@ no recuerda por qué tomó cada decisión.
 | Cola de revisión del instructor | `evaluacion-cola-revision.md` | `evaluacion` | 2 |
 | Emisión y verificación de certificado | `evaluacion-certificado.md` | `evaluacion` | 2 |
 | Edición de secuencias del simulador | `practica-editor-secuencias.md` | `practica` | 3 |
-| Reproducción sincronizada del simulador | `practica-simulador.md` | `practica` | 3 |
+| Reproducción sincronizada del simulador | `practica-simulador.md` | `practica` | 3 — el componente ya existe con datos simulados; falta la pista real y su origen |
 | Descuento de stock y despacho | `comercio-stock-despacho.md` | `comercio` | 4 |
 | Cierre de compra en tienda | `comercio-cierre-compra.md` | `comercio` | 4 |
 | Respuesta ante filtración de credenciales | `seguridad-respuesta-incidente.md` | transversal | 1 |

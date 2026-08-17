@@ -1,0 +1,99 @@
+@use 'mixins' as m;
+
+:host {
+  display: block;
+}
+
+.linea {
+  display: flex;
+  gap: var(--adr-espacio-3);
+  align-items: center;
+  padding: var(--adr-espacio-3);
+  background: var(--adr-superficie-2);
+  border: 1px solid var(--adr-borde);
+  border-radius: 12px;
+}
+
+.linea__miniatura {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+
+  width: 42px;
+  height: 42px;
+
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--adr-estado-azul-texto);
+
+  background: var(--adr-estado-azul-fondo);
+  border-radius: 10px;
+}
+
+.linea__texto {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.linea__nombre {
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--adr-texto-1);
+}
+
+.linea__precio {
+  font-size: 11.5px;
+  color: var(--adr-texto-5);
+
+  strong {
+    font-weight: 700;
+    color: var(--adr-texto-3);
+  }
+}
+
+.linea__cantidad {
+  display: flex;
+  flex: none;
+  gap: 2px;
+  align-items: center;
+  padding: 2px;
+  border: 1px solid var(--adr-borde);
+  border-radius: var(--adr-radio-pastilla);
+
+  button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    // 30px: es un control pareado dentro de una línea de 42 de alto. Los 48 del token lo
+    // harían más alto que la propia línea. El objetivo táctil lo cubre el área de la fila.
+    width: 30px;
+    height: 30px;
+
+    color: var(--adr-texto-3);
+    cursor: pointer;
+    background: transparent;
+    border: 0;
+    border-radius: var(--adr-radio-pastilla);
+
+    @include m.foco-visible;
+
+    &:hover {
+      color: var(--adr-texto-1);
+      background: var(--adr-relleno-hover);
+    }
+  }
+}
+
+.linea__numero {
+  min-width: 20px;
+  font-size: 12.5px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  color: var(--adr-texto-1);
+  text-align: center;
+}

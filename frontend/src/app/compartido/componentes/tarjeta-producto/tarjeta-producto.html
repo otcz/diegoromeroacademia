@@ -1,0 +1,42 @@
+<article class="producto">
+  <div class="producto__portada">
+    <!-- Sin fotos de producto todavía: el marcador del sistema es geometría de la marca, no
+         un cuadro gris roto. Está anotado como material pendiente en el handoff. -->
+    <adr-marco-imagen [fuente]="producto().foto" relacion="3/2" alternativo="" />
+
+    @if (producto().distintivo) {
+      <adr-etiqueta class="producto__distintivo" tinte="mango">
+        {{ producto().distintivo }}
+      </adr-etiqueta>
+    }
+
+    <button
+      type="button"
+      class="producto__regalo"
+      (click)="regalado.emit()"
+      [attr.aria-label]="'Regalar ' + producto().nombre"
+    >
+      <adr-icono nombre="gift" [tamanio]="16" />
+    </button>
+  </div>
+
+  <div class="producto__cuerpo">
+    <span class="producto__categoria">{{ producto().categoria }}</span>
+    <h3 class="producto__nombre">{{ producto().nombre }}</h3>
+
+    <p class="producto__resenias">
+      <adr-icono nombre="star" [tamanio]="16" />
+      {{ calificacion() }} · {{ producto().resenias }} reseñas
+    </p>
+
+    <p class="producto__precio">{{ producto().precioCentavos | pesos }}</p>
+
+    <adr-boton
+      [variante]="enCarrito() > 0 ? 'secundario' : 'primario'"
+      [anchoCompleto]="true"
+      (accion)="anadido.emit()"
+    >
+      {{ rotuloAccion() }}
+    </adr-boton>
+  </div>
+</article>

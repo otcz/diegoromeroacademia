@@ -1,0 +1,317 @@
+@use 'mixins' as m;
+
+// ============================================================================
+// Piezas de la aplicacion del estudiante que se repiten en las trece pantallas.
+//
+// Estan aqui y no en cada componente por la regla 11: el panel, su cabecera, la pastilla de
+// estado y la tabla salen del catalogo, no los improvisa cada pantalla. Trece copias de
+// «tarjeta con titulo y enlace a la derecha» divergen en la segunda semana, y el sintoma es
+// el clasico: dos paneles contiguos con dos milimetros distintos de acolchado.
+//
+// Son clases y no componentes porque no tienen comportamiento ni estado: son forma. Un
+// `<adr-panel>` con `titulo` y `enlace` acabaria con seis entradas para cubrir los casos y
+// una plantilla llena de condicionales, que es mas codigo para menos libertad.
+// ============================================================================
+
+.adr-panel {
+  display: flex;
+  flex-direction: column;
+  gap: var(--adr-espacio-4);
+  padding: var(--adr-espacio-5);
+  background: var(--adr-superficie);
+  border: 1px solid var(--adr-borde);
+  border-radius: var(--adr-radio-tarjeta);
+  box-shadow: var(--adr-sombra-superficie);
+
+  &--azul {
+    background: var(--adr-tarjeta-azul);
+    border-color: var(--adr-tarjeta-heroe-borde);
+  }
+
+  &--dorado {
+    background: var(--adr-tarjeta-dorada);
+    border-color: var(--adr-estado-dorado-borde);
+  }
+
+  &--plano {
+    background: var(--adr-superficie-2);
+    box-shadow: none;
+  }
+}
+
+.adr-panel__cabecera {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--adr-espacio-3);
+  align-items: flex-start;
+  justify-content: space-between;
+}
+
+.adr-panel__titulo {
+  font-family: var(--adr-fuente-titular);
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 1.3;
+  color: var(--adr-texto-1);
+}
+
+.adr-panel__contexto {
+  margin-top: 2px;
+  font-size: 12.5px;
+  color: var(--adr-texto-5);
+}
+
+.adr-panel__lista {
+  display: flex;
+  flex-direction: column;
+  gap: var(--adr-espacio-2);
+}
+
+.adr-panel__dato {
+  display: flex;
+  gap: var(--adr-espacio-2);
+  align-items: center;
+  font-size: 12.5px;
+  color: var(--adr-texto-4);
+
+  adr-icono {
+    flex: none;
+    color: var(--adr-texto-5);
+  }
+}
+
+.adr-panel__precio {
+  display: flex;
+  gap: var(--adr-espacio-3);
+  align-items: baseline;
+  justify-content: space-between;
+
+  span {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--adr-texto-2);
+  }
+
+  strong {
+    font-family: var(--adr-fuente-titular);
+    font-size: 20px;
+    font-weight: 800;
+    color: var(--adr-texto-1);
+  }
+}
+
+// --------------------------------------------------------------- pastilla de estado
+// Lleva SIEMPRE texto. El color es refuerzo, nunca el portador del significado (docs/04 §5):
+// «entregado» y «en camino» tienen que distinguirse tambien sin ver el verde y el dorado.
+.adr-panel__pastilla {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 10px;
+
+  font-size: 10.5px;
+  font-weight: 600;
+  white-space: nowrap;
+
+  color: var(--adr-texto-4);
+  background: var(--adr-relleno-1);
+  border-radius: var(--adr-radio-pastilla);
+
+  &--verde,
+  &--entregado,
+  &--activa,
+  &--pagado {
+    color: var(--adr-estado-verde-texto);
+    background: var(--adr-estado-verde-fondo);
+  }
+
+  &--dorado,
+  &--enviado,
+  &--preparando,
+  &--porVencer {
+    color: var(--adr-estado-dorado-texto);
+    background: var(--adr-estado-dorado-fondo);
+  }
+
+  &--azul,
+  &--descargable {
+    color: var(--adr-estado-azul-texto);
+    background: var(--adr-estado-azul-fondo);
+  }
+
+  &--rojo,
+  &--vencida,
+  &--fallido {
+    color: var(--adr-estado-rojo-texto);
+    background: var(--adr-estado-rojo-fondo);
+  }
+}
+
+.adr-panel__porcentaje {
+  flex: none;
+  font-size: 12px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  color: var(--adr-texto-4);
+}
+
+// Rótulo de «en vivo» con su punto latiendo.
+.adr-panel__vivo {
+  display: flex;
+  gap: var(--adr-espacio-2);
+  align-items: center;
+
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  color: var(--adr-estado-dorado-texto);
+}
+
+.adr-panel__punto {
+  width: 7px;
+  height: 7px;
+  background: var(--adr-estado-dorado-icono);
+  border-radius: var(--adr-radio-pastilla);
+
+  // El latido es lo que distingue «en vivo» de «programado». Se apaga solo con
+  // prefers-reduced-motion, que ya está cubierto globalmente en global.scss.
+  animation: adr-latido 1.8s ease-in-out infinite;
+}
+
+@keyframes adr-latido {
+  0%,
+  100% {
+    opacity: 1;
+  }
+
+  50% {
+    opacity: 0.35;
+  }
+}
+
+// ------------------------------------------------------------------------ tabla
+.adr-tabla {
+  width: 100%;
+  font-size: 12.5px;
+  border-collapse: collapse;
+
+  th {
+    padding-bottom: var(--adr-espacio-2);
+
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    color: var(--adr-texto-5);
+    text-align: left;
+    text-transform: uppercase;
+
+    border-bottom: 1px solid var(--adr-linea);
+  }
+
+  td {
+    padding-block: var(--adr-espacio-3);
+    color: var(--adr-texto-2);
+    border-bottom: 1px solid var(--adr-borde-tenue);
+  }
+
+  tbody tr:last-child td {
+    border-bottom: 0;
+  }
+}
+
+.adr-tabla__derecha {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+.adr-tabla__tenue {
+  color: var(--adr-texto-5);
+}
+
+.adr-tabla__producto {
+  display: inline-flex;
+  gap: var(--adr-espacio-2);
+  align-items: center;
+  font-weight: 600;
+  color: var(--adr-texto-1);
+
+  adr-icono {
+    flex: none;
+    color: var(--adr-texto-5);
+  }
+}
+
+// --------------------------------------------------------- cabecera de pantalla
+.adr-cabecera {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--adr-espacio-4);
+  align-items: flex-end;
+  justify-content: space-between;
+  margin-bottom: var(--adr-espacio-5);
+}
+
+.adr-cabecera__titulo {
+  font-family: var(--adr-fuente-titular);
+  font-size: 27px;
+  font-weight: 800;
+  line-height: 1.2;
+  letter-spacing: var(--adr-espaciado-letra-titulo);
+  color: var(--adr-texto-1);
+}
+
+.adr-cabecera__bajada {
+  margin-top: var(--adr-espacio-1);
+  font-size: 13.5px;
+  color: var(--adr-texto-4);
+}
+
+// Enlace de vuelta que encabeza las pantallas de detalle.
+.adr-volver {
+  display: inline-flex;
+  gap: var(--adr-espacio-2);
+  align-items: center;
+
+  height: 36px;
+  padding-inline: var(--adr-espacio-3);
+
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--adr-texto-4);
+  text-decoration: none;
+
+  background: transparent;
+  border: 1px solid var(--adr-borde);
+  border-radius: var(--adr-radio-pastilla);
+
+  @include m.foco-visible;
+
+  &:hover {
+    color: var(--adr-texto-1);
+    background: var(--adr-relleno-1);
+  }
+}
+
+// Tira horizontal de filtros. Se desplaza en móvil en vez de partirse en dos líneas: con
+// `flex-wrap` una fila de cinco chips ocupa el doble de alto justo donde menos sobra.
+.adr-filtros {
+  display: flex;
+  gap: var(--adr-espacio-2);
+  overflow-x: auto;
+  scrollbar-width: none;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+// Rejilla estándar de tarjetas. `auto-fit` con un mínimo: las columnas las decide el ancho
+// disponible, no un punto de quiebre escrito a mano por pantalla.
+.adr-rejilla {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(240px, 100%), 1fr));
+  gap: var(--adr-espacio-4);
+}
+
+.adr-rejilla--ancha {
+  grid-template-columns: repeat(auto-fit, minmax(min(300px, 100%), 1fr));
+}

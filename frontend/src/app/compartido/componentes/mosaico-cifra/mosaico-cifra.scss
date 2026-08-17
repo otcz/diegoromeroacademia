@@ -1,0 +1,73 @@
+:host {
+  display: block;
+}
+
+.mosaico {
+  display: flex;
+  flex-direction: column;
+  gap: var(--adr-espacio-3);
+  height: 100%;
+  padding: var(--adr-espacio-4);
+  background: var(--adr-superficie);
+  border: 1px solid var(--adr-borde);
+  border-radius: 14px;
+  box-shadow: var(--adr-sombra-superficie);
+}
+
+.mosaico__cabecera {
+  display: flex;
+  gap: var(--adr-espacio-2);
+  align-items: center;
+}
+
+.mosaico__icono {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 9px;
+
+  color: var(--adr-estado-azul-texto);
+  background: var(--adr-estado-azul-fondo);
+
+  .mosaico--dorado & {
+    color: var(--adr-estado-dorado-icono);
+    background: var(--adr-estado-dorado-fondo);
+  }
+
+  .mosaico--morado & {
+    color: var(--adr-estado-morado-texto);
+    background: var(--adr-estado-morado-fondo);
+  }
+
+  .mosaico--verde & {
+    color: var(--adr-estado-verde-icono);
+    background: var(--adr-estado-verde-fondo);
+  }
+}
+
+.mosaico__rotulo {
+  font-size: 11.5px;
+  font-weight: 600;
+  color: var(--adr-texto-4);
+}
+
+.mosaico__valor {
+  font-family: var(--adr-fuente-titular);
+  font-size: 26px;
+  font-weight: 800;
+  line-height: 1;
+  // Sin cifras tabulares, pasar de 9 a 10 cambia el ancho y la fila de cuatro se recoloca.
+  font-variant-numeric: tabular-nums;
+  color: var(--adr-texto-1);
+}
+
+.mosaico__complemento {
+  margin-left: var(--adr-espacio-1);
+  font-family: var(--adr-fuente-cuerpo);
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--adr-texto-5);
+}

@@ -1,0 +1,46 @@
+:host {
+  display: block;
+}
+
+.vacio {
+  display: flex;
+  flex-direction: column;
+  gap: var(--adr-espacio-2);
+  align-items: center;
+  padding: var(--adr-espacio-6) var(--adr-espacio-5);
+  text-align: center;
+}
+
+.vacio__icono {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  margin-bottom: var(--adr-espacio-1);
+  color: var(--adr-texto-5);
+  background: var(--adr-relleno-1);
+  border-radius: var(--adr-radio-pastilla);
+}
+
+.vacio__titulo {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--adr-texto-1);
+}
+
+.vacio__explicacion {
+  // 42ch: por encima de eso la explicación se lee como un párrafo de ayuda y no como el
+  // pie de un estado vacío, que tiene que despacharse de una ojeada.
+  max-width: 42ch;
+  font-size: 12.5px;
+  color: var(--adr-texto-4);
+}
+
+.vacio__accion:empty {
+  display: none;
+}
+
+.vacio__accion {
+  margin-top: var(--adr-espacio-3);
+}

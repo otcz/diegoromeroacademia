@@ -1,0 +1,80 @@
+:host {
+  display: block;
+  height: 100%;
+}
+
+.tutorial {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow: hidden;
+  background: var(--adr-superficie);
+  border: 1px solid var(--adr-borde);
+  border-radius: var(--adr-radio-tarjeta);
+  box-shadow: var(--adr-sombra-superficie);
+}
+
+.tutorial__portada {
+  position: relative;
+}
+
+.tutorial__marca {
+  position: absolute;
+  top: var(--adr-espacio-3);
+  left: var(--adr-espacio-3);
+}
+
+.tutorial__cuerpo {
+  display: flex;
+  // flex:1 estira el cuerpo hasta el fondo de la celda: en una rejilla, las tarjetas quedan
+  // a la misma altura aunque un título ocupe dos líneas y otro una.
+  flex: 1;
+  flex-direction: column;
+  gap: var(--adr-espacio-2);
+  padding: var(--adr-espacio-4);
+}
+
+.tutorial__titulo {
+  font-family: var(--adr-fuente-titular);
+  font-size: 15px;
+  font-weight: 700;
+  line-height: 1.25;
+  color: var(--adr-texto-1);
+}
+
+.tutorial__meta {
+  display: flex;
+  gap: var(--adr-espacio-2);
+  font-size: 11.5px;
+  color: var(--adr-texto-5);
+}
+
+.tutorial__accion {
+  display: flex;
+  gap: var(--adr-espacio-3);
+  align-items: center;
+  justify-content: space-between;
+  // Empuja la acción al fondo. Sin esto, en una fila de tarjetas los botones quedan a
+  // alturas distintas según lo que mida cada título.
+  margin-top: auto;
+  padding-top: var(--adr-espacio-2);
+}
+
+.tutorial__precio {
+  font-family: var(--adr-fuente-titular);
+  font-size: 17px;
+  font-weight: 700;
+  color: var(--adr-texto-1);
+}
+
+// Variante del carrusel de Inicio: más estrecha y sin barra de progreso.
+.tutorial--compacta {
+  .tutorial__cuerpo {
+    gap: var(--adr-espacio-1);
+    padding: var(--adr-espacio-3);
+  }
+
+  .tutorial__titulo {
+    font-size: 13.5px;
+  }
+}

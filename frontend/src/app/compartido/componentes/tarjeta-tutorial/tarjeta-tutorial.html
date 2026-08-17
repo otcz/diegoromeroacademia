@@ -1,0 +1,57 @@
+<article class="tutorial" [class.tutorial--compacta]="compacta()">
+  <div class="tutorial__portada">
+    <adr-marco-imagen
+      [fuente]="tutorial().portada"
+      relacion="16/9"
+      velo="inferior"
+      alternativo=""
+    />
+    <!-- «Comprado» y «Nuevo» son verdes y mango: estado y novedad. Nunca las dos a la vez —
+         un tutorial recién estrenado que además ya compraste solo necesita decir que es tuyo. -->
+    @if (tutorial().comprado) {
+      <adr-etiqueta class="tutorial__marca" tinte="verde">Comprado</adr-etiqueta>
+    } @else if (tutorial().nuevo) {
+      <adr-etiqueta class="tutorial__marca" tinte="mango">Nuevo</adr-etiqueta>
+    }
+  </div>
+
+  <div class="tutorial__cuerpo">
+    <h3 class="tutorial__titulo">{{ tutorial().titulo }}</h3>
+
+    <p class="tutorial__meta">
+      <span>{{ tutorial().duracionSegundos | minutos }}</span>
+      <span aria-hidden="true">·</span>
+      <span
+        >{{ tutorial().totalPartes }} {{ tutorial().totalPartes === 1 ? 'parte' : 'partes' }}</span
+      >
+    </p>
+
+    <!-- La barra solo aparece si hay algo que mostrar. Una barra al 0 % en un tutorial sin
+         empezar ocupa sitio para decir «nada», y en un catálogo de compra confunde: parece
+         que ya lo tienes. -->
+    @if (tutorial().comprado && tutorial().avance > 0 && tutorial().avance < 100) {
+      <adr-barra-progreso
+        [valor]="tutorial().avance"
+        [mostrarTexto]="true"
+        [etiqueta]="'Avance de ' + tutorial().titulo"
+      />
+    }
+
+    <div class="tutorial__accion">
+      @if (tutorial().comprado) {
+        <adr-boton variante="secundario" [enlace]="'/tutoriales/' + tutorial().id">
+          {{ tutorial().avance > 0 ? 'Continuar' : 'Ver ahora' }}
+        </adr-boton>
+      } @else {
+        <span class="tutorial__precio">{{ tutorial().precioCentavos | pesos }}</span>
+        <!--
+          «Comprar» va deshabilitado: la compra suelta necesita pasarela, y el webhook es la
+          única fuente de verdad del pago (no negociable 3). El precio sí se enseña — es
+          política de la casa que los precios se vean sin registrarse.
+          CONDICIÓN DE SALIDA: se habilita con el módulo `pagos`.
+        -->
+        <adr-boton variante="primario" [deshabilitado]="true">Comprar</adr-boton>
+      }
+    </div>
+  </div>
+</article>

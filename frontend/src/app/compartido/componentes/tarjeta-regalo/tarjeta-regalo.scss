@@ -1,0 +1,97 @@
+:host {
+  display: block;
+}
+
+.regalo {
+  display: flex;
+  flex-direction: column;
+  gap: var(--adr-espacio-3);
+
+  padding: var(--adr-espacio-5);
+
+  color: var(--adr-color-blanco);
+  background:
+    radial-gradient(420px 300px at 84% -10%, rgb(240 168 60 / 22%), transparent 62%),
+    linear-gradient(160deg, var(--adr-color-noche-panel-a), var(--adr-color-noche-panel-b));
+  border: 1px solid rgb(240 168 60 / 32%);
+  border-radius: var(--adr-radio-tarjeta);
+}
+
+.regalo__marca {
+  display: flex;
+  gap: var(--adr-espacio-3);
+  align-items: center;
+}
+
+.regalo__logotipo {
+  display: inline-flex;
+  flex: none;
+  width: 32px;
+  height: 32px;
+  overflow: hidden;
+  background: #000;
+  border-radius: var(--adr-radio-pastilla);
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+}
+
+.regalo__marca-texto {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.regalo__marca-nombre {
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.regalo__marca-kicker {
+  font-size: 8.5px;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  color: #f4c37a;
+}
+
+.regalo__para {
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  color: rgb(255 255 255 / 55%);
+  text-transform: uppercase;
+}
+
+.regalo__nombre {
+  font-family: var(--adr-fuente-titular);
+  font-size: 22px;
+  font-weight: 800;
+  line-height: 1.15;
+  // Sin esto, un nombre largo pegado sin espacios desborda la tarjeta.
+  overflow-wrap: anywhere;
+}
+
+.regalo__mensaje {
+  font-size: 13px;
+  font-style: italic;
+  line-height: 1.55;
+  color: rgb(255 255 255 / 78%);
+  overflow-wrap: anywhere;
+}
+
+.regalo__pie {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--adr-espacio-2);
+  justify-content: space-between;
+
+  padding-top: var(--adr-espacio-3);
+
+  font-size: 11px;
+  color: rgb(255 255 255 / 62%);
+
+  border-top: 1px solid rgb(255 255 255 / 14%);
+}

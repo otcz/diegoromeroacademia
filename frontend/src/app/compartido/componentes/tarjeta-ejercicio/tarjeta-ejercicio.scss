@@ -1,0 +1,72 @@
+:host {
+  display: block;
+  height: 100%;
+}
+
+.ejercicio {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow: hidden;
+  background: var(--adr-superficie);
+  border: 1px solid var(--adr-borde);
+  border-radius: var(--adr-radio-tarjeta);
+  box-shadow: var(--adr-sombra-superficie);
+}
+
+.ejercicio__portada {
+  position: relative;
+}
+
+.ejercicio__tipo {
+  position: absolute;
+  top: var(--adr-espacio-3);
+  left: var(--adr-espacio-3);
+}
+
+.ejercicio__duracion {
+  position: absolute;
+  right: var(--adr-espacio-3);
+  bottom: var(--adr-espacio-3);
+
+  padding: 3px 8px;
+
+  font-size: 10.5px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  color: var(--adr-color-blanco);
+
+  background: rgb(8 6 20 / 72%);
+  border-radius: 6px;
+}
+
+.ejercicio__cuerpo {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: var(--adr-espacio-2);
+  padding: var(--adr-espacio-4);
+}
+
+.ejercicio__titulo {
+  font-family: var(--adr-fuente-titular);
+  font-size: 15px;
+  font-weight: 700;
+  line-height: 1.25;
+  color: var(--adr-texto-1);
+}
+
+.ejercicio__meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--adr-espacio-2);
+  // Empuja el botón al fondo para que en una fila todos queden alineados.
+  margin-bottom: auto;
+  font-size: 11.5px;
+  color: var(--adr-texto-5);
+
+  span:first-child {
+    font-weight: 700;
+    color: var(--adr-estado-azul-texto);
+  }
+}

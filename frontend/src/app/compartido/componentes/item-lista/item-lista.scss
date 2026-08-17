@@ -1,0 +1,78 @@
+:host {
+  display: block;
+}
+
+.item {
+  display: flex;
+  gap: var(--adr-espacio-3);
+  align-items: center;
+  padding: var(--adr-espacio-3);
+  border: 1px solid var(--adr-borde-tenue);
+  border-radius: 12px;
+  transition: background-color 0.15s ease;
+
+  &--viendo {
+    background: var(--adr-estado-azul-fondo);
+    border-color: var(--adr-estado-azul-borde);
+  }
+
+  &--bloqueado {
+    // No es `display:none`: el alumno tiene que VER que hay más camino y por qué está
+    // cerrado. Una lista que se corta sin más parece una lista terminada.
+    opacity: 0.62;
+  }
+}
+
+.item__marca {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+
+  width: 28px;
+  height: 28px;
+
+  font-size: 12px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+
+  color: var(--adr-texto-5);
+  background: var(--adr-relleno-1);
+  border-radius: var(--adr-radio-pastilla);
+
+  .item--completado & {
+    color: var(--adr-estado-verde-icono);
+    background: var(--adr-estado-verde-fondo);
+  }
+
+  .item--bloqueado & {
+    color: var(--adr-texto-5);
+  }
+
+  // «Viendo ahora»: punto azul relleno, no icono. Un icono de reproducción aquí se leería
+  // como un botón para reproducir, y esta fila no reproduce nada.
+  .item--viendo & {
+    color: transparent;
+    background: var(--adr-color-azul-cta-b);
+    box-shadow: inset 0 0 0 8px var(--adr-color-azul-cta-b);
+  }
+}
+
+.item__texto {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.item__titulo {
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--adr-texto-1);
+}
+
+.item__detalle {
+  font-size: 11.5px;
+  color: var(--adr-texto-5);
+}

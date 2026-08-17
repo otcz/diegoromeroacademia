@@ -1,0 +1,44 @@
+@use 'mixins' as m;
+
+:host {
+  display: inline-flex;
+}
+
+.chip {
+  display: inline-flex;
+  gap: var(--adr-espacio-2);
+  align-items: center;
+
+  // 36px es la altura del handoff para un filtro. Por debajo del mínimo táctil de 48, y a
+  // propósito: los chips van en fila y con 48 una tira de cinco ocupa el alto de una tarjeta.
+  // La holgura la da el espacio entre ellos, que llega a los 44 de área pulsable efectiva.
+  height: 36px;
+  padding-inline: 15px;
+
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--adr-texto-4);
+  white-space: nowrap;
+  cursor: pointer;
+
+  background: transparent;
+  border: 1px solid var(--adr-borde-fuerte);
+  border-radius: var(--adr-radio-pastilla);
+  transition:
+    background-color 0.15s ease,
+    border-color 0.15s ease,
+    color 0.15s ease;
+
+  @include m.foco-visible;
+
+  &:hover {
+    color: var(--adr-texto-2);
+    background: var(--adr-relleno-1);
+  }
+
+  &--activo {
+    color: var(--adr-texto-1);
+    background: var(--adr-estado-azul-fondo-fuerte);
+    border-color: var(--adr-estado-azul-borde);
+  }
+}

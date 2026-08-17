@@ -1,0 +1,218 @@
+@use 'mixins' as m;
+
+// El simulador vive SIEMPRE sobre el video, que es oscuro en los dos temas. Por eso aquí se
+// usan blancos con alfa y no la capa semántica: el panel no sigue al tema, sigue al video.
+:host {
+  display: block;
+}
+
+.simulador {
+  display: flex;
+  flex-direction: column;
+  gap: var(--adr-espacio-3);
+  padding: var(--adr-espacio-3);
+
+  color: var(--adr-color-blanco);
+  background: rgb(8 6 20 / 82%);
+  border: 1px solid rgb(255 255 255 / 14%);
+  border-radius: 14px;
+  backdrop-filter: blur(10px);
+
+  @supports not (backdrop-filter: blur(10px)) {
+    background: rgb(8 6 20 / 95%);
+  }
+}
+
+.simulador__cabecera {
+  display: flex;
+  gap: var(--adr-espacio-3);
+  align-items: center;
+  justify-content: space-between;
+}
+
+.simulador__titulo {
+  font-family: var(--adr-fuente-cuerpo);
+  font-size: 9.5px;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  color: rgb(255 255 255 / 62%);
+}
+
+.simulador__cerrar {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 26px;
+  color: rgb(255 255 255 / 70%);
+  cursor: pointer;
+  background: transparent;
+  border: 0;
+  border-radius: 8px;
+
+  @include m.foco-visible;
+
+  &:hover {
+    color: var(--adr-color-blanco);
+    background: rgb(255 255 255 / 12%);
+  }
+}
+
+.simulador__cuerpo {
+  display: flex;
+  gap: var(--adr-espacio-4);
+}
+
+.simulador__grupo {
+  display: flex;
+  gap: var(--adr-espacio-2);
+}
+
+.simulador__rotulo {
+  font-size: 8.5px;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  color: rgb(255 255 255 / 45%);
+}
+
+.simulador__etiquetas {
+  display: flex;
+  font-size: 8px;
+  font-weight: 600;
+  color: rgb(255 255 255 / 38%);
+}
+
+.simulador__filas {
+  display: flex;
+}
+
+.simulador__teclas {
+  display: flex;
+}
+
+// La tecla. `box-sizing: border-box` es obligatorio: sin él el borde de 1px se suma a los
+// 13 y la tecla encendida mide 15, así que la fila entera se descoloca justo en el botón que
+// hay que mirar.
+.simulador__tecla {
+  box-sizing: border-box;
+  flex: none;
+
+  width: 13px;
+  height: 13px;
+
+  background: rgb(255 255 255 / 8%);
+  border: 1px solid rgb(255 255 255 / 18%);
+  border-radius: var(--adr-radio-pastilla);
+
+  &--activa {
+    background: linear-gradient(140deg, #3b82f6, #7b3ff2);
+    border-color: rgb(190 210 255 / 75%);
+    box-shadow: 0 0 0 3px rgb(47 102 245 / 32%);
+  }
+
+  // El bajo encendido va en dorado y no en azul: son dos manos distintas, y con el mismo
+  // color el alumno no sabe cuál de las dos le están señalando.
+  &--bajo.simulador__tecla--activa {
+    background: linear-gradient(140deg, #f0a83c, #e07b1f);
+    border-color: rgb(255 220 170 / 70%);
+    box-shadow: 0 0 0 3px rgb(240 168 60 / 28%);
+  }
+}
+
+.simulador__divisor {
+  width: 1px;
+  background: rgb(255 255 255 / 12%);
+}
+
+.simulador__lectura {
+  padding-top: var(--adr-espacio-2);
+  border-top: 1px solid rgb(255 255 255 / 12%);
+}
+
+.simulador__paso {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--adr-color-blanco);
+}
+
+.simulador__detalle {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--adr-espacio-2);
+  margin-top: 2px;
+  font-size: 11px;
+  color: rgb(255 255 255 / 62%);
+
+  // La dirección del fuelle es la mitad del dato: sin ella el mismo botón suena distinto.
+  // Va destacada para que no se lea como un metadato más de la fila.
+  span:nth-child(3) {
+    font-weight: 600;
+    color: #f4c37a;
+  }
+}
+
+// ------------------------------------------------------------------- vertical
+// Panel de 236px sobre el video. Las filas se apilan y las teclas van en columna, que es
+// como se ve el instrumento cuando lo tienes puesto.
+:host(.simulador--vertical) {
+  .simulador {
+    width: var(--adr-simulador-ancho);
+  }
+
+  .simulador__grupo {
+    flex-direction: column;
+  }
+
+  .simulador__filas {
+    flex-direction: row;
+    gap: var(--adr-espacio-2);
+  }
+
+  .simulador__teclas {
+    flex-direction: column;
+    gap: 3px;
+  }
+
+  .simulador__etiquetas {
+    gap: 10px;
+    justify-content: space-around;
+  }
+
+  // Media tecla de desplazamiento en las filas impares y en la segunda columna de bajos.
+  // Es la diagonal real de la botonadura: sin ella el diagrama es una cuadrícula y deja de
+  // parecerse al instrumento que el alumno tiene delante.
+  .simulador__teclas:nth-child(odd) {
+    margin-top: 8px;
+  }
+}
+
+// -------------------------------------------------------------------- franja
+// Filas horizontales. Es la disposición por defecto y la única en móvil.
+:host(.simulador--franja) {
+  .simulador__cuerpo {
+    align-items: flex-start;
+    justify-content: flex-start;
+  }
+
+  .simulador__grupo {
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .simulador__filas {
+    flex-direction: column;
+    gap: 3px;
+  }
+
+  .simulador__teclas {
+    flex-direction: row;
+    gap: 3px;
+    margin-top: 0;
+  }
+
+  // Las etiquetas F1/F2/F3 no caben al lado de una fila horizontal sin robarle sitio a las
+  // teclas. Se ocultan: la lectura textual ya dice en qué fila va.
+  .simulador__etiquetas {
+    display: none;
+  }
+}

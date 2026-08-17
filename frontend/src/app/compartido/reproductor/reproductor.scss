@@ -1,0 +1,298 @@
+@use 'mixins' as m;
+
+:host {
+  display: block;
+}
+
+.repro__escenario {
+  position: relative;
+  overflow: hidden;
+
+  // Nunca un alto fijo: la relación manda y el tope evita que en un monitor ancho el vídeo
+  // ocupe la pantalla entera y deje los controles fuera de la vista.
+  aspect-ratio: 16 / 9;
+  max-height: min(62vh, 540px);
+
+  background: #05040d;
+  border: 1px solid var(--adr-borde);
+  border-radius: var(--adr-radio-tarjeta);
+}
+
+.repro--completa .repro__escenario {
+  max-height: min(80vh, 760px);
+}
+
+.repro__poster {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 62% 28%;
+}
+
+// Dos gradientes: arriba para el kicker y la marca, abajo para los controles. Sin ellos, el
+// texto blanco cae sobre la zona clara de la foto y desaparece.
+.repro__velo {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(to bottom, rgb(8 6 20 / 62%) 0%, transparent 26%),
+    linear-gradient(to top, rgb(8 6 20 / 88%) 0%, transparent 42%);
+}
+
+.repro__marca {
+  position: absolute;
+  top: var(--adr-espacio-3);
+  right: var(--adr-espacio-4);
+
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  color: rgb(255 255 255 / 45%);
+}
+
+.repro__kicker {
+  position: absolute;
+  top: var(--adr-espacio-3);
+  left: var(--adr-espacio-4);
+
+  padding: 4px 9px;
+
+  font-size: 9.5px;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  color: var(--adr-color-blanco);
+
+  background: rgb(255 255 255 / 14%);
+  border: 1px solid rgb(255 255 255 / 22%);
+  border-radius: 6px;
+}
+
+.repro__aviso {
+  position: absolute;
+  top: calc(var(--adr-espacio-3) + 28px);
+  left: var(--adr-espacio-4);
+
+  padding: 4px 9px;
+
+  font-size: 10.5px;
+  font-weight: 600;
+  color: #f4c37a;
+
+  background: rgb(240 168 60 / 16%);
+  border: 1px solid rgb(240 168 60 / 32%);
+  border-radius: 6px;
+}
+
+.repro__play {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 64px;
+  height: 64px;
+
+  color: var(--adr-color-blanco);
+  cursor: pointer;
+
+  background: rgb(8 6 20 / 52%);
+  border: 1px solid rgb(255 255 255 / 40%);
+  border-radius: var(--adr-radio-pastilla);
+  transform: translate(-50%, -50%);
+  transition: background-color 0.15s ease;
+
+  @include m.foco-visible;
+
+  &:hover {
+    background: rgb(8 6 20 / 72%);
+  }
+}
+
+// --------------------------------------------------------------- simulador
+// Panel vertical flotando a la derecha del vídeo; franja anclada abajo sobre los controles.
+// La clase la pone el propio simulador según su disposición, y aquí solo se le da el sitio.
+.repro__simulador {
+  position: absolute;
+  z-index: 2;
+
+  &.simulador--vertical {
+    top: var(--adr-espacio-4);
+    right: var(--adr-espacio-4);
+  }
+
+  &.simulador--franja {
+    right: 10px;
+    bottom: 70px;
+    left: 10px;
+  }
+}
+
+// --------------------------------------------------------------- controles
+.repro__controles {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 3;
+
+  display: flex;
+  flex-direction: column;
+  gap: var(--adr-espacio-2);
+  padding: var(--adr-espacio-3) var(--adr-espacio-4);
+}
+
+.repro__linea {
+  display: flex;
+  gap: var(--adr-espacio-3);
+  align-items: center;
+}
+
+.repro__barra {
+  flex: 1;
+  height: 4px;
+  overflow: hidden;
+  background: rgb(255 255 255 / 24%);
+  border-radius: var(--adr-radio-pastilla);
+}
+
+.repro__barra-relleno {
+  display: block;
+  height: 100%;
+  background: var(--adr-degradado-cta);
+}
+
+.repro__tiempo {
+  flex: none;
+  font-size: 11px;
+  font-variant-numeric: tabular-nums;
+  color: rgb(255 255 255 / 78%);
+}
+
+.repro__botones {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--adr-espacio-1);
+  align-items: center;
+}
+
+.repro__boton {
+  display: inline-flex;
+  gap: var(--adr-espacio-2);
+  align-items: center;
+  justify-content: center;
+
+  // 34px: los controles van SOBRE el vídeo y con 48 taparían un tercio de la imagen. En
+  // móvil la barra crece a 44 (más abajo), donde sí se pulsa con el dedo.
+  min-width: 34px;
+  height: 34px;
+  padding-inline: var(--adr-espacio-2);
+
+  font-size: 11.5px;
+  font-weight: 600;
+  color: rgb(255 255 255 / 82%);
+  white-space: nowrap;
+  cursor: pointer;
+
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: 9px;
+  transition:
+    background-color 0.15s ease,
+    color 0.15s ease;
+
+  @include m.foco-visible;
+
+  &:hover:not(:disabled) {
+    color: var(--adr-color-blanco);
+    background: rgb(255 255 255 / 14%);
+  }
+
+  &:disabled {
+    cursor: not-allowed;
+    opacity: 0.4;
+  }
+
+  &--texto {
+    padding-inline: var(--adr-espacio-3);
+  }
+
+  // El simulador encendido se marca en el propio botón: es el control que más se alterna y
+  // sin marca no se sabe si está oculto o si la lección no trae pista.
+  &--encendido {
+    color: var(--adr-color-blanco);
+    background: rgb(47 102 245 / 30%);
+    border-color: rgb(130 165 255 / 40%);
+  }
+}
+
+.repro__separador {
+  flex: 1;
+}
+
+.repro__bpm {
+  display: inline-flex;
+  gap: 2px;
+  align-items: center;
+  height: 34px;
+  padding: 2px;
+  border: 1px solid rgb(255 255 255 / 20%);
+  border-radius: var(--adr-radio-pastilla);
+
+  button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    color: rgb(255 255 255 / 82%);
+    cursor: pointer;
+    background: transparent;
+    border: 0;
+    border-radius: var(--adr-radio-pastilla);
+
+    @include m.foco-visible;
+
+    &:hover:not(:disabled) {
+      background: rgb(255 255 255 / 14%);
+    }
+
+    &:disabled {
+      cursor: not-allowed;
+      opacity: 0.35;
+    }
+  }
+}
+
+.repro__bpm-valor {
+  min-width: 62px;
+  font-size: 11.5px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  color: var(--adr-color-blanco);
+  text-align: center;
+}
+
+// ---------------------------------------------------------------- estrecho
+@media (width < 620px) {
+  .repro__escenario {
+    max-height: none;
+  }
+
+  // En móvil sí se pulsa con el dedo: los controles suben al mínimo táctil cómodo.
+  .repro__boton {
+    min-width: 44px;
+    height: 44px;
+  }
+
+  // El aviso y el kicker se pisan en pantallas estrechas; el kicker manda.
+  .repro__aviso {
+    display: none;
+  }
+
+  .repro__simulador.simulador--franja {
+    bottom: 84px;
+  }
+}

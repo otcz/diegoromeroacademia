@@ -1,0 +1,158 @@
+<div class="repro" [class.repro--completa]="completa()">
+  <div class="repro__escenario">
+    <!-- Mientras no haya proveedor de streaming, el póster de la lección. `alt` vacío: es
+         ambientación, y lo que dice la pantalla lo dicen el título y los controles. -->
+    <img class="repro__poster" [src]="poster()" alt="" width="1280" height="720" />
+    <span class="repro__velo" aria-hidden="true"></span>
+
+    <!-- Marca de agua identificable. Es la mitigación del riesgo de filtración de video que
+         registra docs/00 §7; con vídeo real llevará además el correo del alumno, que es lo
+         que convierte una copia en rastreable. -->
+    <span class="repro__marca" aria-hidden="true">Estudio Académico DR</span>
+
+    @if (kicker()) {
+      <span class="repro__kicker">{{ kicker() }}</span>
+    }
+
+    <!-- Aviso honesto. Se quita el día que haya vídeo. -->
+    <span class="repro__aviso">Vista previa · el vídeo aún no está conectado</span>
+
+    <button
+      type="button"
+      class="repro__play"
+      (click)="alternarReproduccion()"
+      [attr.aria-label]="playing() ? 'Pausar' : 'Reproducir'"
+    >
+      <adr-icono [nombre]="playing() ? 'pause' : 'play'" [tamanio]="32" />
+    </button>
+
+    @if (simulador() && pisadas().length > 0) {
+      <adr-simulador-pisadas
+        class="repro__simulador"
+        [pisadas]="pisadas()"
+        [tiempo]="tiempoSimulador()"
+        [velocidad]="velocidad()"
+        [rotuloRitmo]="rotuloRitmo()"
+        [disposicion]="disposicionSimulador()"
+        (cerrado)="alternarSimulador()"
+      />
+    }
+
+    <div class="repro__controles">
+      <div class="repro__linea">
+        <!-- La barra es de solo lectura hasta que haya vídeo: arrastrarla movería el reloj
+             interno y no habría nada que buscar. Por eso es un `progress` y no un `range`. -->
+        <div
+          class="repro__barra"
+          role="progressbar"
+          [attr.aria-valuenow]="avanceEntero()"
+          aria-valuemin="0"
+          aria-valuemax="100"
+          aria-label="Avance de la lección"
+        >
+          <span class="repro__barra-relleno" [style.width.%]="avance()"></span>
+        </div>
+        <span class="repro__tiempo">
+          {{ tiempo() | duracion }} / {{ duracionSegundos() | duracion }}
+        </span>
+      </div>
+
+      <div class="repro__botones">
+        <button
+          type="button"
+          class="repro__boton"
+          (click)="alternarReproduccion()"
+          [attr.aria-label]="playing() ? 'Pausar' : 'Reproducir'"
+        >
+          <adr-icono [nombre]="playing() ? 'pause' : 'play'" [tamanio]="16" />
+        </button>
+
+        @if (esEjercicio()) {
+          <button type="button" class="repro__boton repro__boton--texto" (click)="retroceder()">
+            <adr-icono nombre="repeat" [tamanio]="16" />
+            Repetir
+          </button>
+
+          <!-- Control de BPM. Es lo que manda en un ejercicio: el vídeo acompaña. -->
+          <div class="repro__bpm" role="group" aria-label="Metrónomo">
+            <button
+              type="button"
+              (click)="bajarBpm()"
+              [disabled]="bpm() <= BPM_MINIMO"
+              aria-label="Bajar el metrónomo"
+            >
+              <adr-icono nombre="minus" [tamanio]="16" />
+            </button>
+            <span class="repro__bpm-valor" aria-live="polite">{{ bpm() }} BPM</span>
+            <button
+              type="button"
+              (click)="subirBpm()"
+              [disabled]="bpm() >= BPM_MAXIMO"
+              aria-label="Subir el metrónomo"
+            >
+              <adr-icono nombre="plus" [tamanio]="16" />
+            </button>
+          </div>
+        } @else {
+          <button
+            type="button"
+            class="repro__boton"
+            (click)="retroceder()"
+            aria-label="Retroceder 15 segundos"
+          >
+            <adr-icono nombre="rewind" [tamanio]="16" />
+          </button>
+          <button
+            type="button"
+            class="repro__boton"
+            (click)="avanzar()"
+            aria-label="Avanzar 15 segundos"
+          >
+            <adr-icono nombre="fast-forward" [tamanio]="16" />
+          </button>
+          <button type="button" class="repro__boton" aria-label="Volumen">
+            <adr-icono nombre="speaker-high" [tamanio]="16" />
+          </button>
+        }
+
+        <span class="repro__separador"></span>
+
+        <button
+          type="button"
+          class="repro__boton repro__boton--texto"
+          (click)="siguienteVelocidad()"
+          [attr.aria-label]="'Velocidad ' + rotuloVelocidad() + '. Pulsa para cambiar'"
+        >
+          <adr-icono nombre="sliders-horizontal" [tamanio]="16" />
+          {{ rotuloVelocidad() }}
+        </button>
+
+        <button
+          type="button"
+          class="repro__boton repro__boton--texto"
+          [class.repro__boton--encendido]="simulador()"
+          (click)="alternarSimulador()"
+          [attr.aria-pressed]="simulador()"
+        >
+          <adr-icono nombre="music-notes" [tamanio]="16" />
+          Simulador
+        </button>
+
+        @if (!esEjercicio()) {
+          <button type="button" class="repro__boton" aria-label="Subtítulos">
+            <adr-icono nombre="closed-captioning" [tamanio]="16" />
+          </button>
+        }
+
+        <button
+          type="button"
+          class="repro__boton"
+          (click)="alternarPantallaCompleta()"
+          [attr.aria-label]="completa() ? 'Salir de pantalla completa' : 'Pantalla completa'"
+        >
+          <adr-icono [nombre]="completa() ? 'corners-in' : 'corners-out'" [tamanio]="16" />
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

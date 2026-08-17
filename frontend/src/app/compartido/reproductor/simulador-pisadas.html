@@ -1,0 +1,88 @@
+<section class="simulador" aria-labelledby="simulador-titulo">
+  <header class="simulador__cabecera">
+    <h3 id="simulador-titulo" class="simulador__titulo">ACORDEÓN VALLENATO</h3>
+    <button
+      type="button"
+      class="simulador__cerrar"
+      (click)="cerrado.emit()"
+      aria-label="Ocultar el simulador"
+    >
+      <adr-icono nombre="x" [tamanio]="16" />
+    </button>
+  </header>
+
+  <!--
+    El diagrama entero es decorativo para un lector de pantalla: 43 círculos sin texto no
+    dicen nada, y leerlos uno a uno sería ruido. La información va en la lectura textual de
+    abajo, que es `aria-live` y sí se anuncia en cada cambio de paso.
+  -->
+  <div class="simulador__cuerpo" aria-hidden="true">
+    <div class="simulador__grupo">
+      <span class="simulador__rotulo">PITOS</span>
+      <div class="simulador__etiquetas">
+        @for (nombre of nombresFila; track nombre) {
+          <span>{{ nombre }}</span>
+        }
+      </div>
+      <!--
+        `let indiceFila = $index` no es adorno: dentro del bucle interior, `$index` es el del
+        BOTÓN y tapa al de la fila. Sin el alias, `estaActivo($index, boton)` recibía el
+        número de botón como número de fila y el simulador encendía la tecla equivocada — que
+        en este componente es el único error que no se puede permitir.
+      -->
+      <div class="simulador__filas">
+        @for (fila of filas; track $index; let indiceFila = $index) {
+          <div class="simulador__teclas">
+            @for (boton of botonesDe(indiceFila); track boton) {
+              <span
+                class="simulador__tecla"
+                [class.simulador__tecla--activa]="estaActivo(indiceFila, boton)"
+              ></span>
+            }
+          </div>
+        }
+      </div>
+    </div>
+
+    <div class="simulador__divisor"></div>
+
+    <div class="simulador__grupo">
+      <span class="simulador__rotulo">BAJOS</span>
+      <div class="simulador__etiquetas">
+        @for (nombre of nombresColumnaBajo; track nombre) {
+          <span>{{ nombre }}</span>
+        }
+      </div>
+      <div class="simulador__filas">
+        @for (columna of nombresColumnaBajo; track $index; let indiceColumna = $index) {
+          <div class="simulador__teclas">
+            @for (bajo of bajosDe(indiceColumna); track bajo) {
+              <span
+                class="simulador__tecla simulador__tecla--bajo"
+                [class.simulador__tecla--activa]="bajoActivo() === bajo"
+              ></span>
+            }
+          </div>
+        }
+      </div>
+    </div>
+  </div>
+
+  <!--
+    La lectura textual. `aria-live="polite"` la anuncia al cambiar de paso sin interrumpir lo
+    que el lector esté diciendo. No es un pie de foto del diagrama: es la misma información
+    en la única forma que sirve sin ver la pantalla.
+  -->
+  <footer class="simulador__lectura" aria-live="polite">
+    <p class="simulador__paso">{{ lectura() }}</p>
+    @if (paso(); as p) {
+      <p class="simulador__detalle">
+        <span>Bajo {{ p.bajo }}</span>
+        <span aria-hidden="true">·</span>
+        <span>{{ p.direccion }}</span>
+        <span aria-hidden="true">·</span>
+        <span>{{ rotuloRitmo() }}</span>
+      </p>
+    }
+  </footer>
+</section>

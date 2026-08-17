@@ -101,6 +101,21 @@
           </article>
         }
       </div>
+
+      <!-- Los medios de pago viven AQUÍ y no en un panel propio: la pregunta «¿con qué puedo
+           pagarlo?» aparece mientras se mira el precio de otro plan, no diez centímetros más
+           abajo en una tarjeta suelta. -->
+      <div class="suscripcion__medios">
+        <div class="suscripcion__medios-pastillas">
+          <span class="adr-panel__pastilla">Tarjeta</span>
+          <span class="adr-panel__pastilla">PSE</span>
+          <span class="adr-panel__pastilla">Nequi</span>
+          <span class="adr-panel__pastilla">Efecty</span>
+        </div>
+        <p class="adr-panel__contexto">
+          Con tarjeta el cobro es automático; con los demás medios te avisamos 3 días antes.
+        </p>
+      </div>
     </section>
 
     <!-- ============================================ PAGOS Y MEDIOS -->
@@ -142,33 +157,18 @@
         </table>
       </section>
 
-      <div class="suscripcion__lateral">
-        <section class="adr-panel" aria-labelledby="medios-titulo">
-          <h2 id="medios-titulo" class="adr-panel__titulo">Medios de pago</h2>
-          <div class="suscripcion__medios">
-            <span class="adr-panel__pastilla">Tarjeta</span>
-            <span class="adr-panel__pastilla">PSE</span>
-            <span class="adr-panel__pastilla">Nequi</span>
-            <span class="adr-panel__pastilla">Efecty</span>
-          </div>
-          <p class="adr-panel__contexto">
-            Con tarjeta el cobro es automático; con los demás medios te avisamos 3 días antes.
-          </p>
-        </section>
-
-        <section
-          class="adr-panel adr-panel--dorado suscripcion__regalo"
-          aria-labelledby="regalo-titulo"
-        >
-          <span class="suscripcion__regalo-icono">
-            <adr-icono nombre="gift" [tamanio]="24" />
-          </span>
-          <h2 id="regalo-titulo" class="adr-panel__titulo">Regala esta suscripción a alguien</h2>
-          <adr-boton variante="secundario" [anchoCompleto]="true" enlace="/regalar">
-            Regalar
-          </adr-boton>
-        </section>
-      </div>
+      <section
+        class="adr-panel adr-panel--dorado suscripcion__regalo"
+        aria-labelledby="regalo-titulo"
+      >
+        <span class="suscripcion__regalo-icono">
+          <adr-icono nombre="gift" [tamanio]="24" />
+        </span>
+        <h2 id="regalo-titulo" class="adr-panel__titulo">Regala esta suscripción a alguien</h2>
+        <adr-boton variante="secundario" [anchoCompleto]="true" enlace="/regalar">
+          Regalar
+        </adr-boton>
+      </section>
     </div>
   </div>
 }

@@ -1,6 +1,8 @@
-<!-- `data-nav` es lo único que decide si la barra lateral se dibuja. Con una clase por
-     estado acabarían conviviendo `.sin-nav` y `.nav-oculta` sin que nadie recuerde cuál gana. -->
-<div class="shell" [attr.data-nav]="disposicion.barraLateralVisible() ? 'visible' : 'oculta'">
+<!-- `data-nav` es lo único que decide la FORMA de la barra lateral. Con una clase por estado
+     acabarían conviviendo `.sin-nav` y `.nav-oculta` sin que nadie recuerde cuál gana.
+     Plegada no significa escondida: la barra pasa a su riel de iconos, y por eso el estado se
+     llama `riel` y no `oculta`. Quién dibuja qué en cada forma lo decide la propia barra. -->
+<div class="shell" [attr.data-nav]="disposicion.barraLateralExpandida() ? 'expandida' : 'riel'">
   <adr-barra-lateral />
 
   <main class="shell__principal">

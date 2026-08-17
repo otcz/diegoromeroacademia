@@ -230,12 +230,70 @@ comparten el `viewBox` de Material y el menú de cuenta pasó de 20/16 px a 24/2
 
 ---
 
+## 5.3 El riel de iconos y la reordenación de `/suscripcion` (2026-08-16)
+
+Tercera tanda de la revisión, sobre las pantallas ya publicadas.
+
+### La barra lateral plegada dejaba la aplicación sin navegación
+
+**«El sidebar debe mostrar los iconos como es normal verlos.»** La hamburguesa mandaba la barra
+entera a `display: none`, así que plegarla no ahorraba ancho: **quitaba la navegación**. En
+escritorio no quedaba ninguna otra vía —la barra inferior solo existe por debajo de 1024 px— y
+el único rastro era un botón que no explicaba adónde se había ido todo.
+
+Ahora se pliega a un **riel de 76 px** con sus iconos: el logotipo, las cinco secciones, el
+estado del plan y el pie. El contenido gana 170 px de ancho, que era el objetivo del pliegue.
+
+**Lo que había que resolver, y no era el ancho:**
+
+- **Ningún nombre se pierde.** Los rótulos siguen en el DOM con `adr-solo-lectores` y se ofrecen
+  además en el `title`. Ocultarlos con `display: none` habría dejado ocho enlaces que un lector
+  de pantalla anuncia como «enlace, enlace, enlace», y a quien usa ratón sin forma de saber cuál
+  es cuál. Hay una prueba por enlace.
+- **La tarjeta del plan no cabe en 76 px, pero tampoco se puede omitir**: es el dato por el que
+  el alumno mira ahí. Se reduce a un enlace con la corona teñida del color de su estado, con el
+  plan y el estado en el `title` y en el texto accesible — el color refuerza, no porta el
+  significado (docs/04 §5).
+- **La barra pasó a conocer su propia forma.** Antes el `display: none` lo ponía el shell, con
+  el argumento de que «la barra no tiene por qué saber que se la puede esconder». Deja de valer
+  en cuanto no se esconde sino que **se dibuja distinto**: eso es presentación del propio
+  componente, y desde fuera no se puede alcanzar sin `::ng-deep`.
+- **`barraLateralVisible` pasó a llamarse `barraLateralExpandida`.** Plegada, la barra sigue
+  visible; con el nombre anterior, quien leyera `!barraLateralVisible()` habría concluido que no
+  hay nada que dibujar — que es exactamente el fallo que se estaba corrigiendo. El valor que se
+  guarda en el navegador **no** se renombró: habría descolocado la preferencia que cada alumno
+  ya tiene escrita, a cambio de nada.
+
+Esto cierra el punto «riel de iconos de 84 px» que estaba en §6 como pendiente. Salió a 76 px:
+es lo que necesita un icono de 24 centrado en su fila de 44 con aire suficiente.
+
+### `/suscripcion`: los medios de pago se movieron al lado de los precios
+
+«Medios de pago» ocupaba la columna derecha, junto a «Últimos pagos», y empujaba «Regala esta
+suscripción» hasta el fondo de la página. El propietario pidió el intercambio, dejando a
+elección poner los medios al final o dentro de la tarjeta de cambio de plan.
+
+**Van dentro de «Cambiar de plan»**, como pie de la tarjeta. La pregunta «¿con qué puedo pagar
+esto?» aparece mientras se mira el precio de otro plan, no diez centímetros más abajo en un
+panel suelto. Al final de la página habría quedado enterrada. Una línea superior los separa de
+la rejilla: sin ella, las pastillas se leen como una cuarta opción de plan.
+
+«Regalar» sube a la columna derecha, junto a la tabla de pagos.
+
+**Verificación.** 315 pruebas (cuatro nuevas en `barra-lateral.spec.ts`), y en el navegador: el
+riel mide 76 px con los ocho iconos centrados y los rótulos colapsados a 1 px pero presentes;
+por debajo de 1024 px la barra sigue cediendo a la navegación inferior, sin desborde horizontal.
+
+---
+
 ## 6. Qué falta
 
-- Revisión visual de las trece pantallas y de la portada oscura.
+- Revisión visual del resto de las pantallas. `/inicio`, `/ajustes` y `/suscripcion` ya pasaron
+  por el propietario (§5.1 a §5.3).
 - Renombrar los alias de token heredados (`--adr-color-tinta` y compañía) a los nombres
   semánticos, en un cambio propio y aislado.
-- El riel de iconos de 84 px para tablet: el handoff aprueba las dos formas y se eligió la barra
-  inferior, que resuelve tablet y móvil con una sola pieza.
+- ~~El riel de iconos para tablet~~ — **hecho** en §5.3, aunque por otra puerta: entró como la
+  forma plegada de la barra de escritorio, no como una pieza de tablet. En tablet y móvil sigue
+  mandando la barra inferior, que resuelve las dos con una sola pieza.
 - Material real: fotos de producto, miniaturas por lección y pistas de digitación de verdad. Hoy
   hay una sola pista de ejemplo repetida en bucle.

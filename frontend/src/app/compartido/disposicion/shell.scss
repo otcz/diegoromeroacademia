@@ -9,13 +9,6 @@
   min-height: 100vh;
   background: var(--adr-fondo);
   color: var(--adr-texto-1);
-
-  // Oculta la barra lateral cuando el alumno la cerró con la hamburguesa. La regla vive
-  // aquí y no dentro del propio componente porque es el shell quien conoce el estado; la
-  // barra no tiene por qué saber que se la puede esconder.
-  &[data-nav='oculta'] adr-barra-lateral {
-    display: none;
-  }
 }
 
 .shell__principal {
@@ -71,9 +64,11 @@
 }
 
 // -------------------------------------------------------------------- tableta
-// 1024px: por debajo desaparece la barra lateral y manda la barra inferior. El handoff
-// aprueba también un riel de iconos de 84px para tableta; se elige la barra inferior, que
-// es la que usa el prototipo responsive y la que resuelve tableta y móvil con una pieza.
+// 1024px: por debajo desaparece la barra lateral y manda la barra inferior. Aquí sí es
+// `display: none`, y no el riel: el riel es la forma PLEGADA de la barra de escritorio, y en
+// móvil compite con la barra inferior por el mismo hueco. Dos navegaciones a la vez en 390px
+// no es una elección, es un estorbo. El handoff aprueba las dos formas para tableta y se elige
+// la inferior, que es la del prototipo responsive y resuelve tableta y móvil con una pieza.
 @media (width < 1024px) {
   .shell adr-barra-lateral {
     display: none;

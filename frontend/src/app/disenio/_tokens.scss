@@ -222,6 +222,11 @@
   // Del handoff de la app (docs/handoff-disenio/app-estudiante). Son medidas de
   // estructura, no de color: no cambian con el tema.
   --adr-barra-lateral: 246px;
+
+  // Riel de iconos: la barra lateral plegada. 76px son el icono de 24 centrado en su fila de
+  // 44 y el aire lateral que necesita para no rozar el borde. El handoff aprobaba 84 para
+  // tableta; a 76 el contenido gana 170px sobre la barra ancha y el icono sigue holgado.
+  --adr-barra-riel: 76px;
   --adr-riel-iconos: 84px;
   --adr-nav-inferior: 76px;
   --adr-carrito-ancho: 384px;

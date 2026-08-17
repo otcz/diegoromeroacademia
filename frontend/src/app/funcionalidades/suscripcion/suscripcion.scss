@@ -173,14 +173,20 @@
   align-items: start;
 }
 
-.suscripcion__lateral {
+// Pie de la tarjeta de cambio de plan. La línea de arriba lo separa de la rejilla de planes:
+// sin ella, las pastillas de medio de pago se leen como una cuarta opción de plan.
+.suscripcion__medios {
   display: flex;
-  flex-direction: column;
-  gap: var(--adr-espacio-4);
-  min-width: 0;
+  flex-wrap: wrap;
+  gap: var(--adr-espacio-3);
+  align-items: center;
+  justify-content: space-between;
+
+  padding-top: var(--adr-espacio-4);
+  border-top: 1px solid var(--adr-linea);
 }
 
-.suscripcion__medios {
+.suscripcion__medios-pastillas {
   display: flex;
   flex-wrap: wrap;
   gap: var(--adr-espacio-2);

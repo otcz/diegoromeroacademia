@@ -1,11 +1,11 @@
-<aside class="lateral">
+<aside class="lateral" [class.lateral--riel]="riel()">
   <!-- Identidad. El logotipo va recortado en círculo sobre negro: el archivo que entregó el
        propietario no tiene transparencia, y estirarlo en un rectángulo enseña su fondo. -->
   <a class="lateral__marca" routerLink="/inicio">
     <span class="lateral__logotipo">
       <img [src]="logotipo" alt="" width="42" height="42" />
     </span>
-    <span class="lateral__marca-texto">
+    <span class="lateral__marca-texto" [class.adr-solo-lectores]="riel()">
       <span class="lateral__marca-nombre">Diego Romero</span>
       <span class="lateral__marca-kicker">ESTUDIO ACADÉMICO</span>
     </span>
@@ -19,9 +19,10 @@
         routerLinkActive="lateral__enlace--activo"
         #activo="routerLinkActive"
         [attr.aria-current]="activo.isActive ? 'page' : null"
+        [attr.title]="riel() ? entrada.etiqueta : null"
       >
         <adr-icono [nombre]="entrada.icono" [tamanio]="24" />
-        <span>{{ entrada.etiqueta }}</span>
+        <span [class.adr-solo-lectores]="riel()">{{ entrada.etiqueta }}</span>
       </a>
     }
   </nav>
@@ -32,25 +33,43 @@
   <!-- Estado del plan. Lleva icono y texto, nunca solo el color: docs/04 §5 — el color no
        puede ser el único portador de significado, y «vencida» es justo el caso donde alguien
        que no distingue rojo de verde necesita enterarse. -->
-  <div class="lateral__plan" [class]="'lateral__plan--' + perfil().estadoPlan">
-    <div class="lateral__plan-cabecera">
-      <span class="lateral__plan-nombre">{{ perfil().plan }}</span>
-      <span class="lateral__plan-estado">{{ rotuloEstado[perfil().estadoPlan] }}</span>
+  @if (riel()) {
+    <!-- En 76 px no cabe la tarjeta, así que el plan se reduce a su enlace. NO se omite: es el
+         dato por el que el alumno mira aquí, y dejarlo fuera del riel convertiría el pliegue
+         en una pérdida de función en vez de un ahorro de ancho. -->
+    <a
+      class="lateral__enlace lateral__plan-riel"
+      [class]="'lateral__enlace lateral__plan-riel lateral__plan-riel--' + perfil().estadoPlan"
+      routerLink="/suscripcion"
+      [title]="perfil().plan + ' · ' + rotuloEstado[perfil().estadoPlan]"
+    >
+      <adr-icono nombre="crown-simple" [tamanio]="24" />
+      <span class="adr-solo-lectores">
+        {{ perfil().plan }}, {{ rotuloEstado[perfil().estadoPlan] }}. Gestionar suscripción
+      </span>
+    </a>
+  } @else {
+    <div class="lateral__plan" [class]="'lateral__plan lateral__plan--' + perfil().estadoPlan">
+      <div class="lateral__plan-cabecera">
+        <span class="lateral__plan-nombre">{{ perfil().plan }}</span>
+        <span class="lateral__plan-estado">{{ rotuloEstado[perfil().estadoPlan] }}</span>
+      </div>
+      <p class="lateral__plan-nota">{{ notaPlan[perfil().estadoPlan] }}</p>
+      <adr-boton variante="fantasma" [anchoCompleto]="true" enlace="/suscripcion">
+        Gestionar suscripción
+      </adr-boton>
     </div>
-    <p class="lateral__plan-nota">{{ notaPlan[perfil().estadoPlan] }}</p>
-    <adr-boton variante="fantasma" [anchoCompleto]="true" enlace="/suscripcion">
-      Gestionar suscripción
-    </adr-boton>
-  </div>
+  }
 
   <div class="lateral__pie">
     <a
       class="lateral__enlace lateral__enlace--pie"
       routerLink="/ajustes"
       routerLinkActive="lateral__enlace--activo"
+      [attr.title]="riel() ? 'Ajustes' : null"
     >
       <adr-icono nombre="gear" [tamanio]="24" />
-      <span>Ajustes</span>
+      <span [class.adr-solo-lectores]="riel()">Ajustes</span>
     </a>
     <!--
       Salir es un enlace a la portada y no un botón que cierre sesión de verdad: el backend
@@ -60,9 +79,9 @@
       CONDICIÓN DE SALIDA: pasa a llamar a `AutenticacionServicio.cerrarSesion()` el día que
       estas pantallas consuman la API real.
     -->
-    <a class="lateral__enlace lateral__enlace--pie" href="/">
+    <a class="lateral__enlace lateral__enlace--pie" href="/" [attr.title]="riel() ? 'Salir' : null">
       <adr-icono nombre="sign-out" [tamanio]="24" />
-      <span>Salir</span>
+      <span [class.adr-solo-lectores]="riel()">Salir</span>
     </a>
   </div>
 </aside>

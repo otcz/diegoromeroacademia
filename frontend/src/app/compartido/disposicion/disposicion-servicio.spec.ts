@@ -11,24 +11,26 @@ describe('DisposicionServicio', () => {
   beforeEach(() => localStorage.clear());
   afterEach(() => localStorage.clear());
 
-  it('debe empezar con la barra lateral visible y todo lo flotante cerrado', () => {
+  it('debe empezar con la barra lateral expandida y todo lo flotante cerrado', () => {
     // Un panel abierto al entrar tapa la pantalla que el alumno vino a ver.
     const disposicion = crear();
 
-    expect(disposicion.barraLateralVisible()).toBe(true);
+    expect(disposicion.barraLateralExpandida()).toBe(true);
     expect(disposicion.carrito()).toBe(false);
     expect(disposicion.menuUsuario()).toBe(false);
   });
 
-  it('debe recordar la barra lateral oculta entre visitas', () => {
-    // Quien la oculta lo hace para ganar ancho: volver a ocultarla en cada carga es
+  it('debe recordar la barra lateral plegada entre visitas', () => {
+    // Quien la pliega lo hace para ganar ancho: volver a plegarla en cada carga es
     // exactamente el trabajo que se queria evitar.
     crear().alternarBarraLateral();
 
+    // El valor guardado sigue diciendo «oculta» aunque plegada la barra siga visible como
+    // riel: renombrarlo habria descolocado la preferencia ya escrita en cada navegador.
     expect(localStorage.getItem(CLAVE_BARRA_LATERAL)).toBe('oculta');
 
     TestBed.resetTestingModule();
-    expect(crear().barraLateralVisible()).toBe(false);
+    expect(crear().barraLateralExpandida()).toBe(false);
   });
 
   it('NO debe recordar el carrito abierto', () => {

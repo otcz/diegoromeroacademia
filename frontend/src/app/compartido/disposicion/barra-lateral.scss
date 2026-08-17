@@ -195,3 +195,66 @@
   font-size: 13px;
   color: var(--adr-texto-4);
 }
+
+// -------------------------------------------------------------------- riel
+// La barra plegada. NO desaparece: se queda en sus iconos, que es como se espera ver un menú
+// lateral plegado. Antes la hamburguesa la borraba y dejaba al alumno sin navegación, con un
+// botón que no explicaba adónde se había ido todo.
+//
+// Los rótulos siguen en el DOM con `adr-solo-lectores` (ver la plantilla): quien usa lector de
+// pantalla los oye y quien usa ratón los ve en el `title`. Ocultarlos con `display: none`
+// habría dejado siete enlaces sin nombre accesible.
+.lateral--riel {
+  width: var(--adr-barra-riel);
+  padding-inline: var(--adr-espacio-3);
+
+  .lateral__marca,
+  .lateral__enlace {
+    justify-content: center;
+    padding-inline: 0;
+  }
+
+  // El pliegue es para ganar ancho de contenido, así que el riel no puede empujar hacia fuera
+  // con un rótulo largo. Sin esto, «ESTUDIO ACADÉMICO» seguiría midiendo aunque no se vea.
+  .lateral__enlace {
+    gap: 0;
+  }
+
+  .lateral__pie {
+    gap: 4px;
+  }
+}
+
+// Estado del plan en el riel: la corona con el color del estado. El `title` y el texto para
+// lectores llevan el plan y su estado, así que el color refuerza y no porta el significado
+// (docs/04 §5).
+.lateral__plan-riel {
+  color: var(--adr-estado-verde-texto);
+  background: var(--adr-estado-verde-fondo);
+
+  &:hover {
+    color: var(--adr-estado-verde-texto);
+    background: var(--adr-estado-verde-fondo);
+    filter: brightness(0.97);
+  }
+
+  &--porVencer {
+    color: var(--adr-estado-dorado-texto);
+    background: var(--adr-estado-dorado-fondo);
+
+    &:hover {
+      color: var(--adr-estado-dorado-texto);
+      background: var(--adr-estado-dorado-fondo);
+    }
+  }
+
+  &--vencida {
+    color: var(--adr-estado-rojo-texto);
+    background: var(--adr-estado-rojo-fondo);
+
+    &:hover {
+      color: var(--adr-estado-rojo-texto);
+      background: var(--adr-estado-rojo-fondo);
+    }
+  }
+}

@@ -13,7 +13,7 @@ export const CLAVE_BARRA_LATERAL = 'adr-barra-lateral';
  * por tres niveles de plantilla, que es como se pierde un `close` por el camino.
  *
  * <p>La preferencia de la barra lateral se recuerda —lo pide el handoff— porque quien la
- * oculta lo hace para ganar ancho en una pantalla pequenia, y volver a ocultarla en cada
+ * pliega lo hace para ganar ancho en una pantalla pequenia, y volver a plegarla en cada
  * carga es exactamente el trabajo que se queria evitar.
  *
  * <p>El carrito y el menu de usuario NO se recuerdan: un panel abierto al entrar tapa la
@@ -23,22 +23,32 @@ export const CLAVE_BARRA_LATERAL = 'adr-barra-lateral';
 export class DisposicionServicio {
   private readonly almacen = inject(AlmacenLocal);
 
-  private readonly barraLateralOculta = signal(
+  // Los valores guardados siguen diciendo «oculta» y «visible» aunque la barra ya no se
+  // esconda: plegarla la deja en riel de iconos. Renombrarlos habria descolocado la
+  // preferencia que cada alumno ya tiene escrita en su navegador, a cambio de nada.
+  private readonly barraLateralPlegada = signal(
     this.almacen.leerTexto(CLAVE_BARRA_LATERAL) === 'oculta',
   );
   private readonly carritoAbierto = signal(false);
   private readonly menuUsuarioAbierto = signal(false);
 
-  readonly barraLateralVisible = computed(() => !this.barraLateralOculta());
+  /**
+   * Cierto con la barra ancha; falso con el riel de iconos.
+   *
+   * <p>Se llama «expandida» y no «visible» porque plegada la barra SIGUE VISIBLE: se reduce a
+   * su riel de iconos. Con el nombre anterior, quien leyera `!barraLateralVisible()` habria
+   * concluido que no hay nada que dibujar, que es justo el fallo que se corrigio.
+   */
+  readonly barraLateralExpandida = computed(() => !this.barraLateralPlegada());
   readonly carrito = this.carritoAbierto.asReadonly();
   readonly menuUsuario = this.menuUsuarioAbierto.asReadonly();
 
-  /** Muestra u oculta la barra lateral y lo recuerda. Es el boton de hamburguesa. */
+  /** Pliega o despliega la barra lateral y lo recuerda. Es el boton de hamburguesa. */
   alternarBarraLateral(): void {
-    this.barraLateralOculta.update((oculta) => !oculta);
+    this.barraLateralPlegada.update((plegada) => !plegada);
     this.almacen.escribirTexto(
       CLAVE_BARRA_LATERAL,
-      this.barraLateralOculta() ? 'oculta' : 'visible',
+      this.barraLateralPlegada() ? 'oculta' : 'visible',
     );
   }
 

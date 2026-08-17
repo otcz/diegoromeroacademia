@@ -1,0 +1,87 @@
+@if (disposicion.carrito()) {
+  <div class="carrito">
+    <!-- Velo. Es un <button> y no un <div>: así se alcanza con el tabulador y el panel se
+         puede cerrar sin ratón, además de con Esc. -->
+    <button
+      type="button"
+      class="carrito__velo"
+      (click)="cerrar()"
+      aria-label="Cerrar el carrito"
+    ></button>
+
+    <aside class="carrito__panel" role="dialog" aria-modal="true" aria-labelledby="carrito-titulo">
+      <header class="carrito__cabecera">
+        <span class="carrito__titulo-grupo">
+          <h2 id="carrito-titulo" class="carrito__titulo">Mi carrito</h2>
+          <span class="carrito__conteo">{{ carrito.articulos() }} artículos</span>
+        </span>
+        <button type="button" class="carrito__cerrar" (click)="cerrar()" aria-label="Cerrar">
+          <adr-icono nombre="x" [tamanio]="20" />
+        </button>
+      </header>
+
+      <div class="carrito__cuerpo">
+        @if (carrito.vacio()) {
+          <adr-estado-vacio
+            icono="shopping-cart"
+            titulo="Tu carrito está vacío"
+            explicacion="Explora la tienda y añade acordeones, accesorios o material de estudio."
+          >
+            <adr-boton variante="primario" (accion)="irATienda()">Ir a la tienda</adr-boton>
+          </adr-estado-vacio>
+        } @else {
+          <div class="carrito__lineas">
+            @for (linea of carrito.resumen().lineas; track linea.producto.id) {
+              <adr-linea-carrito
+                [linea]="linea"
+                (cambio)="carrito.cambiar(linea.producto.id, $event)"
+              />
+            }
+          </div>
+          <adr-boton variante="fantasma" [anchoCompleto]="true" (accion)="carrito.vaciar()">
+            Vaciar carrito
+          </adr-boton>
+        }
+      </div>
+
+      <!-- El pie no se desplaza con la lista: el total es lo que decide la compra y con el
+           carrito lleno quedaría fuera de la vista. -->
+      @if (!carrito.vacio()) {
+        <footer class="carrito__pie">
+          <div class="carrito__fila">
+            <span>Subtotal</span>
+            <span>{{ carrito.resumen().subtotalCentavos | pesos }}</span>
+          </div>
+          <div class="carrito__fila">
+            <span>Envío</span>
+            @if (carrito.resumen().envioGratis) {
+              <span class="carrito__gratis">Gratis</span>
+            } @else {
+              <span>{{ carrito.resumen().envioCentavos | pesos }}</span>
+            }
+          </div>
+          <div class="carrito__divisor"></div>
+          <div class="carrito__fila carrito__fila--total">
+            <span>Total</span>
+            <span>{{ carrito.resumen().totalCentavos | pesos }}</span>
+          </div>
+
+          <!--
+            «Ir a pagar» va DESHABILITADO y con su explicación al lado. No hay pasarela: la
+            decisión pendiente 1 de docs/00 §5 sigue abierta y el webhook es la única fuente
+            de verdad del pago (no negociable 3). Un botón que abriera un pago falso es lo
+            único que aquí sería peor que no tenerlo.
+            CONDICIÓN DE SALIDA: se habilita cuando exista `POST /api/pedidos`.
+          -->
+          <adr-boton variante="primario" [anchoCompleto]="true" [deshabilitado]="true">
+            Ir a pagar
+          </adr-boton>
+          <p class="carrito__aviso">
+            <adr-icono nombre="info" [tamanio]="16" />
+            El pago todavía no está disponible. Escríbenos por WhatsApp para completar tu compra.
+          </p>
+        </footer>
+      }
+    </aside>
+  </div>
+}

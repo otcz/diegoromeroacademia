@@ -1,0 +1,321 @@
+@use 'mixins' as m;
+
+:host {
+  display: contents;
+}
+
+.superior {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+
+  display: flex;
+  gap: var(--adr-espacio-3);
+  align-items: center;
+
+  padding: var(--adr-espacio-3) var(--adr-espacio-5);
+
+  background: var(--adr-fondo-barra);
+  border-bottom: 1px solid var(--adr-linea);
+
+  // El desenfoque es lo que permite que la barra sea translúcida sin que el texto de debajo
+  // la atraviese. Donde no exista, el respaldo es el fondo opaco de la aplicación.
+  backdrop-filter: blur(14px);
+
+  @supports not (backdrop-filter: blur(14px)) {
+    background: var(--adr-fondo);
+  }
+}
+
+// ------------------------------------------------------------------ buscador
+.superior__buscador {
+  display: flex;
+  flex: 1;
+  gap: var(--adr-espacio-2);
+  align-items: center;
+
+  // 360px es el tope del handoff. Sin él, el buscador se come todo el ancho sobrante en un
+  // monitor grande y la barra se lee como un formulario en vez de como una cabecera.
+  max-width: 360px;
+  height: 40px;
+  padding-inline: var(--adr-espacio-3);
+
+  color: var(--adr-texto-5);
+  background: var(--adr-relleno-1);
+  border: 1px solid var(--adr-borde);
+  border-radius: 11px;
+
+  input {
+    width: 100%;
+    min-width: 0;
+    font-size: 13px;
+    color: var(--adr-texto-2);
+    background: transparent;
+    border: 0;
+    outline: none;
+
+    &::placeholder {
+      color: var(--adr-texto-5);
+    }
+
+    &:disabled {
+      cursor: not-allowed;
+    }
+  }
+}
+
+.superior__acciones {
+  display: flex;
+  gap: 2px;
+  align-items: center;
+  margin-left: auto;
+}
+
+// --------------------------------------------------------------------- iconos
+.superior__icono {
+  position: relative;
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+
+  // 40px: es un icono dentro de una barra de 64, no un objetivo táctil aislado. En móvil la
+  // barra inferior es la que lleva los objetivos de 48+.
+  width: 40px;
+  height: 40px;
+
+  color: var(--adr-texto-3);
+  cursor: pointer;
+  background: transparent;
+  border: 0;
+  border-radius: 11px;
+  transition:
+    background-color 0.15s ease,
+    color 0.15s ease;
+
+  @include m.foco-visible;
+
+  &:hover {
+    color: var(--adr-texto-1);
+    background: var(--adr-relleno-1);
+  }
+}
+
+.superior__hamburguesa {
+  margin-right: var(--adr-espacio-1);
+}
+
+// Burbuja de conteo del carrito. Lleva número, no solo un punto: «tengo algo» y «tengo tres
+// cosas» son informaciones distintas y la segunda es la que decide si se abre el panel.
+.superior__burbuja {
+  position: absolute;
+  top: 4px;
+  right: 2px;
+
+  min-width: 17px;
+  padding: 1px 4px;
+
+  font-size: 10px;
+  font-weight: 700;
+  line-height: 15px;
+  color: var(--adr-color-blanco);
+  text-align: center;
+
+  background: var(--adr-color-azul-cta-b);
+  border-radius: var(--adr-radio-pastilla);
+  box-shadow: 0 0 0 2px var(--adr-anillo-punto);
+}
+
+.superior__punto {
+  position: absolute;
+  top: 9px;
+  right: 10px;
+  width: 7px;
+  height: 7px;
+  background: var(--adr-estado-dorado-icono);
+  border-radius: var(--adr-radio-pastilla);
+  box-shadow: 0 0 0 2px var(--adr-anillo-punto);
+}
+
+// ------------------------------------------------------------ menú de usuario
+.superior__usuario {
+  position: relative;
+  flex: none;
+}
+
+.superior__disparador {
+  display: flex;
+  gap: var(--adr-espacio-2);
+  align-items: center;
+
+  height: 44px;
+  padding: 0 var(--adr-espacio-2) 0 var(--adr-espacio-3);
+
+  color: var(--adr-texto-3);
+  cursor: pointer;
+  background: transparent;
+  border: 1px solid var(--adr-borde);
+  border-radius: var(--adr-radio-pastilla);
+
+  @include m.foco-visible;
+
+  &:hover {
+    background: var(--adr-relleno-1);
+  }
+}
+
+.superior__usuario-texto {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  align-items: flex-end;
+}
+
+.superior__usuario-nombre {
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--adr-texto-1);
+}
+
+.superior__usuario-plan {
+  font-size: 10.5px;
+  color: var(--adr-texto-5);
+}
+
+.superior__menu {
+  position: absolute;
+  top: calc(100% + var(--adr-espacio-2));
+  right: 0;
+  z-index: 30;
+
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+
+  width: 296px;
+  padding: var(--adr-espacio-2);
+
+  background: var(--adr-superficie);
+  border: 1px solid var(--adr-borde);
+  border-radius: 14px;
+  box-shadow: var(--adr-sombra-flotante);
+
+  // En oscuro la superficie es un velo translúcido y el menú dejaría ver el contenido de
+  // debajo. Una capa flotante tiene que ser opaca o no se lee.
+  [data-theme='oscuro'] & {
+    background: var(--adr-color-noche-panel-a);
+  }
+}
+
+.superior__menu-cabecera {
+  display: flex;
+  gap: var(--adr-espacio-3);
+  align-items: center;
+  padding: var(--adr-espacio-3);
+  margin-bottom: var(--adr-espacio-1);
+  border-bottom: 1px solid var(--adr-linea);
+}
+
+.superior__menu-identidad {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.superior__menu-nombre {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--adr-texto-1);
+}
+
+.superior__menu-correo {
+  overflow: hidden;
+  font-size: 11.5px;
+  color: var(--adr-texto-5);
+  text-overflow: ellipsis;
+}
+
+.superior__opcion {
+  display: flex;
+  gap: var(--adr-espacio-3);
+  align-items: center;
+
+  padding: var(--adr-espacio-2) var(--adr-espacio-3);
+
+  color: var(--adr-texto-2);
+  text-decoration: none;
+
+  border-radius: 11px;
+
+  @include m.foco-visible;
+
+  &:hover {
+    color: var(--adr-texto-1);
+    background: var(--adr-relleno-1);
+  }
+
+  adr-icono:last-child {
+    margin-left: auto;
+    color: var(--adr-texto-5);
+  }
+}
+
+.superior__opcion-icono {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  color: var(--adr-estado-azul-texto);
+  background: var(--adr-estado-azul-fondo);
+  border-radius: 10px;
+}
+
+.superior__opcion-texto {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  min-width: 0;
+}
+
+.superior__opcion-etiqueta {
+  font-size: 12.5px;
+  font-weight: 600;
+}
+
+.superior__opcion-detalle {
+  font-size: 11px;
+  color: var(--adr-texto-5);
+}
+
+.superior__menu-divisor {
+  height: 1px;
+  margin: var(--adr-espacio-1) var(--adr-espacio-3);
+  background: var(--adr-linea);
+}
+
+.superior__opcion--salir .superior__opcion-icono {
+  color: var(--adr-estado-rojo-texto);
+  background: var(--adr-estado-rojo-fondo);
+}
+
+// -------------------------------------------------------------------- estrecho
+// 620px: el punto del handoff. Por debajo, el nombre y el plan estorban más de lo que
+// informan — el avatar ya identifica la cuenta.
+@media (width < 620px) {
+  .superior {
+    gap: var(--adr-espacio-2);
+    padding: var(--adr-espacio-3) var(--adr-espacio-4);
+  }
+
+  .superior__usuario-texto,
+  .superior__hamburguesa {
+    display: none;
+  }
+
+  .superior__menu {
+    width: min(296px, calc(100vw - var(--adr-espacio-6)));
+  }
+}

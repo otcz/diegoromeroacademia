@@ -1,0 +1,118 @@
+@if (certificado(); as diploma) {
+  <div class="certificado">
+    <header class="certificado__cabecera">
+      <a class="adr-volver" routerLink="/mis-cursos">
+        <adr-icono nombre="arrow-left" [tamanio]="16" />
+        Mis cursos
+      </a>
+      <div>
+        <h1 class="adr-cabecera__titulo">Tu certificado está listo</h1>
+        <p class="adr-cabecera__bajada">
+          {{ diploma.curso }} — completado el {{ diploma.fechaEmision }}.
+        </p>
+      </div>
+    </header>
+
+    <div class="certificado__columnas">
+      <!-- El diploma. Papel claro y doble borde dorado EN LOS DOS TEMAS: es un documento
+           impreso, no una superficie de la interfaz. Un certificado en modo oscuro no
+           existe. -->
+      <div class="diploma">
+        <div class="diploma__borde">
+          <div class="diploma__hoja">
+            <span class="diploma__logotipo">
+              <img [src]="logotipo" alt="" width="52" height="52" />
+            </span>
+
+            <p class="diploma__academia">ESTUDIO ACADÉMICO DIEGO ROMERO</p>
+            <p class="diploma__tipo">Certificado de finalización</p>
+
+            <p class="diploma__preambulo">Se certifica que</p>
+            <p class="diploma__nombre">{{ diploma.estudiante }}</p>
+
+            <p class="diploma__cuerpo">
+              completó satisfactoriamente el curso <strong>{{ diploma.curso }}</strong
+              >, con {{ diploma.totalClases }} lecciones y {{ diploma.horasPractica }} horas de
+              práctica guiada.
+            </p>
+
+            <div class="diploma__firmas">
+              <div class="diploma__firma">
+                <span class="diploma__firma-nombre">Diego Romero</span>
+                <span class="diploma__firma-linea"></span>
+                <span class="diploma__firma-cargo">DIRECTOR ACADÉMICO</span>
+              </div>
+              <div class="diploma__firma">
+                <span class="diploma__firma-nombre">{{ diploma.fechaEmision }}</span>
+                <span class="diploma__firma-linea"></span>
+                <span class="diploma__firma-cargo">FECHA DE EMISIÓN</span>
+              </div>
+            </div>
+
+            <p class="diploma__codigo">
+              <adr-icono nombre="seal-check" [tamanio]="16" />
+              Código {{ diploma.codigo }}
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <aside class="certificado__lateral">
+        <section class="adr-panel" aria-labelledby="acciones-titulo">
+          <h2 id="acciones-titulo" class="adr-panel__titulo">Descargar y compartir</h2>
+
+          <!-- Descargar y compartir necesitan el PDF generado en el servidor, que es alcance
+               de la fase 2. Se enseñan deshabilitados en vez de ocultarse: forman parte de lo
+               que promete un certificado. -->
+          <adr-boton
+            variante="primario"
+            icono="download-simple"
+            [anchoCompleto]="true"
+            [deshabilitado]="true"
+          >
+            Descargar PDF
+          </adr-boton>
+          <adr-boton
+            variante="secundario"
+            icono="linkedin-logo"
+            [anchoCompleto]="true"
+            [deshabilitado]="true"
+          >
+            Compartir en LinkedIn
+          </adr-boton>
+
+          <div class="certificado__enlace">
+            <span class="certificado__enlace-rotulo">Enlace de verificación</span>
+            <!-- Se enseña completo y seleccionable en vez de un botón «copiar» que aún no
+                 puede copiar nada: así el alumno lo puede copiar a mano si le hace falta. -->
+            <code class="certificado__enlace-valor">{{ enlaceVerificacion() }}</code>
+          </div>
+
+          <p class="certificado__nota">
+            <adr-icono nombre="shield-check" [tamanio]="16" />
+            Cualquiera puede validar el código en esa dirección, sin cuenta.
+          </p>
+        </section>
+
+        <section class="adr-panel adr-panel--azul" aria-labelledby="sigue-titulo">
+          <h2 id="sigue-titulo" class="adr-panel__titulo">Sigue con el Nivel 2</h2>
+          <p class="adr-panel__contexto">
+            Ya llevas 42 % del Nivel Intermedio. Termina el módulo 4 para desbloquear el siguiente
+            certificado.
+          </p>
+          <adr-boton variante="primario" [anchoCompleto]="true" enlace="/clase/l7">
+            Continuar mis clases
+          </adr-boton>
+        </section>
+
+        <section class="adr-panel adr-panel--plano" aria-labelledby="permanente-titulo">
+          <h2 id="permanente-titulo" class="adr-panel__vivo">TUYO PARA SIEMPRE</h2>
+          <p class="adr-panel__contexto">
+            El certificado no se pierde si cancelas la suscripción. Tampoco tus tutoriales comprados
+            ni tu historial de progreso.
+          </p>
+        </section>
+      </aside>
+    </div>
+  </div>
+}

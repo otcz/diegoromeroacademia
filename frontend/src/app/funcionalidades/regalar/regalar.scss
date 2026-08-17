@@ -1,0 +1,329 @@
+@use 'mixins' as m;
+
+:host {
+  display: block;
+}
+
+.regalar {
+  display: flex;
+  flex-direction: column;
+  gap: var(--adr-espacio-4);
+  max-width: 1400px;
+}
+
+.regalar__cabecera {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--adr-espacio-4);
+  align-items: center;
+}
+
+.regalar__identidad {
+  flex: 1;
+  min-width: 220px;
+}
+
+// ------------------------------------------------------------------- canje
+.regalar__canje {
+  position: relative;
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: center;
+
+  input {
+    flex: 1;
+    min-width: 180px;
+    height: 44px;
+    padding-inline: var(--adr-espacio-4);
+
+    font-size: 13px;
+    letter-spacing: 0.06em;
+    color: var(--adr-texto-2);
+
+    background: var(--adr-superficie);
+    border: 1px solid var(--adr-borde-fuerte);
+    border-radius: 12px;
+    outline: none;
+
+    &:disabled {
+      cursor: not-allowed;
+    }
+  }
+}
+
+.regalar__canje-texto {
+  flex: 1;
+  min-width: 220px;
+  font-size: 12.5px;
+  color: var(--adr-texto-4);
+}
+
+.regalar__canje-cerrar {
+  position: absolute;
+  top: var(--adr-espacio-2);
+  right: var(--adr-espacio-2);
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+
+  color: var(--adr-texto-5);
+  cursor: pointer;
+  background: transparent;
+  border: 0;
+  border-radius: var(--adr-radio-pastilla);
+
+  @include m.foco-visible;
+}
+
+// ---------------------------------------------------------------- columnas
+.regalar__columnas {
+  display: grid;
+  grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
+  gap: var(--adr-espacio-4);
+  align-items: start;
+}
+
+.regalar__pasos,
+.regalar__lateral {
+  display: flex;
+  flex-direction: column;
+  gap: var(--adr-espacio-4);
+  min-width: 0;
+}
+
+.regalar__paso-cabecera {
+  display: flex;
+  gap: var(--adr-espacio-3);
+  align-items: center;
+}
+
+.regalar__numero {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+
+  width: 28px;
+  height: 28px;
+
+  font-family: var(--adr-fuente-titular);
+  font-size: 13px;
+  font-weight: 800;
+  color: var(--adr-color-blanco);
+
+  background: var(--adr-degradado-cta);
+  border-radius: var(--adr-radio-pastilla);
+}
+
+// --------------------------------------------------------------- opciones
+.regalar__opciones {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(210px, 100%), 1fr));
+  gap: var(--adr-espacio-2);
+}
+
+.regalar__opcion {
+  display: flex;
+  gap: var(--adr-espacio-3);
+  align-items: center;
+  justify-content: space-between;
+
+  padding: var(--adr-espacio-3);
+
+  text-align: left;
+  cursor: pointer;
+
+  background: transparent;
+  border: 1px solid var(--adr-borde);
+  border-radius: 12px;
+
+  @include m.foco-visible;
+
+  &:hover {
+    background: var(--adr-relleno-1);
+  }
+
+  &--activa {
+    background: var(--adr-estado-azul-fondo);
+    border-color: var(--adr-estado-azul-borde);
+  }
+}
+
+.regalar__opcion-nombre {
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--adr-texto-1);
+}
+
+.regalar__opcion-precio {
+  flex: none;
+  font-size: 12.5px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  color: var(--adr-texto-4);
+}
+
+.regalar__aviso {
+  display: flex;
+  gap: var(--adr-espacio-2);
+  align-items: flex-start;
+
+  padding: var(--adr-espacio-3);
+
+  font-size: 12px;
+  line-height: 1.5;
+
+  color: var(--adr-texto-4);
+  background: var(--adr-relleno-1);
+  border-radius: 10px;
+
+  adr-icono {
+    flex: none;
+    margin-top: 1px;
+    color: var(--adr-texto-5);
+  }
+}
+
+// ---------------------------------------------------------------- campos
+.regalar__campos {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(220px, 100%), 1fr));
+  gap: var(--adr-espacio-3);
+}
+
+.regalar__campo {
+  display: flex;
+  flex-direction: column;
+  gap: var(--adr-espacio-2);
+
+  > span:first-child,
+  .regalar__campo-rotulo {
+    font-size: 12.5px;
+    font-weight: 600;
+    color: var(--adr-texto-2);
+  }
+
+  input,
+  textarea {
+    width: 100%;
+    padding: var(--adr-espacio-3) var(--adr-espacio-4);
+
+    font-family: var(--adr-fuente-cuerpo);
+    font-size: 13.5px;
+    color: var(--adr-texto-1);
+
+    background: var(--adr-superficie-2);
+    border: 1px solid var(--adr-borde-fuerte);
+    border-radius: 12px;
+
+    &::placeholder {
+      color: var(--adr-texto-5);
+    }
+
+    &:focus {
+      border-color: var(--adr-color-foco);
+      outline: none;
+      box-shadow: var(--adr-anillo-foco);
+    }
+  }
+
+  input {
+    min-height: var(--adr-altura-control);
+  }
+
+  textarea {
+    resize: vertical;
+  }
+}
+
+.regalar__campo-rotulo {
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--adr-texto-2);
+}
+
+.regalar__contador {
+  font-size: 11px;
+  color: var(--adr-texto-5);
+  text-align: right;
+}
+
+.regalar__entrega {
+  display: flex;
+  flex-direction: column;
+  gap: var(--adr-espacio-2);
+}
+
+// ----------------------------------------------------------------- medios
+.regalar__medios {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--adr-espacio-2);
+}
+
+.regalar__medio {
+  display: inline-flex;
+  gap: var(--adr-espacio-2);
+  align-items: center;
+
+  padding: var(--adr-espacio-3) var(--adr-espacio-4);
+
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--adr-texto-4);
+
+  background: var(--adr-relleno-1);
+  border: 1px solid var(--adr-borde);
+  border-radius: 12px;
+
+  // No son botones: no se pueden elegir todavía. Se ven apagados a propósito para que no
+  // inviten a pulsarlos.
+  opacity: 0.72;
+}
+
+// ---------------------------------------------------------------- resumen
+.regalar__fila {
+  display: flex;
+  justify-content: space-between;
+  font-size: 12.5px;
+  color: var(--adr-texto-4);
+
+  &--total {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--adr-texto-1);
+  }
+}
+
+.regalar__gratis {
+  font-weight: 600;
+  color: var(--adr-estado-verde-texto);
+}
+
+.regalar__divisor {
+  height: 1px;
+  background: var(--adr-linea);
+}
+
+.regalar__nota {
+  display: flex;
+  gap: var(--adr-espacio-2);
+  align-items: flex-start;
+  font-size: 11.5px;
+  line-height: 1.45;
+  color: var(--adr-texto-5);
+
+  adr-icono {
+    flex: none;
+    margin-top: 1px;
+  }
+}
+
+@media (width < 1024px) {
+  .regalar__columnas {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}

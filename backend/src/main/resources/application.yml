@@ -110,7 +110,12 @@ academia:
   identidad:
     # A donde vuelve el navegador cuando Google confirma. Relativo: sirve igual en local y en
     # el servidor, porque el frontend y la API comparten origen detras de nginx.
-    destino-tras-ingresar: ${IDENTIDAD_DESTINO_OK:/}
+    #
+    # Era `/` mientras el alumno no tenia panel al que llegar. Ahora existe (ADR 0013). Tiene
+    # que coincidir con `DESTINO_TRAS_INGRESAR` de `frontend/src/app/app.routes.ts`: si no,
+    # se entra a un sitio distinto segun se use Google o el formulario de correo, y esa es la
+    # clase de diferencia que nadie nota hasta que un alumno la reporta.
+    destino-tras-ingresar: ${IDENTIDAD_DESTINO_OK:/inicio}
     destino-tras-fallar: ${IDENTIDAD_DESTINO_ERROR:/acceso}
 
   seguridad:

@@ -1,0 +1,156 @@
+@if (clase(); as leccion) {
+  <div class="clase">
+    <header class="clase__cabecera">
+      <a class="adr-volver" routerLink="/mis-cursos">
+        <adr-icono nombre="arrow-left" [tamanio]="16" />
+        Volver al curso
+      </a>
+      <div class="clase__identidad">
+        <h1 class="clase__titulo">Lección {{ leccion.numero }} · {{ leccion.titulo }}</h1>
+        <p class="clase__contexto">{{ leccion.cursoTitulo }} · {{ leccion.moduloTitulo }}</p>
+      </div>
+      <span class="clase__posicion">Clase {{ leccion.numero }} de {{ leccion.totalClases }}</span>
+    </header>
+
+    <div class="clase__columnas">
+      <div class="clase__principal">
+        <adr-reproductor
+          [poster]="leccion.poster"
+          [duracionSegundos]="leccion.duracionSegundos"
+          [pisadas]="leccion.pisadas"
+          modo="clase"
+        />
+
+        <section class="adr-panel" aria-label="Detalle de la lección">
+          <div class="adr-filtros">
+            @for (opcion of pestanias; track opcion.clave) {
+              <adr-chip
+                [activo]="pestania() === opcion.clave"
+                (elegido)="pestania.set(opcion.clave)"
+              >
+                {{ opcion.etiqueta }}
+                @if (opcion.clave === 'comentarios') {
+                  <span> · {{ leccion.comentarios.length }}</span>
+                }
+              </adr-chip>
+            }
+          </div>
+
+          @switch (pestania()) {
+            @case ('resumen') {
+              <p class="clase__resumen">{{ leccion.resumen }}</p>
+              <div class="clase__datos">
+                <span class="adr-panel__pastilla adr-panel__pastilla--azul"
+                  >Tono {{ leccion.tono }}</span
+                >
+                <span class="adr-panel__pastilla adr-panel__pastilla--azul"
+                  >{{ leccion.bpm }} BPM</span
+                >
+                <span class="adr-panel__pastilla">Fuelle: abrir y cerrar</span>
+              </div>
+
+              <div class="clase__capitulos">
+                <h2 class="adr-panel__titulo">Capítulos</h2>
+                @for (capitulo of leccion.capitulos; track capitulo.segundo) {
+                  <!-- Salta el vídeo de verdad: es la razón de que el reproductor exponga
+                       `irA` y de que esta pantalla guarde una referencia a él. -->
+                  <button
+                    type="button"
+                    class="clase__capitulo"
+                    (click)="irACapitulo(capitulo.segundo)"
+                  >
+                    <span class="clase__capitulo-tiempo">{{ capitulo.segundo | duracion }}</span>
+                    <span>{{ capitulo.titulo }}</span>
+                  </button>
+                }
+              </div>
+            }
+
+            @case ('recursos') {
+              <div class="adr-panel__lista">
+                @for (recurso of leccion.recursos; track recurso.id) {
+                  <!-- Deshabilitados: los archivos todavía no existen en almacenamiento. Se
+                       enseñan porque forman parte de lo que incluye la clase, y se dice que
+                       aún no se pueden descargar en vez de dar un enlace roto. -->
+                  <div class="clase__recurso">
+                    <span class="clase__recurso-icono">
+                      <adr-icono [nombre]="iconoRecurso[recurso.tipo]" [tamanio]="20" />
+                    </span>
+                    <span class="clase__recurso-texto">
+                      <span class="clase__recurso-titulo">{{ recurso.titulo }}</span>
+                      <span class="clase__recurso-detalle">{{ recurso.detalle }}</span>
+                    </span>
+                    <span class="adr-panel__pastilla">Próximamente</span>
+                  </div>
+                }
+              </div>
+            }
+
+            @default {
+              <div class="clase__escribir">
+                <adr-avatar [nombre]="perfil().nombre" [foto]="perfil().foto" [tamanio]="32" />
+                <!-- El campo está deshabilitado: no hay endpoint que reciba el comentario y
+                     escribir para que se pierda al recargar es peor que no poder escribir. -->
+                <input
+                  type="text"
+                  placeholder="Escribir un comentario estará disponible pronto"
+                  aria-label="Escribe tu comentario o pregunta a Diego"
+                  disabled
+                />
+              </div>
+
+              <div class="clase__comentarios">
+                @for (comentario of leccion.comentarios; track comentario.id) {
+                  <article class="comentario" [class.comentario--profesor]="comentario.esProfesor">
+                    <adr-avatar [nombre]="comentario.autor" [tamanio]="32" />
+                    <div class="comentario__cuerpo">
+                      <p class="comentario__firma">
+                        <strong>{{ comentario.autor }}</strong>
+                        @if (comentario.esProfesor) {
+                          <span class="adr-panel__pastilla adr-panel__pastilla--azul"
+                            >Profesor</span
+                          >
+                        }
+                        <span class="comentario__cuando">
+                          {{ comentario.cuando }}
+                          @if (comentario.segundo !== null) {
+                            <span> · min {{ comentario.segundo | duracion }}</span>
+                          }
+                        </span>
+                      </p>
+                      <p class="comentario__texto">{{ comentario.texto }}</p>
+                      <p class="comentario__votos">
+                        <adr-icono nombre="thumbs-up" [tamanio]="16" />
+                        {{ comentario.votos }}
+                      </p>
+                    </div>
+                  </article>
+                }
+              </div>
+            }
+          }
+        </section>
+      </div>
+
+      <aside class="clase__lateral">
+        <section class="adr-panel" aria-labelledby="progreso-titulo">
+          <div class="adr-panel__cabecera">
+            <h2 id="progreso-titulo" class="adr-panel__titulo">Progreso del curso</h2>
+            <span class="adr-panel__porcentaje">{{ leccion.avanceCurso }} %</span>
+          </div>
+          <adr-barra-progreso [valor]="leccion.avanceCurso" etiqueta="Progreso del curso" />
+
+          <div class="adr-panel__lista">
+            @for (item of leccion.lista; track item.id) {
+              <adr-item-lista [item]="item" />
+            }
+          </div>
+
+          <adr-boton variante="secundario" [anchoCompleto]="true" [deshabilitado]="true">
+            Marcar clase como vista
+          </adr-boton>
+        </section>
+      </aside>
+    </div>
+  </div>
+}

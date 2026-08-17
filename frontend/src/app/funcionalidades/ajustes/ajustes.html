@@ -1,0 +1,105 @@
+<div class="ajustes">
+  <header class="ajustes__cabecera">
+    <a class="adr-volver" routerLink="/inicio">
+      <adr-icono nombre="arrow-left" [tamanio]="16" />
+      Inicio
+    </a>
+    <div>
+      <h1 class="adr-cabecera__titulo">Ajustes</h1>
+      <p class="adr-cabecera__bajada">Notificaciones, idioma y reproducción de las clases.</p>
+    </div>
+  </header>
+
+  <!-- Se dice una vez, arriba, en vez de repetir «guardado» junto a cada interruptor. -->
+  <p class="ajustes__aviso">
+    <adr-icono nombre="check-circle" [tamanio]="16" />
+    Los cambios se guardan solos en este navegador.
+  </p>
+
+  <div class="ajustes__columnas">
+    <section class="adr-panel" aria-labelledby="notif-titulo">
+      <div>
+        <h2 id="notif-titulo" class="adr-panel__titulo">Notificaciones</h2>
+        <p class="adr-panel__contexto">Elige qué quieres recibir por correo y WhatsApp.</p>
+      </div>
+
+      <div class="ajustes__filas">
+        @for (fila of filasNotificacion; track fila.clave) {
+          <div class="ajustes__fila">
+            <span class="ajustes__fila-texto">
+              <span class="ajustes__fila-etiqueta">{{ fila.etiqueta }}</span>
+              <span class="ajustes__fila-detalle">{{ fila.detalle }}</span>
+            </span>
+            <adr-interruptor
+              [activo]="preferencias().notificaciones[fila.clave]"
+              [etiqueta]="fila.etiqueta"
+              (alternado)="alternarNotificacion(fila.clave)"
+            />
+          </div>
+        }
+      </div>
+    </section>
+
+    <div class="ajustes__lateral">
+      <section class="adr-panel" aria-labelledby="idioma-titulo">
+        <h2 id="idioma-titulo" class="adr-panel__titulo">Idioma</h2>
+        <div class="adr-filtros">
+          @for (idioma of idiomas; track idioma) {
+            <adr-chip [activo]="preferencias().idioma === idioma" (elegido)="elegirIdioma(idioma)">
+              {{ idioma }}
+            </adr-chip>
+          }
+        </div>
+        <!-- Honesto: la traducción de la interfaz no existe todavía. -->
+        <p class="ajustes__nota">
+          Por ahora solo cambia el idioma de los correos. La interfaz está en español.
+        </p>
+
+        <div class="ajustes__dato">
+          <span class="ajustes__fila-etiqueta">Zona horaria</span>
+          <span class="adr-panel__pastilla">{{ preferencias().zonaHoraria }}</span>
+        </div>
+        <div class="ajustes__dato">
+          <span class="ajustes__fila-etiqueta">Subtítulos</span>
+          <span class="adr-panel__pastilla">{{ preferencias().subtitulos }}</span>
+        </div>
+      </section>
+
+      <section class="adr-panel" aria-labelledby="repro-titulo">
+        <h2 id="repro-titulo" class="adr-panel__titulo">Reproducción</h2>
+        <div class="ajustes__filas">
+          @for (fila of filasReproduccion; track fila.clave) {
+            <div class="ajustes__fila">
+              <span class="ajustes__fila-texto">
+                <span class="ajustes__fila-etiqueta">{{ fila.etiqueta }}</span>
+                <span class="ajustes__fila-detalle">{{ fila.detalle }}</span>
+              </span>
+              <adr-interruptor
+                [activo]="preferencias().reproduccion[fila.clave]"
+                [etiqueta]="fila.etiqueta"
+                (alternado)="alternarReproduccion(fila.clave)"
+              />
+            </div>
+          }
+        </div>
+      </section>
+
+      <section class="adr-panel" aria-labelledby="tema-titulo">
+        <h2 id="tema-titulo" class="adr-panel__titulo">Tema de la aplicación</h2>
+        <div class="ajustes__tema">
+          <span class="ajustes__fila-detalle">
+            Ahora estás en modo <strong>{{ tema.nombre() }}</strong
+            >.
+          </span>
+          <adr-boton
+            variante="secundario"
+            [icono]="tema.esOscuro() ? 'sun' : 'moon'"
+            (accion)="tema.alternar()"
+          >
+            Cambiar a {{ tema.esOscuro() ? 'claro' : 'oscuro' }}
+          </adr-boton>
+        </div>
+      </section>
+    </div>
+  </div>
+</div>

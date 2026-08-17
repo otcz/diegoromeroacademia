@@ -1,0 +1,100 @@
+@use 'mixins' as m;
+
+:host {
+  display: block;
+}
+
+.shell {
+  display: flex;
+  min-height: 100vh;
+  background: var(--adr-fondo);
+  color: var(--adr-texto-1);
+
+  // Oculta la barra lateral cuando el alumno la cerró con la hamburguesa. La regla vive
+  // aquí y no dentro del propio componente porque es el shell quien conoce el estado; la
+  // barra no tiene por qué saber que se la puede esconder.
+  &[data-nav='oculta'] adr-barra-lateral {
+    display: none;
+  }
+}
+
+.shell__principal {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-width: 0;
+  background: var(--adr-fondo-contenido);
+}
+
+.shell__contenido {
+  flex: 1;
+  padding: var(--adr-espacio-6) var(--adr-espacio-5) var(--adr-espacio-7);
+
+  // Sin esto, un elemento ancho —una tabla, la franja del simulador— estira el contenedor y
+  // toda la aplicación gana desplazamiento horizontal en vez de desplazarse solo el ancho.
+  min-width: 0;
+
+  // `tabindex="-1"` lo hace enfocable para el salto al contenido, y eso trae un anillo de
+  // foco sobre un contenedor del tamaño de la pantalla. Se quita solo aquí, donde el foco es
+  // un destino de navegación y no un control.
+  &:focus {
+    outline: none;
+  }
+}
+
+// ------------------------------------------------------------ salto al contenido
+// Fuera de la pantalla hasta que recibe el foco. No con `display:none`: eso lo sacaría
+// también del orden de tabulación y dejaría de existir para quien lo necesita.
+.shell__salto {
+  position: absolute;
+  top: var(--adr-espacio-2);
+  left: var(--adr-espacio-2);
+  z-index: 50;
+
+  padding: var(--adr-espacio-2) var(--adr-espacio-4);
+
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--adr-color-blanco);
+  text-decoration: none;
+
+  background: var(--adr-color-azul-cta-b);
+  border-radius: 10px;
+  transform: translateY(-200%);
+
+  &:focus-visible {
+    color: var(--adr-color-blanco);
+    outline: 2px solid var(--adr-color-blanco);
+    outline-offset: 2px;
+    transform: translateY(0);
+  }
+}
+
+// -------------------------------------------------------------------- tableta
+// 1024px: por debajo desaparece la barra lateral y manda la barra inferior. El handoff
+// aprueba también un riel de iconos de 84px para tableta; se elige la barra inferior, que
+// es la que usa el prototipo responsive y la que resuelve tableta y móvil con una pieza.
+@media (width < 1024px) {
+  .shell adr-barra-lateral {
+    display: none;
+  }
+
+  .shell__contenido {
+    // Deja sitio a la barra inferior fija. Sin esto, la última tarjeta de cada pantalla
+    // queda debajo de las pestañas y no se puede pulsar.
+    padding-bottom: calc(var(--adr-nav-inferior) + var(--adr-espacio-5));
+  }
+}
+
+@media (width >= 1024px) {
+  .shell adr-nav-inferior {
+    display: none;
+  }
+}
+
+@media (width < 620px) {
+  .shell__contenido {
+    padding-inline: var(--adr-espacio-4);
+    padding-top: var(--adr-espacio-5);
+  }
+}

@@ -1,0 +1,103 @@
+@if (ejercicio(); as pieza) {
+  <div class="guiado">
+    <header class="guiado__cabecera">
+      <a class="adr-volver" routerLink="/practica">
+        <adr-icono nombre="arrow-left" [tamanio]="16" />
+        Zona Ejercicios
+      </a>
+      <div class="guiado__identidad">
+        <h1 class="guiado__titulo">{{ pieza.titulo }}</h1>
+        <p class="guiado__contexto">
+          Ejercicio de {{ pieza.tipo.toLowerCase() }} · Nivel {{ pieza.nivel }} ·
+          {{ pieza.duracionSegundos | duracion }}
+        </p>
+      </div>
+      <span class="adr-panel__pastilla">Practicado {{ pieza.vecesPracticado }} veces</span>
+    </header>
+
+    <div class="guiado__columnas">
+      <div class="guiado__principal">
+        <adr-reproductor
+          [poster]="pieza.portada"
+          [duracionSegundos]="pieza.duracionSegundos"
+          [pisadas]="pieza.pisadas"
+          modo="ejercicio"
+          kicker="EJERCICIO GUIADO"
+        />
+
+        <div class="guiado__fila">
+          <section class="adr-panel" aria-labelledby="reps-titulo">
+            <h2 id="reps-titulo" class="adr-panel__titulo">Repeticiones de hoy</h2>
+            <p class="guiado__contador">
+              <strong>{{ repeticiones() }}</strong>
+              <span>de {{ pieza.repeticionesObjetivo }}</span>
+            </p>
+            <adr-barra-progreso
+              [valor]="avanceRepeticiones()"
+              etiqueta="Repeticiones registradas hoy"
+            />
+            <adr-boton variante="primario" [anchoCompleto]="true" (accion)="registrarRepeticion()">
+              Registrar repetición
+            </adr-boton>
+            <!-- Se dice que no se guarda. Descubrirlo al volver es peor que saberlo antes. -->
+            <p class="guiado__nota">El conteo es de esta sesión: aún no se guarda en tu cuenta.</p>
+          </section>
+
+          <section class="adr-panel" aria-labelledby="pasos-titulo">
+            <h2 id="pasos-titulo" class="adr-panel__titulo">Pasos del ejercicio</h2>
+            <ol class="guiado__pasos">
+              @for (paso of pieza.pasos; track paso) {
+                <li>
+                  <button
+                    type="button"
+                    class="guiado__paso"
+                    [class.guiado__paso--hecho]="$index < pasosHechos()"
+                    [attr.aria-pressed]="$index < pasosHechos()"
+                    (click)="marcarHasta($index)"
+                  >
+                    <span class="guiado__paso-marca">
+                      @if ($index < pasosHechos()) {
+                        <adr-icono nombre="check" [tamanio]="16" />
+                      } @else {
+                        {{ $index + 1 }}
+                      }
+                    </span>
+                    <span>{{ paso }}</span>
+                  </button>
+                </li>
+              }
+            </ol>
+          </section>
+        </div>
+      </div>
+
+      <aside class="guiado__lateral">
+        <section class="adr-panel" aria-labelledby="escalas-titulo">
+          <h2 id="escalas-titulo" class="adr-panel__titulo">Tu progreso en escalas</h2>
+          <div class="guiado__escalas">
+            @for (escala of escalas(); track escala.nombre) {
+              <div class="guiado__escala">
+                <p class="guiado__escala-firma">
+                  <span>{{ escala.nombre }}</span>
+                  <span>{{ escala.etiqueta }}</span>
+                </p>
+                <adr-barra-progreso
+                  [valor]="escala.avance"
+                  [etiqueta]="'Avance en ' + escala.nombre"
+                />
+              </div>
+            }
+          </div>
+        </section>
+
+        <section class="adr-panel adr-panel--dorado" aria-labelledby="consejo-titulo">
+          <h2 id="consejo-titulo" class="adr-panel__vivo">
+            <adr-icono nombre="sparkle" [tamanio]="16" />
+            CONSEJO DE DIEGO
+          </h2>
+          <p class="guiado__consejo">{{ pieza.consejo }}</p>
+        </section>
+      </aside>
+    </div>
+  </div>
+}

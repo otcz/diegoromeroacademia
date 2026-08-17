@@ -28,14 +28,97 @@ export const rutas: Routes = [
     loadComponent: () => import('./funcionalidades/acceso/acceso').then((m) => m.Acceso),
   },
   {
-    path: 'perfil',
-    title: 'Tu cuenta — Academia Diego Romero',
-    loadComponent: () => import('./funcionalidades/perfil/perfil').then((m) => m.Perfil),
-  },
-  {
     path: 'login',
     pathMatch: 'full',
     redirectTo: 'acceso',
+  },
+  // ==========================================================================
+  // Aplicacion del estudiante (ADR 0013).
+  //
+  // Todas cuelgan de un padre sin ruta propia para compartir una unica instancia del shell:
+  // al navegar entre secciones no se vuelve a crear el menu, asi que la barra lateral no
+  // parpadea y el carrito abierto no se cierra solo.
+  //
+  // El padre va DESPUES de `''` y de `acceso` y ANTES del comodin. El orden importa: un
+  // padre de ruta vacia intenta casar cualquier URL, asi que si estuviera arriba se quedaria
+  // con la portada.
+  // ==========================================================================
+  {
+    path: '',
+    loadComponent: () => import('./compartido/disposicion/shell').then((m) => m.Shell),
+    children: [
+      {
+        path: 'inicio',
+        title: 'Tu panel — Academia Diego Romero',
+        loadComponent: () => import('./funcionalidades/inicio/inicio').then((m) => m.Inicio),
+      },
+      {
+        path: 'mis-cursos',
+        title: 'Mis cursos — Academia Diego Romero',
+        loadComponent: () =>
+          import('./funcionalidades/mis-cursos/mis-cursos').then((m) => m.MisCursos),
+      },
+      {
+        path: 'clase/:id',
+        title: 'Clase — Academia Diego Romero',
+        loadComponent: () => import('./funcionalidades/clase/clase').then((m) => m.ClasePantalla),
+      },
+      {
+        path: 'practica',
+        title: 'Zona de ejercicios — Academia Diego Romero',
+        loadComponent: () => import('./funcionalidades/practica/practica').then((m) => m.Practica),
+      },
+      {
+        path: 'practica/:id',
+        title: 'Ejercicio guiado — Academia Diego Romero',
+        loadComponent: () =>
+          import('./funcionalidades/practica/ejercicio-guiado').then((m) => m.EjercicioGuiado),
+      },
+      {
+        path: 'tutoriales',
+        title: 'Tutoriales — Academia Diego Romero',
+        loadComponent: () =>
+          import('./funcionalidades/tutoriales/tutoriales').then((m) => m.Tutoriales),
+      },
+      {
+        path: 'tutoriales/:id',
+        title: 'Ver tutorial — Academia Diego Romero',
+        loadComponent: () =>
+          import('./funcionalidades/tutoriales/ver-tutorial').then((m) => m.VerTutorial),
+      },
+      {
+        path: 'tienda',
+        title: 'Tienda — Academia Diego Romero',
+        loadComponent: () => import('./funcionalidades/tienda/tienda').then((m) => m.Tienda),
+      },
+      {
+        path: 'regalar',
+        title: 'Regalar — Academia Diego Romero',
+        loadComponent: () => import('./funcionalidades/regalar/regalar').then((m) => m.Regalar),
+      },
+      {
+        path: 'suscripcion',
+        title: 'Mi suscripción — Academia Diego Romero',
+        loadComponent: () =>
+          import('./funcionalidades/suscripcion/suscripcion').then((m) => m.SuscripcionPantalla),
+      },
+      {
+        path: 'perfil',
+        title: 'Mi perfil — Academia Diego Romero',
+        loadComponent: () => import('./funcionalidades/perfil/perfil').then((m) => m.Perfil),
+      },
+      {
+        path: 'ajustes',
+        title: 'Ajustes — Academia Diego Romero',
+        loadComponent: () => import('./funcionalidades/ajustes/ajustes').then((m) => m.Ajustes),
+      },
+      {
+        path: 'certificados/:id',
+        title: 'Certificado — Academia Diego Romero',
+        loadComponent: () =>
+          import('./funcionalidades/certificado/certificado').then((m) => m.CertificadoPantalla),
+      },
+    ],
   },
   {
     // Antes esto era `redirectTo: ''`. Se cambio a una pantalla explicita porque el redirect
@@ -55,11 +138,30 @@ export const rutas: Routes = [
  * <p>Existe para que una prueba pueda comprobar que ningun texto de la landing apunta a una
  * ruta inexistente. Se deriva de `rutas` en vez de escribirse a mano: una lista paralela se
  * desincroniza en la primera pantalla nueva y la prueba pasaria a mentir.
+ *
+ * <p>Recorre tambien las rutas HIJAS. Cuando la aplicacion del estudiante paso a colgar de un
+ * padre de ruta vacia, la version plana dejo de ver `/inicio`, `/tienda` y las otras once: la
+ * prueba seguia en verde porque no encontraba enlaces rotos, pero es que ya no miraba donde
+ * estaban. Una comprobacion que deja de comprobar sin fallar es peor que no tenerla.
  */
-export const RUTAS_INTERNAS: readonly string[] = rutas
-  .map((r) => r.path)
-  .filter((p): p is string => typeof p === 'string' && p !== '**')
-  .map((p) => `/${p}`);
+function recolectarRutas(lista: Routes, prefijo = ''): string[] {
+  return lista.flatMap((ruta) => {
+    if (typeof ruta.path !== 'string' || ruta.path === '**') {
+      return [];
+    }
+
+    // Un padre de ruta vacia solo agrupa: aporta el prefijo de sus hijas y ningun destino
+    // propio. Una ruta vacia SIN hijas si es una pantalla — la portada — y su destino es `/`.
+    if (ruta.path === '') {
+      return ruta.children ? recolectarRutas(ruta.children, prefijo) : [prefijo || '/'];
+    }
+
+    const completa = `${prefijo}/${ruta.path}`;
+    return [completa, ...(ruta.children ? recolectarRutas(ruta.children, completa) : [])];
+  });
+}
+
+export const RUTAS_INTERNAS: readonly string[] = recolectarRutas(rutas);
 
 /**
  * Destino de toda llamada a la accion mientras no exista la pantalla de registro (§6.2).
@@ -81,10 +183,12 @@ export const DESTINO_REGISTRO = '/acceso';
  * Google. Tienen que coincidir: si no, se entra a un sitio distinto segun el metodo usado, y
  * esa es la clase de diferencia que nadie nota hasta que un alumno la reporta.
  *
- * <p>CONDICION DE SALIDA: pasa al panel del alumno el dia que exista. Se cambia AQUI, y
- * tambien en la variable del backend.
+ * <p>Fue `/` mientras no habia panel. Ya existe (ADR 0013), asi que se cumplio la condicion
+ * de salida que estaba anotada aqui: entrar lleva al panel del alumno y no a la portada.
+ * Hay que cambiar tambien `IDENTIDAD_DESTINO_OK` en el backend — si no coinciden, se entra
+ * a un sitio distinto segun el metodo usado.
  */
-export const DESTINO_TRAS_INGRESAR = '/';
+export const DESTINO_TRAS_INGRESAR = '/inicio';
 
 /**
  * A donde va el alumno al cerrar sesion.

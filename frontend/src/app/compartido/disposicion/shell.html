@@ -1,0 +1,20 @@
+<!-- `data-nav` es lo único que decide si la barra lateral se dibuja. Con una clase por
+     estado acabarían conviviendo `.sin-nav` y `.nav-oculta` sin que nadie recuerde cuál gana. -->
+<div class="shell" [attr.data-nav]="disposicion.barraLateralVisible() ? 'visible' : 'oculta'">
+  <adr-barra-lateral />
+
+  <main class="shell__principal">
+    <adr-barra-superior />
+
+    <!-- Salto al contenido. Sin él, quien navega con teclado recorre las cinco entradas del
+         menú y los seis iconos de la barra en CADA cambio de pantalla. -->
+    <a class="shell__salto" href="#contenido">Saltar al contenido</a>
+
+    <div class="shell__contenido" id="contenido" tabindex="-1">
+      <router-outlet />
+    </div>
+  </main>
+
+  <adr-nav-inferior />
+  <adr-panel-carrito />
+</div>

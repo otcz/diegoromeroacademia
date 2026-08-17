@@ -1,11 +1,15 @@
 import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
+import { RouterLink } from '@angular/router';
 import { Alerta } from '../../compartido/componentes/alerta/alerta';
+import { Avatar } from '../../compartido/componentes/avatar/avatar';
 import { Boton } from '../../compartido/componentes/boton/boton';
 import { Campo } from '../../compartido/componentes/campo/campo';
-import { NavPublica } from '../../compartido/componentes/nav-publica/nav-publica';
+import { Chip } from '../../compartido/componentes/chip/chip';
+import { Icono } from '../../compartido/componentes/icono/icono';
+import { Interruptor } from '../../compartido/componentes/interruptor/interruptor';
 import { AutenticacionServicio } from '../../nucleo/servicios/autenticacion-servicio';
+import { CuentaServicio, NIVELES } from '../../nucleo/servicios/cuenta-servicio';
 
 /**
  * Longitud minima que acepta el formulario.
@@ -16,37 +20,57 @@ import { AutenticacionServicio } from '../../nucleo/servicios/autenticacion-serv
  */
 const LONGITUD_MINIMA = 12;
 
-type EstadoPerfil = 'cargando' | 'listo' | 'guardando' | 'guardada' | 'error';
+/** Estado del unico bloque de esta pantalla que habla de verdad con el backend. */
+type EstadoContrasena = 'comprobando' | 'sinSesion' | 'listo' | 'guardando' | 'guardada' | 'error';
 
 /**
- * Perfil del alumno: hoy, poner o cambiar la contrasena.
+ * Mi perfil: foto, datos, nivel, resumen de cuenta y seguridad.
  *
- * <p><b>Para que sirve.</b> Quien entro con Google no tiene contrasena, y por tanto depende
- * de Google para siempre. Aqui deja una propia y puede entrar por el formulario — que es el
- * respaldo obligatorio de la especificacion §5.1: no todos tienen Google activo, y quien
- * pierde el acceso a su cuenta de Google perderia tambien la de la academia.
+ * <p><b>Solo un bloque de esta pantalla funciona de verdad hoy: el de la contrasena.</b> Es
+ * el que existia antes del rediseno y sigue hablando con `POST /api/acceso/contrasena`. Los
+ * demas se dibujan con datos simulados y sus botones estan deshabilitados.
  *
- * <p>La pantalla se dibuja despues de PREGUNTARLE al backend quien tiene la sesion abierta.
- * No basta con lo que el frontend recuerde: el ingreso con Google termina en una redireccion
- * y la aplicacion se recarga sin saber que alguien entro.
+ * <p>Ese bloque importa mas de lo que parece: quien entro con Google no tiene contrasena y
+ * depende de Google para siempre. Aqui deja una propia y puede entrar por el formulario, que
+ * es el respaldo obligatorio de la especificacion §5.1.
  *
- * <p>Si no hay sesion, se va a la pantalla de acceso. Esconder el formulario y dejar la
- * pagina vacia seria peor: el alumno no sabria si esta roto o si le falta entrar.
+ * <p><b>Sin sesion la pantalla ya NO redirige.</b> Antes se iba a `/acceso`, y tenia sentido
+ * cuando el perfil era solo el formulario de contrasena. Ahora es una de las trece pantallas
+ * que el propietario tiene que poder revisar, y un salto al formulario de ingreso la hacia
+ * inalcanzable en la demostracion. Se dibuja entera y el bloque de seguridad explica que hay
+ * que entrar. El dato real sigue exigiendo sesion — lo exige el backend, que es donde cuenta.
  */
 @Component({
   selector: 'adr-perfil',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [Alerta, Boton, Campo, NavPublica, ReactiveFormsModule],
+  imports: [
+    Alerta,
+    Avatar,
+    Boton,
+    Campo,
+    Chip,
+    Icono,
+    Interruptor,
+    ReactiveFormsModule,
+    RouterLink,
+  ],
   templateUrl: './perfil.html',
   styleUrl: './perfil.scss',
 })
 export class Perfil {
   private readonly autenticacion = inject(AutenticacionServicio);
-  private readonly router = inject(Router);
+  private readonly cuenta = inject(CuentaServicio);
 
   protected readonly usuario = this.autenticacion.usuario;
-  protected readonly estado = signal<EstadoPerfil>('cargando');
+  protected readonly perfil = this.cuenta.perfil;
+  protected readonly nombreCompleto = this.cuenta.nombreCompleto;
+  protected readonly niveles = NIVELES;
+
+  protected readonly estado = signal<EstadoContrasena>('comprobando');
   protected readonly mensajeError = signal('');
+
+  /** Verificacion en dos pasos. Local: no hay endpoint que la active todavia. */
+  protected readonly dosPasos = signal(false);
 
   protected readonly formulario = new FormGroup({
     contrasena: new FormControl('', {
@@ -56,13 +80,17 @@ export class Perfil {
   });
 
   constructor() {
-    this.autenticacion.sesionActual().subscribe((usuario) => {
-      if (usuario === null) {
-        this.router.navigate(['/acceso']);
-        return;
-      }
-      this.estado.set('listo');
-    });
+    this.autenticacion
+      .sesionActual()
+      .subscribe((usuario) => this.estado.set(usuario === null ? 'sinSesion' : 'listo'));
+  }
+
+  protected elegirNivel(nivel: string): void {
+    this.cuenta.establecerNivel(nivel);
+  }
+
+  protected alternarDosPasos(): void {
+    this.dosPasos.update((v) => !v);
   }
 
   /**

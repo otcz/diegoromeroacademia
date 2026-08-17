@@ -1,0 +1,46 @@
+<div class="tutoriales">
+  <header class="adr-cabecera">
+    <div>
+      <h1 class="adr-cabecera__titulo">Tutoriales</h1>
+      <p class="adr-cabecera__bajada">Canciones y técnicas puntuales. Se compran una vez.</p>
+    </div>
+  </header>
+
+  <section aria-labelledby="coleccion-titulo">
+    <h2 id="coleccion-titulo" class="tutoriales__seccion">
+      Mi colección · {{ coleccion().length }}
+    </h2>
+
+    @if (coleccion().length === 0) {
+      <adr-estado-vacio
+        icono="play-circle"
+        titulo="Todavía no tienes tutoriales"
+        explicacion="Los tutoriales se compran una vez y son tuyos para siempre, aunque canceles la suscripción."
+      >
+        <adr-boton variante="primario" enlace="/tienda">Ver el catálogo</adr-boton>
+      </adr-estado-vacio>
+    } @else {
+      <div class="adr-rejilla">
+        @for (tutorial of coleccion(); track tutorial.id) {
+          <adr-tarjeta-tutorial [tutorial]="tutorial" />
+        }
+      </div>
+    }
+  </section>
+
+  <section class="adr-panel" aria-labelledby="suma-titulo">
+    <div class="adr-panel__cabecera">
+      <div>
+        <h2 id="suma-titulo" class="adr-panel__titulo">Suma a tu colección</h2>
+        <p class="adr-panel__contexto">Recomendados para tu nivel.</p>
+      </div>
+      <a routerLink="/tienda">Ver catálogo</a>
+    </div>
+
+    <div class="adr-rejilla">
+      @for (tutorial of recomendados(); track tutorial.id) {
+        <adr-tarjeta-tutorial [tutorial]="tutorial" />
+      }
+    </div>
+  </section>
+</div>

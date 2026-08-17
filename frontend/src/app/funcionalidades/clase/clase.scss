@@ -1,0 +1,254 @@
+@use 'mixins' as m;
+
+:host {
+  display: block;
+}
+
+.clase {
+  display: flex;
+  flex-direction: column;
+  gap: var(--adr-espacio-4);
+  max-width: 1400px;
+}
+
+.clase__cabecera {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--adr-espacio-4);
+  align-items: center;
+}
+
+.clase__identidad {
+  flex: 1;
+  min-width: 200px;
+}
+
+.clase__titulo {
+  font-family: var(--adr-fuente-titular);
+  font-size: 20px;
+  font-weight: 700;
+  line-height: 1.25;
+  color: var(--adr-texto-1);
+}
+
+.clase__contexto {
+  margin-top: 2px;
+  font-size: 12.5px;
+  color: var(--adr-texto-5);
+}
+
+.clase__posicion {
+  font-size: 12px;
+  color: var(--adr-texto-5);
+}
+
+.clase__columnas {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 320px;
+  gap: var(--adr-espacio-4);
+  align-items: start;
+}
+
+.clase__principal {
+  display: flex;
+  flex-direction: column;
+  gap: var(--adr-espacio-4);
+  min-width: 0;
+}
+
+.clase__lateral {
+  position: sticky;
+  // Se pega justo debajo de la barra superior, que mide 64. Sin esto, la lista de clases se
+  // pierde de vista en cuanto se baja a leer los comentarios.
+  top: calc(64px + var(--adr-espacio-4));
+  min-width: 0;
+}
+
+// ------------------------------------------------------------------ resumen
+.clase__resumen {
+  font-size: 13.5px;
+  line-height: 1.6;
+  color: var(--adr-texto-3);
+}
+
+.clase__datos {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--adr-espacio-2);
+}
+
+.clase__capitulos {
+  display: flex;
+  flex-direction: column;
+  gap: var(--adr-espacio-2);
+}
+
+.clase__capitulo {
+  display: flex;
+  gap: var(--adr-espacio-3);
+  align-items: center;
+
+  width: 100%;
+  padding: var(--adr-espacio-2) var(--adr-espacio-3);
+
+  font-size: 12.5px;
+  color: var(--adr-texto-2);
+  text-align: left;
+
+  cursor: pointer;
+  background: transparent;
+  border: 1px solid var(--adr-borde-tenue);
+  border-radius: 10px;
+
+  @include m.foco-visible;
+
+  &:hover {
+    background: var(--adr-relleno-1);
+  }
+}
+
+.clase__capitulo-tiempo {
+  flex: none;
+  font-size: 11.5px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  color: var(--adr-estado-azul-texto);
+}
+
+// ----------------------------------------------------------------- recursos
+.clase__recurso {
+  display: flex;
+  gap: var(--adr-espacio-3);
+  align-items: center;
+  padding: var(--adr-espacio-3);
+  border: 1px solid var(--adr-borde-tenue);
+  border-radius: 12px;
+}
+
+.clase__recurso-icono {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  color: var(--adr-estado-azul-texto);
+  background: var(--adr-estado-azul-fondo);
+  border-radius: 10px;
+}
+
+.clase__recurso-texto {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.clase__recurso-titulo {
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--adr-texto-1);
+}
+
+.clase__recurso-detalle {
+  font-size: 11.5px;
+  color: var(--adr-texto-5);
+}
+
+// -------------------------------------------------------------- comentarios
+.clase__escribir {
+  display: flex;
+  gap: var(--adr-espacio-3);
+  align-items: center;
+
+  input {
+    flex: 1;
+    min-width: 0;
+    height: 44px;
+    padding-inline: var(--adr-espacio-4);
+
+    font-size: 13px;
+    color: var(--adr-texto-2);
+
+    background: var(--adr-relleno-1);
+    border: 1px solid var(--adr-borde);
+    border-radius: 12px;
+    outline: none;
+
+    &::placeholder {
+      color: var(--adr-texto-5);
+    }
+
+    &:disabled {
+      cursor: not-allowed;
+    }
+  }
+}
+
+.clase__comentarios {
+  display: flex;
+  flex-direction: column;
+  gap: var(--adr-espacio-4);
+}
+
+.comentario {
+  display: flex;
+  gap: var(--adr-espacio-3);
+
+  // La respuesta del profesor se distingue con superficie propia. Es la que el alumno busca
+  // al abrir los comentarios, y perdida entre las demás no se encuentra.
+  &--profesor {
+    padding: var(--adr-espacio-3);
+    background: var(--adr-estado-azul-fondo);
+    border: 1px solid var(--adr-estado-azul-borde);
+    border-radius: 12px;
+  }
+}
+
+.comentario__cuerpo {
+  display: flex;
+  flex-direction: column;
+  gap: var(--adr-espacio-1);
+  min-width: 0;
+}
+
+.comentario__firma {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--adr-espacio-2);
+  align-items: center;
+  font-size: 12.5px;
+  color: var(--adr-texto-1);
+}
+
+.comentario__cuando {
+  font-weight: 400;
+  color: var(--adr-texto-5);
+}
+
+.comentario__texto {
+  font-size: 13px;
+  line-height: 1.55;
+  color: var(--adr-texto-3);
+}
+
+.comentario__votos {
+  display: flex;
+  gap: var(--adr-espacio-2);
+  align-items: center;
+  font-size: 11.5px;
+  color: var(--adr-texto-5);
+}
+
+// ----------------------------------------------------------------- estrecho
+// 1100px: por debajo la columna lateral de 320 deja al vídeo sin ancho útil.
+@media (width < 1100px) {
+  .clase__columnas {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .clase__lateral {
+    position: static;
+  }
+}

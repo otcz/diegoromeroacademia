@@ -1,0 +1,146 @@
+@use 'mixins' as m;
+
+:host {
+  display: contents;
+}
+
+.carrito {
+  position: fixed;
+  inset: 0;
+  z-index: 40;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.carrito__velo {
+  position: absolute;
+  inset: 0;
+  padding: 0;
+  cursor: pointer;
+  background: var(--adr-velo-modal);
+  border: 0;
+}
+
+.carrito__panel {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+
+  width: min(var(--adr-carrito-ancho), 100vw);
+  height: 100%;
+
+  background: var(--adr-fondo);
+  border-left: 1px solid var(--adr-borde);
+  box-shadow: var(--adr-sombra-flotante);
+}
+
+.carrito__cabecera {
+  display: flex;
+  gap: var(--adr-espacio-3);
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--adr-espacio-5);
+  border-bottom: 1px solid var(--adr-linea);
+}
+
+.carrito__titulo-grupo {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.carrito__titulo {
+  font-family: var(--adr-fuente-titular);
+  font-size: var(--adr-texto-tarjeta);
+  font-weight: 700;
+  color: var(--adr-texto-1);
+}
+
+.carrito__conteo {
+  font-size: 11.5px;
+  color: var(--adr-texto-5);
+}
+
+.carrito__cerrar {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  color: var(--adr-texto-3);
+  cursor: pointer;
+  background: transparent;
+  border: 0;
+  border-radius: 11px;
+
+  @include m.foco-visible;
+
+  &:hover {
+    background: var(--adr-relleno-1);
+  }
+}
+
+// Única zona con desplazamiento, como manda la anatomía de docs/04 §4.
+.carrito__cuerpo {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: var(--adr-espacio-3);
+  min-height: 0;
+  padding: var(--adr-espacio-4);
+  overflow-y: auto;
+}
+
+.carrito__lineas {
+  display: flex;
+  flex-direction: column;
+  gap: var(--adr-espacio-2);
+}
+
+.carrito__pie {
+  display: flex;
+  flex-direction: column;
+  gap: var(--adr-espacio-2);
+  padding: var(--adr-espacio-4);
+  background: var(--adr-superficie-2);
+  border-top: 1px solid var(--adr-linea);
+}
+
+.carrito__fila {
+  display: flex;
+  justify-content: space-between;
+  font-size: 12.5px;
+  color: var(--adr-texto-4);
+
+  &--total {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--adr-texto-1);
+  }
+}
+
+.carrito__gratis {
+  font-weight: 600;
+  color: var(--adr-estado-verde-texto);
+}
+
+.carrito__divisor {
+  height: 1px;
+  margin-block: var(--adr-espacio-1);
+  background: var(--adr-linea);
+}
+
+.carrito__aviso {
+  display: flex;
+  gap: var(--adr-espacio-2);
+  align-items: flex-start;
+  font-size: 11.5px;
+  line-height: 1.45;
+  color: var(--adr-texto-5);
+
+  adr-icono {
+    flex: none;
+    margin-top: 1px;
+  }
+}

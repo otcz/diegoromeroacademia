@@ -1,0 +1,60 @@
+<div class="tienda">
+  <header class="adr-cabecera">
+    <div>
+      <h1 class="adr-cabecera__titulo">Tienda</h1>
+      <p class="adr-cabecera__bajada">Instrumentos, accesorios y material de estudio.</p>
+    </div>
+    <div class="tienda__acciones">
+      <span class="tienda__envio">
+        <adr-icono nombre="package" [tamanio]="16" />
+        Envío gratis desde {{ envioGratisDesde | pesos }}
+      </span>
+      <adr-boton variante="secundario" icono="shopping-cart" (accion)="disposicion.abrirCarrito()">
+        Carrito · {{ carrito.articulos() }}
+      </adr-boton>
+    </div>
+  </header>
+
+  <section class="adr-panel adr-panel--dorado tienda__regalo" aria-labelledby="regalo-titulo">
+    <span class="tienda__regalo-icono">
+      <adr-icono nombre="gift" [tamanio]="24" />
+    </span>
+    <div>
+      <h2 id="regalo-titulo" class="adr-panel__titulo">Regala acordeón</h2>
+      <p class="adr-panel__contexto">
+        Suscripciones, bonos de valor o cualquier producto, con tarjeta y mensaje para quien lo
+        recibe.
+      </p>
+    </div>
+    <adr-boton variante="primario" enlace="/regalar">Crear un regalo</adr-boton>
+  </section>
+
+  <div class="adr-filtros">
+    @for (opcion of categorias; track opcion) {
+      <adr-chip [activo]="categoria() === opcion" (elegido)="categoria.set(opcion)">
+        {{ opcion }}
+      </adr-chip>
+    }
+  </div>
+
+  @if (visibles().length === 0) {
+    <adr-estado-vacio
+      icono="storefront"
+      titulo="No hay productos en esta categoría"
+      explicacion="Vuelve a «Todo» para ver el catálogo completo."
+    >
+      <adr-boton variante="secundario" (accion)="categoria.set('Todo')">Ver todo</adr-boton>
+    </adr-estado-vacio>
+  } @else {
+    <div class="adr-rejilla">
+      @for (producto of visibles(); track producto.id) {
+        <adr-tarjeta-producto
+          [producto]="producto"
+          [enCarrito]="carrito.cantidadDe(producto.id)"
+          (anadido)="anadir(producto.id)"
+          (regalado)="regalar(producto.id)"
+        />
+      }
+    </div>
+  }
+</div>

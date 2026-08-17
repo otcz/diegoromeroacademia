@@ -1,0 +1,183 @@
+<div class="regalar">
+  <header class="regalar__cabecera">
+    <a class="adr-volver" routerLink="/tienda">
+      <adr-icono nombre="arrow-left" [tamanio]="16" />
+      Tienda
+    </a>
+    <div class="regalar__identidad">
+      <h1 class="adr-cabecera__titulo">Regalar</h1>
+      <p class="adr-cabecera__bajada">
+        Elige qué regalas, a quién llega y cuándo. Nosotros enviamos la tarjeta.
+      </p>
+    </div>
+    <adr-boton variante="secundario" (accion)="canjeAbierto.set(!canjeAbierto())">
+      Tengo un código de regalo
+    </adr-boton>
+  </header>
+
+  @if (canjeAbierto()) {
+    <section class="adr-panel adr-panel--azul regalar__canje" aria-label="Canjear un código">
+      <p class="regalar__canje-texto">Escribe el código que te enviaron para activar tu regalo.</p>
+      <!-- Deshabilitado: canjear escribe en `acceso_recurso`, y eso solo lo hace el backend
+           (no negociable 2). Un canje que pareciera funcionar y no diera acceso sería el
+           peor de los casos: el alumno cree que ya tiene el curso. -->
+      <input type="text" placeholder="DR-REGALO-0000" aria-label="Código de regalo" disabled />
+      <adr-boton variante="primario" [deshabilitado]="true">Canjear</adr-boton>
+      <button
+        type="button"
+        class="regalar__canje-cerrar"
+        (click)="canjeAbierto.set(false)"
+        aria-label="Cerrar"
+      >
+        <adr-icono nombre="x" [tamanio]="16" />
+      </button>
+    </section>
+  }
+
+  <div class="regalar__columnas">
+    <div class="regalar__pasos">
+      <!-- ================================================== PASO 1 -->
+      <section class="adr-panel" aria-labelledby="paso1-titulo">
+        <div class="regalar__paso-cabecera">
+          <span class="regalar__numero">1</span>
+          <h2 id="paso1-titulo" class="adr-panel__titulo">¿Qué quieres regalar?</h2>
+        </div>
+
+        <div class="adr-filtros">
+          @for (opcion of tipos; track opcion) {
+            <adr-chip [activo]="tipo() === opcion" (elegido)="elegirTipo(opcion)">
+              {{ opcion }}
+            </adr-chip>
+          }
+        </div>
+
+        <div class="regalar__opciones">
+          @for (item of opciones(); track item.etiqueta) {
+            <button
+              type="button"
+              class="regalar__opcion"
+              [class.regalar__opcion--activa]="opcion().etiqueta === item.etiqueta"
+              [attr.aria-pressed]="opcion().etiqueta === item.etiqueta"
+              (click)="elegirOpcion(item.etiqueta)"
+            >
+              <span class="regalar__opcion-nombre">{{ item.etiqueta }}</span>
+              <span class="regalar__opcion-precio">{{ item.precioCentavos | pesos }}</span>
+            </button>
+          }
+        </div>
+
+        <p class="regalar__aviso">
+          <adr-icono nombre="info" [tamanio]="16" />
+          {{ aviso() }}
+        </p>
+      </section>
+
+      <!-- ================================================== PASO 2 -->
+      <section class="adr-panel" aria-labelledby="paso2-titulo">
+        <div class="regalar__paso-cabecera">
+          <span class="regalar__numero">2</span>
+          <h2 id="paso2-titulo" class="adr-panel__titulo">¿Para quién es?</h2>
+        </div>
+
+        <div class="regalar__campos">
+          <label class="regalar__campo">
+            <span>Nombre de quien recibe</span>
+            <input type="text" [formControl]="nombre" placeholder="Ej. Luis Fernando" />
+          </label>
+          <label class="regalar__campo">
+            <span>Correo o WhatsApp</span>
+            <input type="text" [formControl]="contacto" placeholder="luis@correo.com" />
+          </label>
+        </div>
+
+        <label class="regalar__campo">
+          <span>Mensaje en la tarjeta</span>
+          <textarea
+            [formControl]="mensaje"
+            rows="3"
+            [attr.maxlength]="limiteMensaje"
+            placeholder="Para que por fin aprendas ese paseo que tanto te gusta."
+          ></textarea>
+          <!-- El contador es del texto YA recortado, no del control: si difirieran, diría
+               210 mientras la tarjeta enseña 200. -->
+          <span class="regalar__contador">
+            {{ mensajeEscrito().length }} de {{ limiteMensaje }} caracteres
+          </span>
+        </label>
+
+        <div class="regalar__entrega">
+          <span class="regalar__campo-rotulo">¿Cuándo lo entregamos?</span>
+          <div class="adr-filtros">
+            @for (cuando of entregas; track cuando) {
+              <adr-chip [activo]="entrega() === cuando" (elegido)="entrega.set(cuando)">
+                {{ cuando }}
+              </adr-chip>
+            }
+          </div>
+        </div>
+      </section>
+
+      <!-- ================================================== PASO 3 -->
+      <section class="adr-panel" aria-labelledby="paso3-titulo">
+        <div class="regalar__paso-cabecera">
+          <span class="regalar__numero">3</span>
+          <h2 id="paso3-titulo" class="adr-panel__titulo">Cómo lo pagas</h2>
+        </div>
+
+        <!-- Los medios se enseñan porque forman parte de la decisión de regalar, pero
+             ninguno se puede elegir todavía: la pasarela es la decisión pendiente 1 de
+             docs/00 §5 y el webhook es la única fuente de verdad del pago. -->
+        <div class="regalar__medios">
+          <span class="regalar__medio"
+            ><adr-icono nombre="credit-card" [tamanio]="20" />Tarjeta</span
+          >
+          <span class="regalar__medio"><adr-icono nombre="wallet" [tamanio]="20" />PSE</span>
+          <span class="regalar__medio"><adr-icono nombre="ticket" [tamanio]="20" />Nequi</span>
+        </div>
+        <p class="regalar__aviso">
+          <adr-icono nombre="info" [tamanio]="16" />
+          El cobro todavía no está conectado. Escríbenos por WhatsApp para completar el regalo.
+        </p>
+      </section>
+    </div>
+
+    <!-- ============================================ VISTA PREVIA -->
+    <aside class="regalar__lateral">
+      <section class="adr-panel" aria-labelledby="previa-titulo">
+        <h2 id="previa-titulo" class="adr-panel__vivo">VISTA PREVIA DE LA TARJETA</h2>
+
+        <adr-tarjeta-regalo
+          [destinatario]="nombreParaTarjeta()"
+          [mensaje]="mensajeParaTarjeta()"
+          [concepto]="opcion().etiqueta"
+          [entrega]="entrega()"
+        />
+      </section>
+
+      <section class="adr-panel" aria-labelledby="resumen-titulo">
+        <h2 id="resumen-titulo" class="adr-panel__titulo">Resumen</h2>
+        <div class="regalar__fila">
+          <span>{{ opcion().etiqueta }}</span>
+          <span>{{ opcion().precioCentavos | pesos }}</span>
+        </div>
+        <div class="regalar__fila">
+          <span>Tarjeta digital</span>
+          <span class="regalar__gratis">Gratis</span>
+        </div>
+        <div class="regalar__divisor"></div>
+        <div class="regalar__fila regalar__fila--total">
+          <span>Total</span>
+          <span>{{ opcion().precioCentavos | pesos }}</span>
+        </div>
+
+        <adr-boton variante="primario" [anchoCompleto]="true" [deshabilitado]="true">
+          Pagar y enviar regalo
+        </adr-boton>
+        <p class="regalar__nota">
+          <adr-icono nombre="info" [tamanio]="16" />
+          Quien recibe activa el regalo con un código. Si no tiene cuenta, la crea gratis.
+        </p>
+      </section>
+    </aside>
+  </div>
+</div>

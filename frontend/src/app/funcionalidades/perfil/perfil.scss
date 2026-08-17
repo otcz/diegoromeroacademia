@@ -1,29 +1,189 @@
-@use 'mixins' as m;
+:host {
+  display: block;
+}
 
 .perfil {
-  background: var(--adr-color-niebla);
-  min-height: 70vh;
+  display: flex;
+  flex-direction: column;
+  gap: var(--adr-espacio-4);
+  max-width: 1200px;
 }
 
-// Columna estrecha: un formulario de un solo campo estirado a lo ancho de la pantalla se
-// lee como un error de maquetacion, no como una pantalla terminada.
-.perfil__caja {
-  max-width: 480px;
+.perfil__cabecera {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--adr-espacio-4);
+  align-items: center;
 }
 
-.perfil__quien {
-  margin-bottom: var(--adr-espacio-4);
+.perfil__identidad {
+  flex: 1;
+  min-width: 200px;
 }
 
-.perfil__motivo {
-  margin-bottom: var(--adr-espacio-6);
+.perfil__columnas {
+  display: grid;
+  grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr);
+  gap: var(--adr-espacio-4);
+  align-items: start;
+}
+
+.perfil__lateral {
+  display: flex;
+  flex-direction: column;
+  gap: var(--adr-espacio-4);
+  min-width: 0;
+}
+
+// -------------------------------------------------------------------- foto
+.perfil__foto {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--adr-espacio-4);
+  align-items: center;
+}
+
+.perfil__foto-texto {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 160px;
+}
+
+.perfil__foto-acciones {
+  display: flex;
+  gap: var(--adr-espacio-2);
+}
+
+.perfil__etiqueta {
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--adr-texto-1);
+}
+
+.perfil__ayuda {
+  font-size: 11.5px;
+  color: var(--adr-texto-5);
+}
+
+.perfil__divisor {
+  height: 1px;
+  background: var(--adr-linea);
+}
+
+// ------------------------------------------------------------------ campos
+.perfil__campos {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(220px, 100%), 1fr));
+  gap: var(--adr-espacio-3);
+}
+
+.perfil__campo {
+  display: flex;
+  flex-direction: column;
+  gap: var(--adr-espacio-2);
+
+  > span {
+    font-size: 12.5px;
+    font-weight: 600;
+    color: var(--adr-texto-2);
+  }
+
+  input {
+    width: 100%;
+    min-height: var(--adr-altura-control);
+    padding: var(--adr-espacio-3) var(--adr-espacio-4);
+
+    font-family: var(--adr-fuente-cuerpo);
+    font-size: 13.5px;
+    color: var(--adr-texto-1);
+
+    background: var(--adr-superficie-2);
+    border: 1px solid var(--adr-borde-fuerte);
+    border-radius: 12px;
+
+    &:focus {
+      border-color: var(--adr-color-foco);
+      outline: none;
+      box-shadow: var(--adr-anillo-foco);
+    }
+  }
+}
+
+.perfil__nivel {
+  display: flex;
+  flex-direction: column;
+  gap: var(--adr-espacio-2);
+}
+
+// ----------------------------------------------------------------- resumen
+.perfil__resumen {
+  display: flex;
+  flex-direction: column;
+
+  > div {
+    display: flex;
+    gap: var(--adr-espacio-3);
+    justify-content: space-between;
+    padding-block: var(--adr-espacio-2);
+    border-bottom: 1px solid var(--adr-borde-tenue);
+
+    &:last-child {
+      border-bottom: 0;
+    }
+  }
+
+  dt {
+    font-size: 12.5px;
+    color: var(--adr-texto-5);
+  }
+
+  dd {
+    margin: 0;
+    font-size: 12.5px;
+    font-weight: 600;
+    color: var(--adr-texto-1);
+  }
+}
+
+// --------------------------------------------------------------- seguridad
+.perfil__sesion {
+  display: flex;
+  gap: var(--adr-espacio-2);
+  align-items: center;
+
+  padding: var(--adr-espacio-2) var(--adr-espacio-3);
+
+  font-size: 12px;
+
+  color: var(--adr-estado-verde-texto);
+  background: var(--adr-estado-verde-fondo);
+  border-radius: 10px;
 }
 
 .perfil__formulario {
-  display: grid;
-  gap: var(--adr-espacio-5);
-  margin-top: var(--adr-espacio-6);
-  padding: var(--adr-espacio-6);
+  display: flex;
+  flex-direction: column;
+  gap: var(--adr-espacio-4);
+}
 
-  @include m.tarjeta;
+.perfil__fila {
+  display: flex;
+  gap: var(--adr-espacio-4);
+  align-items: center;
+  justify-content: space-between;
+}
+
+.perfil__fila-texto {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+@media (width < 900px) {
+  .perfil__columnas {
+    grid-template-columns: minmax(0, 1fr);
+  }
 }

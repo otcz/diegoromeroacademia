@@ -1,0 +1,18 @@
+:host {
+  display: block;
+}
+
+.tutoriales {
+  display: flex;
+  flex-direction: column;
+  gap: var(--adr-espacio-5);
+  max-width: 1400px;
+}
+
+.tutoriales__seccion {
+  margin-bottom: var(--adr-espacio-4);
+  font-family: var(--adr-fuente-titular);
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--adr-texto-1);
+}

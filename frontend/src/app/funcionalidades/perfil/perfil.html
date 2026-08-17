@@ -1,54 +1,171 @@
-<adr-nav-publica />
+<div class="perfil">
+  <header class="perfil__cabecera">
+    <a class="adr-volver" routerLink="/inicio">
+      <adr-icono nombre="arrow-left" [tamanio]="16" />
+      Inicio
+    </a>
+    <div class="perfil__identidad">
+      <h1 class="adr-cabecera__titulo">Mi perfil</h1>
+      <p class="adr-cabecera__bajada">Tus datos, tu foto y la seguridad de la cuenta.</p>
+    </div>
+    <!-- Deshabilitado: no hay `PUT /yo`. Los campos se dibujan para revisar la pantalla. -->
+    <adr-boton variante="primario" [deshabilitado]="true">Guardar cambios</adr-boton>
+  </header>
 
-<section class="adr-seccion perfil">
-  <div class="adr-contenedor perfil__caja">
-    @if (estado() === 'cargando') {
-      <p class="adr-texto-secundario">Cargando tu cuenta…</p>
-    } @else {
-      <p class="adr-kicker adr-kicker--azul">Tu cuenta</p>
-      <h1 class="adr-titulo-seccion">Tu contraseña.</h1>
+  <div class="perfil__columnas">
+    <section class="adr-panel" aria-labelledby="datos-titulo">
+      <h2 id="datos-titulo" class="adr-solo-lectores">Datos personales</h2>
 
-      @if (usuario(); as alumno) {
-        <p class="adr-texto-secundario perfil__quien">
-          Entraste como <strong>{{ alumno.correo }}</strong>
-        </p>
-      }
+      <div class="perfil__foto">
+        <adr-avatar [nombre]="nombreCompleto()" [foto]="perfil().foto" [tamanio]="48" />
+        <div class="perfil__foto-texto">
+          <span class="perfil__etiqueta">Foto de perfil</span>
+          <span class="perfil__ayuda">JPG o PNG, mínimo 400 × 400 px.</span>
+        </div>
+        <div class="perfil__foto-acciones">
+          <adr-boton variante="secundario" icono="camera" [deshabilitado]="true"
+            >Subir foto</adr-boton
+          >
+          <adr-boton variante="fantasma" [deshabilitado]="true">Quitar</adr-boton>
+        </div>
+      </div>
 
-      <!-- Se dice por qué existe esto. Sin la explicación, alguien que ya entra con Google
-           no entiende para qué querría una contraseña, y no la pone. -->
-      <p class="adr-texto-secundario perfil__motivo">
-        Entraste con Google, así que todavía no tienes contraseña. Ponla si quieres entrar
-        también con tu correo — o si algún día pierdes el acceso a esa cuenta de Google.
-      </p>
+      <div class="perfil__divisor"></div>
 
-      @if (estado() === 'guardada') {
-        <adr-alerta tono="exito">
-          Contraseña guardada. Ya puedes entrar con tu correo.
-        </adr-alerta>
-      }
+      <div class="perfil__campos">
+        <label class="perfil__campo">
+          <span>Nombre</span>
+          <input type="text" [value]="perfil().nombre" autocomplete="given-name" />
+        </label>
+        <label class="perfil__campo">
+          <span>Apellidos</span>
+          <input type="text" [value]="perfil().apellidos" autocomplete="family-name" />
+        </label>
+        <label class="perfil__campo">
+          <span>Correo</span>
+          <input type="email" [value]="perfil().correo" autocomplete="email" />
+        </label>
+        <label class="perfil__campo">
+          <span>WhatsApp</span>
+          <input type="tel" [value]="perfil().whatsapp" autocomplete="tel" />
+        </label>
+        <label class="perfil__campo">
+          <span>Ciudad</span>
+          <input type="text" [value]="perfil().ciudad" autocomplete="address-level2" />
+        </label>
+        <label class="perfil__campo">
+          <span>Mi acordeón</span>
+          <input type="text" [value]="perfil().instrumento" />
+        </label>
+      </div>
 
-      @if (estado() === 'error') {
-        <adr-alerta tono="error">{{ mensajeError() }}</adr-alerta>
-      }
+      <div class="perfil__nivel">
+        <span class="perfil__etiqueta">Mi nivel</span>
+        <div class="adr-filtros">
+          @for (nivel of niveles; track nivel) {
+            <adr-chip [activo]="perfil().nivel === nivel" (elegido)="elegirNivel(nivel)">
+              {{ nivel }}
+            </adr-chip>
+          }
+        </div>
+      </div>
+    </section>
 
-      <form class="perfil__formulario" [formGroup]="formulario" (ngSubmit)="enviar()">
-        <adr-campo
-          etiqueta="Nueva contraseña"
-          tipo="password"
-          autocompletado="new-password"
-          ayuda="Mínimo 12 caracteres. No pedimos mayúsculas ni símbolos: la longitud protege más."
-          [control]="formulario.controls.contrasena"
-        />
-
-        <adr-boton
-          tipo="submit"
-          variante="primario"
-          [anchoCompleto]="true"
-          [cargando]="estado() === 'guardando'"
-        >
-          {{ estado() === 'guardando' ? 'Guardando…' : 'Guardar contraseña' }}
+    <div class="perfil__lateral">
+      <section class="adr-panel" aria-labelledby="cuenta-titulo">
+        <h2 id="cuenta-titulo" class="adr-panel__titulo">Tu cuenta</h2>
+        <dl class="perfil__resumen">
+          <div>
+            <dt>Estudiante desde</dt>
+            <dd>{{ perfil().estudianteDesde }}</dd>
+          </div>
+          <div>
+            <dt>Plan</dt>
+            <dd>{{ perfil().plan }}</dd>
+          </div>
+          <div>
+            <dt>Racha actual</dt>
+            <dd>{{ perfil().racha }} días</dd>
+          </div>
+          <div>
+            <dt>Certificados</dt>
+            <dd>{{ perfil().certificados }}</dd>
+          </div>
+        </dl>
+        <adr-boton variante="secundario" [anchoCompleto]="true" enlace="/suscripcion">
+          Gestionar suscripción
         </adr-boton>
-      </form>
-    }
+      </section>
+
+      <!-- ======================================================= SEGURIDAD -->
+      <!-- El único bloque que habla de verdad con el backend. -->
+      <section class="adr-panel" aria-labelledby="seguridad-titulo">
+        <h2 id="seguridad-titulo" class="adr-panel__titulo">Seguridad</h2>
+
+        @switch (estado()) {
+          @case ('comprobando') {
+            <p class="adr-panel__contexto">Comprobando tu sesión…</p>
+          }
+
+          @case ('sinSesion') {
+            <p class="adr-panel__contexto">
+              Para poner o cambiar tu contraseña hace falta haber iniciado sesión.
+            </p>
+            <adr-boton variante="primario" [anchoCompleto]="true" enlace="/acceso">
+              Iniciar sesión
+            </adr-boton>
+          }
+
+          @default {
+            @if (usuario(); as sesion) {
+              <p class="perfil__sesion">
+                <adr-icono nombre="shield-check" [tamanio]="16" />
+                Sesión iniciada como {{ sesion.correo }}
+              </p>
+            }
+
+            @if (estado() === 'guardada') {
+              <adr-alerta tono="exito">Tu contraseña quedó guardada.</adr-alerta>
+            }
+            @if (estado() === 'error') {
+              <adr-alerta tono="error">{{ mensajeError() }}</adr-alerta>
+            }
+
+            <form class="perfil__formulario" [formGroup]="formulario" (ngSubmit)="enviar()">
+              <adr-campo
+                etiqueta="Contraseña nueva"
+                tipo="password"
+                marcador="Mínimo 12 caracteres"
+                ayuda="Con una contraseña propia puedes entrar sin depender de Google."
+                autocompletado="new-password"
+                [control]="formulario.controls.contrasena"
+              />
+              <adr-boton
+                tipo="submit"
+                variante="primario"
+                [anchoCompleto]="true"
+                [cargando]="estado() === 'guardando'"
+              >
+                {{ estado() === 'guardando' ? 'Guardando…' : 'Guardar contraseña' }}
+              </adr-boton>
+            </form>
+          }
+        }
+
+        <div class="perfil__divisor"></div>
+
+        <div class="perfil__fila">
+          <span class="perfil__fila-texto">
+            <span class="perfil__etiqueta">Verificación en dos pasos</span>
+            <span class="perfil__ayuda">Código por WhatsApp. Aún no está disponible.</span>
+          </span>
+          <adr-interruptor
+            [activo]="dosPasos()"
+            etiqueta="Verificación en dos pasos"
+            (alternado)="alternarDosPasos()"
+          />
+        </div>
+      </section>
+    </div>
   </div>
-</section>
+</div>

@@ -1,0 +1,144 @@
+:host {
+  display: block;
+}
+
+.cursos {
+  display: flex;
+  flex-direction: column;
+  gap: var(--adr-espacio-5);
+  max-width: 1400px;
+}
+
+.curso {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow: hidden;
+  background: var(--adr-superficie);
+  border: 1px solid var(--adr-borde);
+  border-radius: var(--adr-radio-tarjeta);
+  box-shadow: var(--adr-sombra-superficie);
+
+  // El bloqueado se atenúa pero NO se oculta: ver que hay más camino es lo que hace subir
+  // de plan. Y el atenuado no llega a comprometer el contraste del texto, que sigue en su
+  // escalón — por eso es 0.85 y no 0.5.
+  &--bloqueado {
+    opacity: 0.85;
+  }
+}
+
+.curso__portada {
+  position: relative;
+}
+
+.curso__nivel {
+  position: absolute;
+  top: var(--adr-espacio-3);
+  left: var(--adr-espacio-3);
+
+  padding: 4px 9px;
+
+  font-size: 9.5px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  color: var(--adr-color-blanco);
+
+  background: rgb(8 6 20 / 62%);
+  border: 1px solid rgb(255 255 255 / 24%);
+  border-radius: 6px;
+}
+
+.curso__estado {
+  position: absolute;
+  top: var(--adr-espacio-3);
+  right: var(--adr-espacio-3);
+}
+
+.curso__candado {
+  position: absolute;
+  top: var(--adr-espacio-3);
+  right: var(--adr-espacio-3);
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 34px;
+  height: 34px;
+
+  color: var(--adr-color-blanco);
+  background: rgb(8 6 20 / 62%);
+  border: 1px solid rgb(255 255 255 / 24%);
+  border-radius: var(--adr-radio-pastilla);
+}
+
+.curso__cuerpo {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: var(--adr-espacio-2);
+  padding: var(--adr-espacio-4);
+}
+
+.curso__titulo {
+  font-family: var(--adr-fuente-titular);
+  font-size: 17px;
+  font-weight: 700;
+  line-height: 1.25;
+  color: var(--adr-texto-1);
+}
+
+.curso__resumen {
+  font-size: 12.5px;
+  color: var(--adr-texto-4);
+}
+
+.curso__meta {
+  font-size: 11.5px;
+  color: var(--adr-texto-5);
+}
+
+.curso__bloqueo {
+  display: flex;
+  gap: var(--adr-espacio-2);
+  align-items: center;
+
+  padding: var(--adr-espacio-2) var(--adr-espacio-3);
+
+  font-size: 12px;
+  font-weight: 600;
+
+  color: var(--adr-estado-dorado-texto);
+  background: var(--adr-estado-dorado-fondo);
+  border-radius: 10px;
+}
+
+.curso__accion {
+  // Empuja la acción al fondo para que en una fila todas queden a la misma altura.
+  margin-top: auto;
+  padding-top: var(--adr-espacio-3);
+}
+
+// -------------------------------------------------------------- particulares
+.cursos__particulares {
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.cursos__particulares-icono {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  color: var(--adr-estado-azul-texto);
+  background: var(--adr-estado-azul-fondo);
+  border-radius: 12px;
+}
+
+.cursos__particulares > div {
+  flex: 1;
+  min-width: 200px;
+}

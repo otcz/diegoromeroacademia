@@ -1,0 +1,38 @@
+:host {
+  display: block;
+}
+
+.practica {
+  display: flex;
+  flex-direction: column;
+  gap: var(--adr-espacio-5);
+  max-width: 1400px;
+}
+
+.reto {
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.reto__icono {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  color: var(--adr-estado-dorado-icono);
+  background: var(--adr-estado-dorado-fondo-fuerte);
+  border-radius: 12px;
+}
+
+.reto__cuerpo {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: var(--adr-espacio-2);
+  // 240px de mínimo: por debajo la barra de progreso se estrecha tanto que deja de leerse
+  // como una barra, y entonces el bloque entero se apila.
+  min-width: 240px;
+}

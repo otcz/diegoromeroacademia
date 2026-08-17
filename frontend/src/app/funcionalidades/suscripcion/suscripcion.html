@@ -1,0 +1,174 @@
+@if (suscripcion(); as plan) {
+  <div class="suscripcion">
+    <header class="suscripcion__cabecera">
+      <a class="adr-volver" routerLink="/inicio">
+        <adr-icono nombre="arrow-left" [tamanio]="16" />
+        Inicio
+      </a>
+      <div>
+        <h1 class="adr-cabecera__titulo">Mi suscripción</h1>
+        <p class="adr-cabecera__bajada">
+          Tu plan, tu próximo cobro y el cambio de plan, en un solo lugar.
+        </p>
+      </div>
+    </header>
+
+    <!-- ================================================= ESTADO ACTUAL -->
+    <section class="estado" [class]="'estado--' + plan.estado" aria-labelledby="estado-titulo">
+      <div class="estado__cabecera">
+        <h2 id="estado-titulo" class="adr-panel__vivo">TU PLAN</h2>
+        <span class="adr-panel__pastilla" [class]="'adr-panel__pastilla--' + plan.estado">
+          {{ rotuloEstado[plan.estado] }}
+        </span>
+      </div>
+
+      <p class="estado__precio">
+        <span class="estado__nombre">{{ plan.plan }}</span>
+        <span class="estado__monto"> {{ plan.precioCentavos | pesos }}<small>/ mes</small> </span>
+      </p>
+
+      <p class="estado__incluye">{{ plan.incluye }}</p>
+
+      <div class="estado__datos">
+        <p class="adr-panel__dato">
+          <adr-icono nombre="calendar-blank" [tamanio]="16" />
+          Próximo cobro: <strong>{{ plan.proximoCobro }}</strong> ({{ plan.diasRestantes }} días)
+        </p>
+        <p class="adr-panel__dato">
+          <adr-icono nombre="credit-card" [tamanio]="16" />
+          {{ plan.medioPago }}
+        </p>
+      </div>
+
+      <!--
+        Las tres acciones están deshabilitadas: cobrar, cambiar el medio de pago y cancelar
+        la renovación son operaciones de la pasarela, y el webhook es la única fuente de
+        verdad del pago (no negociable 3). Se enseñan porque el alumno tiene que ver que
+        existen y que la cancelación no está escondida.
+      -->
+      <div class="estado__acciones">
+        <adr-boton variante="primario" [deshabilitado]="true">{{ accionPrincipal() }}</adr-boton>
+        <adr-boton variante="secundario" [deshabilitado]="true">Cancelar renovación</adr-boton>
+      </div>
+      <p class="suscripcion__nota">
+        <adr-icono nombre="info" [tamanio]="16" />
+        Los cambios de plan y de medio de pago todavía se gestionan por WhatsApp.
+      </p>
+    </section>
+
+    <!-- ================================================== CAMBIAR PLAN -->
+    <section class="adr-panel" aria-labelledby="cambio-titulo">
+      <div class="adr-panel__cabecera">
+        <h2 id="cambio-titulo" class="adr-panel__titulo">Cambiar de plan</h2>
+        <div class="adr-filtros">
+          @for (opcion of ciclos; track opcion.clave) {
+            <adr-chip [activo]="ciclo() === opcion.clave" (elegido)="ciclo.set(opcion.clave)">
+              {{ opcion.etiqueta }}
+            </adr-chip>
+          }
+        </div>
+      </div>
+
+      <div class="adr-rejilla">
+        @for (opcion of planes(); track opcion.id) {
+          <article
+            class="plan"
+            [class.plan--destacado]="opcion.destacado"
+            [class.plan--actual]="opcion.id === plan.planId"
+          >
+            <div class="plan__cabecera">
+              <h3 class="plan__nombre">{{ opcion.nombre }}</h3>
+              @if (opcion.id === plan.planId) {
+                <span class="adr-panel__pastilla adr-panel__pastilla--verde">Tu plan</span>
+              } @else if (opcion.destacado) {
+                <span class="adr-panel__pastilla adr-panel__pastilla--dorado">Recomendado</span>
+              }
+            </div>
+
+            <p class="plan__precio">
+              {{ precioDe(opcion) | pesos }}<small>{{ periodo() }}</small>
+            </p>
+
+            <p class="plan__incluye">{{ opcion.incluye }}</p>
+
+            <adr-boton
+              [variante]="opcion.destacado ? 'primario' : 'secundario'"
+              [anchoCompleto]="true"
+              [deshabilitado]="true"
+            >
+              {{ opcion.id === plan.planId ? 'Plan actual' : 'Cambiar a ' + opcion.nombre }}
+            </adr-boton>
+          </article>
+        }
+      </div>
+    </section>
+
+    <!-- ============================================ PAGOS Y MEDIOS -->
+    <div class="suscripcion__columnas">
+      <section class="adr-panel" aria-labelledby="pagos-titulo">
+        <div class="adr-panel__cabecera">
+          <h2 id="pagos-titulo" class="adr-panel__titulo">Últimos pagos</h2>
+        </div>
+
+        <table class="adr-tabla">
+          <thead>
+            <tr>
+              <th scope="col">Fecha</th>
+              <th scope="col">Concepto</th>
+              <th scope="col">Estado</th>
+              <th scope="col" class="adr-tabla__derecha">Monto</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (pago of pagos(); track pago.fecha) {
+              <tr>
+                <td class="adr-tabla__tenue">{{ pago.fecha }}</td>
+                <td>{{ pago.concepto }}</td>
+                <td>
+                  <span class="adr-panel__pastilla" [class]="'adr-panel__pastilla--' + pago.estado">
+                    {{
+                      pago.estado === 'pagado'
+                        ? 'Pagado'
+                        : pago.estado === 'pendiente'
+                          ? 'Pendiente'
+                          : 'Fallido'
+                    }}
+                  </span>
+                </td>
+                <td class="adr-tabla__derecha">{{ pago.montoCentavos | pesos }}</td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </section>
+
+      <div class="suscripcion__lateral">
+        <section class="adr-panel" aria-labelledby="medios-titulo">
+          <h2 id="medios-titulo" class="adr-panel__titulo">Medios de pago</h2>
+          <div class="suscripcion__medios">
+            <span class="adr-panel__pastilla">Tarjeta</span>
+            <span class="adr-panel__pastilla">PSE</span>
+            <span class="adr-panel__pastilla">Nequi</span>
+            <span class="adr-panel__pastilla">Efecty</span>
+          </div>
+          <p class="adr-panel__contexto">
+            Con tarjeta el cobro es automático; con los demás medios te avisamos 3 días antes.
+          </p>
+        </section>
+
+        <section
+          class="adr-panel adr-panel--dorado suscripcion__regalo"
+          aria-labelledby="regalo-titulo"
+        >
+          <span class="suscripcion__regalo-icono">
+            <adr-icono nombre="gift" [tamanio]="20" />
+          </span>
+          <h2 id="regalo-titulo" class="adr-panel__titulo">Regala esta suscripción a alguien</h2>
+          <adr-boton variante="secundario" [anchoCompleto]="true" enlace="/regalar">
+            Regalar
+          </adr-boton>
+        </section>
+      </div>
+    </div>
+  </div>
+}

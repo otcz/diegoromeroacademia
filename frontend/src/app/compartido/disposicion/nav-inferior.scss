@@ -1,0 +1,72 @@
+@use 'mixins' as m;
+
+:host {
+  display: contents;
+}
+
+.inferior {
+  position: fixed;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 25;
+
+  display: flex;
+  height: var(--adr-nav-inferior);
+
+  background: var(--adr-fondo-barra);
+  border-top: 1px solid var(--adr-linea);
+  backdrop-filter: blur(14px);
+
+  @supports not (backdrop-filter: blur(14px)) {
+    background: var(--adr-fondo);
+  }
+
+  // Deja libre la franja del gesto de inicio en los teléfonos sin botón. Sin esto, la última
+  // fila de iconos queda debajo de la barra del sistema y no se puede pulsar.
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+.inferior__pestania {
+  position: relative;
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 3px;
+  align-items: center;
+  justify-content: center;
+
+  min-width: 0;
+  color: var(--adr-texto-5);
+  text-decoration: none;
+
+  @include m.foco-visible;
+
+  &--activa {
+    color: var(--adr-estado-azul-texto);
+
+    .inferior__indicador {
+      opacity: 1;
+    }
+  }
+}
+
+.inferior__indicador {
+  position: absolute;
+  top: 0;
+  right: 20%;
+  left: 20%;
+  height: 3px;
+  background: var(--adr-color-azul-cta-b);
+  border-radius: 0 0 3px 3px;
+  opacity: 0;
+}
+
+.inferior__rotulo {
+  max-width: 100%;
+  overflow: hidden;
+  font-size: 10px;
+  font-weight: 600;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}

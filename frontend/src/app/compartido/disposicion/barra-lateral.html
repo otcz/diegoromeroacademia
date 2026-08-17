@@ -1,0 +1,68 @@
+<aside class="lateral">
+  <!-- Identidad. El logotipo va recortado en círculo sobre negro: el archivo que entregó el
+       propietario no tiene transparencia, y estirarlo en un rectángulo enseña su fondo. -->
+  <a class="lateral__marca" routerLink="/inicio">
+    <span class="lateral__logotipo">
+      <img [src]="logotipo" alt="" width="42" height="42" />
+    </span>
+    <span class="lateral__marca-texto">
+      <span class="lateral__marca-nombre">Diego Romero</span>
+      <span class="lateral__marca-kicker">ESTUDIO ACADÉMICO</span>
+    </span>
+  </a>
+
+  <nav class="lateral__nav" aria-label="Secciones de la academia">
+    @for (entrada of entradas; track entrada.ruta) {
+      <a
+        class="lateral__enlace"
+        [routerLink]="entrada.ruta"
+        routerLinkActive="lateral__enlace--activo"
+        #activo="routerLinkActive"
+        [attr.aria-current]="activo.isActive ? 'page' : null"
+      >
+        <adr-icono [nombre]="entrada.icono" [tamanio]="20" />
+        <span>{{ entrada.etiqueta }}</span>
+      </a>
+    }
+  </nav>
+
+  <!-- Empuja el pie hasta abajo sin depender de una altura fija. -->
+  <div class="lateral__espaciador"></div>
+
+  <!-- Estado del plan. Lleva icono y texto, nunca solo el color: docs/04 §5 — el color no
+       puede ser el único portador de significado, y «vencida» es justo el caso donde alguien
+       que no distingue rojo de verde necesita enterarse. -->
+  <div class="lateral__plan" [class]="'lateral__plan--' + perfil().estadoPlan">
+    <div class="lateral__plan-cabecera">
+      <span class="lateral__plan-nombre">{{ perfil().plan }}</span>
+      <span class="lateral__plan-estado">{{ rotuloEstado[perfil().estadoPlan] }}</span>
+    </div>
+    <p class="lateral__plan-nota">{{ notaPlan[perfil().estadoPlan] }}</p>
+    <adr-boton variante="fantasma" [anchoCompleto]="true" enlace="/suscripcion">
+      Gestionar suscripción
+    </adr-boton>
+  </div>
+
+  <div class="lateral__pie">
+    <a
+      class="lateral__enlace lateral__enlace--pie"
+      routerLink="/ajustes"
+      routerLinkActive="lateral__enlace--activo"
+    >
+      <adr-icono nombre="gear" [tamanio]="20" />
+      <span>Ajustes</span>
+    </a>
+    <!--
+      Salir es un enlace a la portada y no un botón que cierre sesión de verdad: el backend
+      solo expone `POST /api/acceso/salir` para sesiones abiertas por sus controladores, y
+      estas pantallas todavía funcionan con datos simulados. Un botón que dijera «Salir» y no
+      cerrara nada sería peor que no tenerlo.
+      CONDICIÓN DE SALIDA: pasa a llamar a `AutenticacionServicio.cerrarSesion()` el día que
+      estas pantallas consuman la API real.
+    -->
+    <a class="lateral__enlace lateral__enlace--pie" href="/">
+      <adr-icono nombre="sign-out" [tamanio]="20" />
+      <span>Salir</span>
+    </a>
+  </div>
+</aside>

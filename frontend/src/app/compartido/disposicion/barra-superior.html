@@ -1,0 +1,119 @@
+<header class="superior">
+  <button
+    type="button"
+    class="superior__icono superior__hamburguesa"
+    (click)="disposicion.alternarBarraLateral()"
+    [attr.aria-expanded]="disposicion.barraLateralVisible()"
+    aria-label="Mostrar u ocultar el menú"
+  >
+    <adr-icono nombre="list" [tamanio]="20" />
+  </button>
+
+  <!--
+    El buscador es de adorno hasta que exista el índice: no hay endpoint de búsqueda y
+    fingir resultados es peor que no ofrecerlos. Va deshabilitado y lo dice, en vez de
+    aceptar texto y no hacer nada — que es lo que hace pensar que la página está rota.
+    CONDICIÓN DE SALIDA: se habilita con `GET /api/busqueda`.
+  -->
+  <div class="superior__buscador">
+    <adr-icono nombre="magnifying-glass" [tamanio]="16" />
+    <input
+      type="search"
+      placeholder="Buscar (próximamente)"
+      aria-label="Buscar lección, tutorial o producto"
+      disabled
+    />
+  </div>
+
+  <div class="superior__acciones">
+    <a class="superior__icono" routerLink="/ajustes" aria-label="Configuración">
+      <adr-icono nombre="gear" [tamanio]="20" />
+    </a>
+
+    <button
+      type="button"
+      class="superior__icono"
+      (click)="disposicion.abrirCarrito()"
+      [attr.aria-label]="'Ver mi carrito, ' + carrito.articulos() + ' artículos'"
+    >
+      <adr-icono nombre="shopping-cart" [tamanio]="20" />
+      @if (carrito.articulos() > 0) {
+        <span class="superior__burbuja">{{ carrito.articulos() }}</span>
+      }
+    </button>
+
+    <!-- El rótulo dice a qué se cambia, no en qué se está: es lo que hace el botón. -->
+    <button
+      type="button"
+      class="superior__icono"
+      (click)="tema.alternar()"
+      [attr.aria-label]="tema.esOscuro() ? 'Cambiar a tema claro' : 'Cambiar a tema oscuro'"
+    >
+      <adr-icono [nombre]="tema.esOscuro() ? 'sun' : 'moon'" [tamanio]="20" />
+    </button>
+
+    <button type="button" class="superior__icono" aria-label="Notificaciones">
+      <adr-icono nombre="bell" [tamanio]="20" />
+      <span class="superior__punto" aria-hidden="true"></span>
+    </button>
+  </div>
+
+  <div class="superior__usuario">
+    <button
+      type="button"
+      class="superior__disparador"
+      (click)="disposicion.alternarMenuUsuario()"
+      [attr.aria-expanded]="disposicion.menuUsuario()"
+      aria-haspopup="menu"
+      aria-label="Mi cuenta y suscripción"
+    >
+      <span class="superior__usuario-texto">
+        <span class="superior__usuario-nombre">{{ nombreCompleto() }}</span>
+        <span class="superior__usuario-plan">{{ perfil().plan }}</span>
+      </span>
+      <adr-avatar [nombre]="nombreCompleto()" [foto]="perfil().foto" [tamanio]="32" />
+      <adr-icono nombre="caret-down" [tamanio]="16" />
+    </button>
+
+    @if (disposicion.menuUsuario()) {
+      <div class="superior__menu" role="menu">
+        <div class="superior__menu-cabecera">
+          <adr-avatar [nombre]="nombreCompleto()" [foto]="perfil().foto" [tamanio]="40" />
+          <span class="superior__menu-identidad">
+            <span class="superior__menu-nombre">{{ nombreCompleto() }}</span>
+            <span class="superior__menu-correo">{{ perfil().correo }}</span>
+          </span>
+        </div>
+
+        @for (opcion of opciones; track opcion.ruta) {
+          <a
+            class="superior__opcion"
+            role="menuitem"
+            [routerLink]="opcion.ruta"
+            (click)="cerrarMenu()"
+          >
+            <span class="superior__opcion-icono">
+              <adr-icono [nombre]="opcion.icono" [tamanio]="20" />
+            </span>
+            <span class="superior__opcion-texto">
+              <span class="superior__opcion-etiqueta">{{ opcion.etiqueta }}</span>
+              <span class="superior__opcion-detalle">{{ opcion.detalle }}</span>
+            </span>
+            <adr-icono nombre="caret-right" [tamanio]="16" />
+          </a>
+        }
+
+        <div class="superior__menu-divisor"></div>
+
+        <!-- Mismo criterio que el «Salir» de la barra lateral: enlace a la portada mientras
+             estas pantallas no consuman la API real. -->
+        <a class="superior__opcion superior__opcion--salir" role="menuitem" href="/">
+          <span class="superior__opcion-icono">
+            <adr-icono nombre="sign-out" [tamanio]="20" />
+          </span>
+          <span class="superior__opcion-etiqueta">Cerrar sesión</span>
+        </a>
+      </div>
+    }
+  </div>
+</header>

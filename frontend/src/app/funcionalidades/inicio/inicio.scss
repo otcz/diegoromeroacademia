@@ -1,0 +1,235 @@
+:host {
+  display: block;
+}
+
+.inicio {
+  display: flex;
+  flex-direction: column;
+  gap: var(--adr-espacio-5);
+  // 1400px: por encima, la fila de cuatro cifras se estira hasta que cada mosaico parece un
+  // panel vacío. El contenido de la aplicación no crece indefinidamente con el monitor.
+  max-width: 1400px;
+}
+
+// ------------------------------------------------------------------- saludo
+.inicio__saludo {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--adr-espacio-4);
+  align-items: center;
+  justify-content: space-between;
+}
+
+.inicio__titulo {
+  font-family: var(--adr-fuente-titular);
+  font-size: 27px;
+  font-weight: 800;
+  line-height: 1.2;
+  letter-spacing: var(--adr-espaciado-letra-titulo);
+  color: var(--adr-texto-1);
+}
+
+.inicio__bajada {
+  margin-top: var(--adr-espacio-1);
+  font-size: 13.5px;
+  color: var(--adr-texto-4);
+}
+
+.inicio__estado {
+  display: inline-flex;
+  gap: var(--adr-espacio-2);
+  align-items: center;
+
+  padding: var(--adr-espacio-2) var(--adr-espacio-4);
+
+  font-size: 12.5px;
+  font-weight: 600;
+
+  border-radius: var(--adr-radio-pastilla);
+
+  color: var(--adr-estado-verde-texto);
+  background: var(--adr-estado-verde-fondo);
+  border: 1px solid var(--adr-estado-verde-borde);
+
+  &--porVencer {
+    color: var(--adr-estado-dorado-texto);
+    background: var(--adr-estado-dorado-fondo);
+    border-color: var(--adr-estado-dorado-borde);
+  }
+
+  &--vencida {
+    color: var(--adr-estado-rojo-texto);
+    background: var(--adr-estado-rojo-fondo);
+    border-color: var(--adr-estado-rojo-borde);
+  }
+}
+
+// --------------------------------------------------------------- continuar
+.continuar {
+  display: grid;
+  grid-template-columns: 300px minmax(0, 1fr) auto;
+  gap: var(--adr-espacio-5);
+  align-items: center;
+
+  padding: var(--adr-espacio-4);
+
+  background: var(--adr-tarjeta-heroe);
+  border: 1px solid var(--adr-tarjeta-heroe-borde);
+  border-radius: var(--adr-radio-tarjeta);
+}
+
+.continuar__portada {
+  position: relative;
+  overflow: hidden;
+  border-radius: 12px;
+  // La miniatura nunca fija su alto: la relación manda y la imagen la rellena.
+  aspect-ratio: 16 / 9;
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: 62% 26%;
+  }
+}
+
+.continuar__velo {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(160deg, rgb(8 6 20 / 10%), rgb(8 6 20 / 62%));
+}
+
+.continuar__play {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 56px;
+  height: 56px;
+
+  color: var(--adr-color-blanco);
+
+  background: rgb(8 6 20 / 45%);
+  border: 1px solid rgb(255 255 255 / 45%);
+  border-radius: var(--adr-radio-pastilla);
+  transform: translate(-50%, -50%);
+}
+
+.continuar__duracion {
+  position: absolute;
+  right: var(--adr-espacio-2);
+  bottom: var(--adr-espacio-2);
+
+  padding: 3px 8px;
+
+  font-size: 10.5px;
+  font-weight: 600;
+  color: var(--adr-color-blanco);
+
+  background: rgb(8 6 20 / 72%);
+  border-radius: 6px;
+}
+
+.continuar__cuerpo {
+  display: flex;
+  flex-direction: column;
+  gap: var(--adr-espacio-2);
+  min-width: 0;
+}
+
+.continuar__titulo {
+  font-family: var(--adr-fuente-titular);
+  font-size: 20px;
+  font-weight: 700;
+  line-height: 1.25;
+  color: var(--adr-texto-1);
+}
+
+.continuar__contexto {
+  font-size: 12.5px;
+  color: var(--adr-texto-5);
+}
+
+.continuar__acciones {
+  display: flex;
+  flex-direction: column;
+  gap: var(--adr-espacio-2);
+}
+
+// ------------------------------------------------------------------- cifras
+.inicio__cifras {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(190px, 100%), 1fr));
+  gap: var(--adr-espacio-4);
+}
+
+// ----------------------------------------------------------------- columnas
+.inicio__columnas {
+  display: grid;
+  // 1.6fr / 1fr: la ruta es lo que se lee y el lateral lo que se consulta.
+  grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr);
+  gap: var(--adr-espacio-4);
+  align-items: start;
+}
+
+.inicio__lateral {
+  display: flex;
+  flex-direction: column;
+  gap: var(--adr-espacio-4);
+}
+
+// ---------------------------------------------------------------- carrusel
+.inicio__carrusel {
+  display: flex;
+  gap: var(--adr-espacio-4);
+  overflow-x: auto;
+
+  // Cada tarjeta se ancla al borde al soltar el arrastre. Sin esto el carrusel queda a
+  // medio producto y no se ve ninguno entero.
+  scroll-snap-type: x mandatory;
+
+  // Deja aire para que la sombra de la tarjeta no se recorte contra el contenedor.
+  padding-bottom: var(--adr-espacio-2);
+}
+
+.inicio__carrusel-item {
+  flex: 0 0 232px;
+  scroll-snap-align: start;
+}
+
+// ---------------------------------------------------------------- estrecho
+// 1100px: por debajo, la tarjeta de «continuar» ya no cabe en tres columnas sin que la
+// portada se estreche hasta parecer un icono.
+@media (width < 1100px) {
+  .continuar {
+    grid-template-columns: 220px minmax(0, 1fr);
+  }
+
+  .continuar__acciones {
+    // Ocupa el ancho completo de la segunda fila, debajo de portada y texto.
+    grid-column: 1 / -1;
+    flex-direction: row;
+  }
+
+  .inicio__columnas {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@media (width < 620px) {
+  .continuar {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .continuar__acciones {
+    flex-direction: column;
+  }
+
+  .inicio__titulo {
+    font-size: 22px;
+  }
+}

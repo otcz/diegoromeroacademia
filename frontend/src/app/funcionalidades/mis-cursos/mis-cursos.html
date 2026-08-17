@@ -1,0 +1,107 @@
+<div class="cursos">
+  <header class="adr-cabecera">
+    <div>
+      <h1 class="adr-cabecera__titulo">Mis cursos</h1>
+      <p class="adr-cabecera__bajada">Tu plan incluye los niveles 1 y 2.</p>
+    </div>
+    <div class="adr-filtros">
+      @for (opcion of filtros; track opcion.clave) {
+        <adr-chip [activo]="filtro() === opcion.clave" (elegido)="filtro.set(opcion.clave)">
+          {{ opcion.etiqueta }}
+        </adr-chip>
+      }
+    </div>
+  </header>
+
+  <div class="adr-rejilla adr-rejilla--ancha">
+    @for (curso of visibles(); track curso.id) {
+      <article class="curso" [class.curso--bloqueado]="curso.estado === 'bloqueado'">
+        <div class="curso__portada">
+          <adr-marco-imagen
+            [fuente]="curso.portada"
+            relacion="16/9"
+            velo="inferior"
+            alternativo=""
+          />
+          <span class="curso__nivel">NIVEL {{ curso.nivel }}</span>
+          @if (curso.estado === 'bloqueado') {
+            <span class="curso__candado">
+              <adr-icono nombre="lock" [tamanio]="20" etiqueta="Curso bloqueado" />
+            </span>
+          } @else {
+            <adr-etiqueta
+              class="curso__estado"
+              [tinte]="curso.estado === 'completado' ? 'verde' : 'azul'"
+            >
+              {{ rotuloEstado[curso.estado] }}
+            </adr-etiqueta>
+          }
+        </div>
+
+        <div class="curso__cuerpo">
+          <h2 class="curso__titulo">{{ curso.titulo }}</h2>
+          <p class="curso__resumen">{{ curso.resumen }}</p>
+          <p class="curso__meta">
+            {{ curso.totalModulos }} módulos · {{ curso.totalClases }} lecciones
+          </p>
+
+          @if (curso.estado === 'bloqueado') {
+            <!-- El motivo del bloqueo se dice con palabras, no solo con el candado. Un
+                 candado sin explicación deja al alumno sin saber qué le falta. -->
+            <p class="curso__bloqueo">
+              <adr-icono nombre="lock" [tamanio]="16" />
+              {{ curso.motivoBloqueo }}
+            </p>
+          } @else {
+            <adr-barra-progreso
+              [valor]="curso.avance"
+              [mostrarTexto]="true"
+              [etiqueta]="'Avance de ' + curso.titulo"
+            />
+          }
+
+          <div class="curso__accion">
+            @switch (curso.estado) {
+              @case ('completado') {
+                <adr-boton
+                  variante="secundario"
+                  [anchoCompleto]="true"
+                  enlace="/certificados/cert1"
+                >
+                  Descargar certificado
+                </adr-boton>
+              }
+              @case ('enCurso') {
+                <adr-boton
+                  variante="primario"
+                  icono="play"
+                  [anchoCompleto]="true"
+                  enlace="/clase/l7"
+                >
+                  Continuar
+                </adr-boton>
+              }
+              @default {
+                <adr-boton variante="secundario" [anchoCompleto]="true" enlace="/suscripcion">
+                  Mejorar plan
+                </adr-boton>
+              }
+            }
+          </div>
+        </div>
+      </article>
+    }
+  </div>
+
+  <!-- Clases particulares. Deshabilitado: no hay agenda ni disponibilidad real que consultar. -->
+  <section class="adr-panel adr-panel--azul cursos__particulares">
+    <span class="cursos__particulares-icono">
+      <adr-icono nombre="video-camera" [tamanio]="24" />
+    </span>
+    <div>
+      <h2 class="adr-panel__titulo">Clases particulares con Diego</h2>
+      <p class="adr-panel__contexto">Sesiones 1 a 1 por videollamada, según tu nivel.</p>
+    </div>
+    <adr-boton variante="secundario" [deshabilitado]="true">Ver horarios</adr-boton>
+  </section>
+</div>

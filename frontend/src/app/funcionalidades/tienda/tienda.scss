@@ -1,0 +1,55 @@
+:host {
+  display: block;
+}
+
+.tienda {
+  display: flex;
+  flex-direction: column;
+  gap: var(--adr-espacio-5);
+  max-width: 1400px;
+}
+
+.tienda__acciones {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--adr-espacio-3);
+  align-items: center;
+}
+
+.tienda__envio {
+  display: inline-flex;
+  gap: var(--adr-espacio-2);
+  align-items: center;
+
+  padding: var(--adr-espacio-2) var(--adr-espacio-4);
+
+  font-size: 12px;
+  font-weight: 600;
+
+  color: var(--adr-estado-verde-texto);
+  background: var(--adr-estado-verde-fondo);
+  border-radius: var(--adr-radio-pastilla);
+}
+
+.tienda__regalo {
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: center;
+
+  > div {
+    flex: 1;
+    min-width: 220px;
+  }
+}
+
+.tienda__regalo-icono {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  color: var(--adr-estado-dorado-icono);
+  background: var(--adr-estado-dorado-fondo-fuerte);
+  border-radius: 12px;
+}

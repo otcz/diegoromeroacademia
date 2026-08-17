@@ -1,0 +1,57 @@
+<div class="practica">
+  <header class="adr-cabecera">
+    <div>
+      <h1 class="adr-cabecera__titulo">Zona de ejercicios</h1>
+      <p class="adr-cabecera__bajada">
+        Rutinas cortas para soltar los dedos. Practica con acompañamiento.
+      </p>
+    </div>
+  </header>
+
+  @if (reto(); as semanal) {
+    <section class="adr-panel adr-panel--dorado reto" aria-labelledby="reto-titulo">
+      <span class="reto__icono">
+        <adr-icono nombre="target" [tamanio]="24" />
+      </span>
+      <div class="reto__cuerpo">
+        <h2 id="reto-titulo" class="adr-panel__titulo">{{ semanal.titulo }}</h2>
+        <p class="adr-panel__contexto">{{ semanal.detalle }}</p>
+        <adr-barra-progreso
+          [valor]="semanal.avance"
+          [mostrarTexto]="true"
+          etiqueta="Avance del reto de la semana"
+        />
+      </div>
+      <adr-boton variante="primario" [enlace]="'/practica/' + semanal.ejercicioId">
+        Practicar hoy
+      </adr-boton>
+    </section>
+  }
+
+  <div class="adr-filtros">
+    @for (tipo of tipos; track tipo) {
+      <adr-chip [activo]="filtro() === tipo" (elegido)="filtro.set(tipo)">
+        {{ tipo }}
+        @if (tipo === 'Todos') {
+          <span> · {{ total() }}</span>
+        }
+      </adr-chip>
+    }
+  </div>
+
+  @if (visibles().length === 0) {
+    <adr-estado-vacio
+      icono="barbell"
+      titulo="No hay ejercicios de este tipo"
+      explicacion="Prueba con otro filtro o vuelve a «Todos» para ver el catálogo completo."
+    >
+      <adr-boton variante="secundario" (accion)="filtro.set('Todos')">Ver todos</adr-boton>
+    </adr-estado-vacio>
+  } @else {
+    <div class="adr-rejilla">
+      @for (ejercicio of visibles(); track ejercicio.id) {
+        <adr-tarjeta-ejercicio [ejercicio]="ejercicio" />
+      }
+    </div>
+  }
+</div>

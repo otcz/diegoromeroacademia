@@ -1,0 +1,197 @@
+@use 'mixins' as m;
+
+:host {
+  display: contents;
+}
+
+.lateral {
+  position: sticky;
+  top: 0;
+  display: flex;
+  flex: none;
+  flex-direction: column;
+  gap: var(--adr-espacio-5);
+
+  width: var(--adr-barra-lateral);
+  height: 100vh;
+  padding: var(--adr-espacio-5) var(--adr-espacio-4);
+
+  background: var(--adr-fondo-panel);
+  border-right: 1px solid var(--adr-linea);
+}
+
+// ------------------------------------------------------------------- identidad
+.lateral__marca {
+  display: flex;
+  gap: 11px;
+  align-items: center;
+  padding-inline: 6px;
+  color: inherit;
+  text-decoration: none;
+
+  @include m.foco-visible;
+}
+
+// El logotipo que entregó el propietario NO tiene transparencia. Recortado en círculo sobre
+// negro se ve deliberado; estirado en un rectángulo enseña su propio fondo.
+.lateral__logotipo {
+  display: block;
+  flex: none;
+  width: 42px;
+  height: 42px;
+  overflow: hidden;
+  background: #000;
+  border-radius: var(--adr-radio-pastilla);
+  box-shadow: 0 0 0 1px var(--adr-anillo-logotipo);
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+}
+
+.lateral__marca-texto {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  min-width: 0;
+}
+
+.lateral__marca-nombre {
+  font-family: var(--adr-fuente-titular);
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 1;
+  color: var(--adr-texto-1);
+}
+
+.lateral__marca-kicker {
+  font-size: 8.5px;
+  font-weight: 600;
+  line-height: 1;
+  letter-spacing: 0.18em;
+  color: var(--adr-texto-5);
+}
+
+// ------------------------------------------------------------------ navegación
+.lateral__nav {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.lateral__enlace {
+  position: relative;
+  display: flex;
+  gap: 11px;
+  align-items: center;
+
+  // 44px y no los 48 del token de control: es una fila de menú, no un objetivo táctil
+  // aislado — en escritorio se pulsa con ratón y con 48 la lista de cinco crece 20px sin
+  // ganar nada. En móvil esta barra ni se dibuja.
+  height: 44px;
+  padding-inline: 13px;
+
+  font-size: 13.5px;
+  font-weight: 600;
+  color: var(--adr-texto-3);
+  text-decoration: none;
+  white-space: nowrap;
+
+  border-radius: 12px;
+  transition:
+    background-color 0.15s ease,
+    color 0.15s ease;
+
+  @include m.foco-visible;
+
+  &:hover {
+    color: var(--adr-texto-1);
+    background: var(--adr-relleno-1);
+  }
+
+  &--activo {
+    color: var(--adr-texto-1);
+    background: var(--adr-nav-activo-fondo);
+    box-shadow: inset 0 0 0 1px var(--adr-nav-activo-borde);
+  }
+}
+
+.lateral__espaciador {
+  flex: 1;
+}
+
+// ----------------------------------------------------------------------- plan
+.lateral__plan {
+  display: flex;
+  flex-direction: column;
+  gap: var(--adr-espacio-2);
+  padding: var(--adr-espacio-3);
+  background: var(--adr-superficie-2);
+  border: 1px solid var(--adr-borde);
+  border-left: 4px solid var(--adr-estado-verde-icono);
+  border-radius: 14px;
+
+  &--porVencer {
+    border-left-color: var(--adr-color-azul-cta-b);
+  }
+
+  &--vencida {
+    border-left-color: var(--adr-estado-rojo-texto);
+  }
+}
+
+.lateral__plan-cabecera {
+  display: flex;
+  gap: var(--adr-espacio-2);
+  align-items: center;
+  justify-content: space-between;
+}
+
+.lateral__plan-nombre {
+  font-size: 12.5px;
+  font-weight: 700;
+  color: var(--adr-texto-1);
+}
+
+.lateral__plan-estado {
+  padding: 3px 8px;
+  font-size: 10px;
+  font-weight: 600;
+  white-space: nowrap;
+  border-radius: var(--adr-radio-pastilla);
+
+  color: var(--adr-estado-verde-texto);
+  background: var(--adr-estado-verde-fondo);
+
+  .lateral__plan--porVencer & {
+    color: var(--adr-estado-azul-texto);
+    background: var(--adr-estado-azul-fondo);
+  }
+
+  .lateral__plan--vencida & {
+    color: var(--adr-estado-rojo-texto);
+    background: var(--adr-estado-rojo-fondo);
+  }
+}
+
+.lateral__plan-nota {
+  font-size: 11.5px;
+  color: var(--adr-texto-4);
+}
+
+// ------------------------------------------------------------------------ pie
+.lateral__pie {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding-top: var(--adr-espacio-3);
+  border-top: 1px solid var(--adr-linea);
+}
+
+.lateral__enlace--pie {
+  height: 40px;
+  font-size: 13px;
+  color: var(--adr-texto-4);
+}

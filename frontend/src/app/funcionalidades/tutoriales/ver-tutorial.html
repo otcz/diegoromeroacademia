@@ -1,0 +1,78 @@
+@if (tutorial(); as pieza) {
+  <div class="ver">
+    <header class="ver__cabecera">
+      <a class="adr-volver" routerLink="/tutoriales">
+        <adr-icono nombre="arrow-left" [tamanio]="16" />
+        Mis tutoriales
+      </a>
+      <div class="ver__identidad">
+        <h1 class="ver__titulo">{{ pieza.titulo }}</h1>
+        <p class="ver__contexto">
+          {{ pieza.totalPartes }} partes · {{ pieza.duracionSegundos | minutos }} en total
+        </p>
+      </div>
+      @if (pieza.comprado) {
+        <!-- La promesa que distingue la compra suelta de la suscripción, dicha aquí y no
+             solo cumplida en la base de datos. -->
+        <span class="ver__permanente">
+          <adr-icono nombre="seal-check" [tamanio]="16" />
+          Comprado · acceso de por vida
+        </span>
+      }
+    </header>
+
+    <div class="ver__columnas">
+      <div class="ver__principal">
+        <adr-reproductor
+          [poster]="pieza.portada"
+          [duracionSegundos]="pieza.duracionSegundos"
+          [pisadas]="pieza.pisadas"
+          modo="tutorial"
+          kicker="TUTORIAL"
+        />
+
+        <section class="adr-panel" aria-labelledby="sobre-titulo">
+          <h2 id="sobre-titulo" class="adr-panel__titulo">Sobre este tutorial</h2>
+          <p class="ver__resumen">{{ pieza.resumen }}</p>
+
+          @if (pieza.recursos.length > 0) {
+            <div class="adr-panel__lista">
+              @for (recurso of pieza.recursos; track recurso.id) {
+                <div class="ver__recurso">
+                  <span class="ver__recurso-icono">
+                    <adr-icono [nombre]="iconoRecurso[recurso.tipo]" [tamanio]="20" />
+                  </span>
+                  <span class="ver__recurso-texto">
+                    <span class="ver__recurso-titulo">{{ recurso.titulo }}</span>
+                    <span class="ver__recurso-detalle">{{ recurso.detalle }}</span>
+                  </span>
+                  <span class="adr-panel__pastilla">Próximamente</span>
+                </div>
+              }
+            </div>
+          }
+        </section>
+      </div>
+
+      <aside class="ver__lateral">
+        <section class="adr-panel" aria-labelledby="partes-titulo">
+          <div class="adr-panel__cabecera">
+            <h2 id="partes-titulo" class="adr-panel__titulo">Partes del tutorial</h2>
+            <span class="adr-panel__porcentaje">{{ pieza.avance }} %</span>
+          </div>
+          <adr-barra-progreso [valor]="pieza.avance" etiqueta="Avance del tutorial" />
+
+          <div class="adr-panel__lista">
+            @for (parte of pieza.partes; track parte.id) {
+              <adr-item-lista [item]="parte" />
+            }
+          </div>
+
+          <adr-boton variante="secundario" [anchoCompleto]="true" [deshabilitado]="true">
+            Marcar parte como vista
+          </adr-boton>
+        </section>
+      </aside>
+    </div>
+  </div>
+}

@@ -1,0 +1,204 @@
+:host {
+  display: block;
+}
+
+.suscripcion {
+  display: flex;
+  flex-direction: column;
+  gap: var(--adr-espacio-4);
+  max-width: 1400px;
+}
+
+.suscripcion__cabecera {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--adr-espacio-4);
+  align-items: center;
+}
+
+// ---------------------------------------------------------------- estado
+.estado {
+  display: flex;
+  flex-direction: column;
+  gap: var(--adr-espacio-3);
+
+  padding: var(--adr-espacio-5);
+
+  background: var(--adr-tarjeta-azul);
+  border: 1px solid var(--adr-borde);
+  // Línea lateral de 4px con el color del estado. Es lo que el handoff pide y lo que hace
+  // que «vencida» se note antes de leer nada.
+  border-left: 4px solid var(--adr-estado-verde-icono);
+  border-radius: var(--adr-radio-tarjeta);
+
+  &--porVencer {
+    border-left-color: var(--adr-color-azul-cta-b);
+  }
+
+  &--vencida {
+    border-left-color: var(--adr-estado-rojo-texto);
+  }
+}
+
+.estado__cabecera {
+  display: flex;
+  gap: var(--adr-espacio-3);
+  align-items: center;
+  justify-content: space-between;
+}
+
+.estado__precio {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--adr-espacio-3);
+  align-items: baseline;
+  justify-content: space-between;
+}
+
+.estado__nombre {
+  font-family: var(--adr-fuente-titular);
+  font-size: 24px;
+  font-weight: 800;
+  color: var(--adr-texto-1);
+}
+
+.estado__monto {
+  font-family: var(--adr-fuente-titular);
+  font-size: 24px;
+  font-weight: 800;
+  color: var(--adr-texto-1);
+
+  small {
+    margin-left: var(--adr-espacio-1);
+    font-family: var(--adr-fuente-cuerpo);
+    font-size: 12.5px;
+    font-weight: 500;
+    color: var(--adr-texto-5);
+  }
+}
+
+.estado__incluye {
+  font-size: 12.5px;
+  color: var(--adr-texto-4);
+}
+
+.estado__datos {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--adr-espacio-5);
+  padding-top: var(--adr-espacio-2);
+  border-top: 1px solid var(--adr-linea);
+}
+
+.estado__acciones {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--adr-espacio-3);
+}
+
+.suscripcion__nota {
+  display: flex;
+  gap: var(--adr-espacio-2);
+  align-items: center;
+  font-size: 11.5px;
+  color: var(--adr-texto-5);
+}
+
+// ------------------------------------------------------------------ plan
+.plan {
+  display: flex;
+  flex-direction: column;
+  gap: var(--adr-espacio-3);
+  height: 100%;
+
+  padding: var(--adr-espacio-4);
+
+  background: var(--adr-superficie);
+  border: 1px solid var(--adr-borde);
+  border-radius: var(--adr-radio-tarjeta);
+
+  &--destacado {
+    border: 2px solid var(--adr-color-azul-rey);
+    box-shadow: var(--adr-sombra-destacado);
+  }
+
+  &--actual {
+    background: var(--adr-estado-verde-fondo);
+    border-color: var(--adr-estado-verde-borde);
+  }
+}
+
+.plan__cabecera {
+  display: flex;
+  gap: var(--adr-espacio-2);
+  align-items: center;
+  justify-content: space-between;
+}
+
+.plan__nombre {
+  font-family: var(--adr-fuente-titular);
+  font-size: 17px;
+  font-weight: 700;
+  color: var(--adr-texto-1);
+}
+
+.plan__precio {
+  font-family: var(--adr-fuente-titular);
+  font-size: 26px;
+  font-weight: 800;
+  color: var(--adr-texto-1);
+
+  small {
+    margin-left: var(--adr-espacio-1);
+    font-family: var(--adr-fuente-cuerpo);
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--adr-texto-5);
+  }
+}
+
+.plan__incluye {
+  // Empuja el botón al fondo: en la rejilla, las tres acciones quedan alineadas.
+  margin-bottom: auto;
+  font-size: 12.5px;
+  line-height: 1.5;
+  color: var(--adr-texto-4);
+}
+
+// -------------------------------------------------------------- columnas
+.suscripcion__columnas {
+  display: grid;
+  grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr);
+  gap: var(--adr-espacio-4);
+  align-items: start;
+}
+
+.suscripcion__lateral {
+  display: flex;
+  flex-direction: column;
+  gap: var(--adr-espacio-4);
+  min-width: 0;
+}
+
+.suscripcion__medios {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--adr-espacio-2);
+}
+
+.suscripcion__regalo-icono {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 38px;
+  height: 38px;
+  color: var(--adr-estado-dorado-icono);
+  background: var(--adr-estado-dorado-fondo-fuerte);
+  border-radius: 11px;
+}
+
+@media (width < 1024px) {
+  .suscripcion__columnas {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}

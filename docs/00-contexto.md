@@ -171,3 +171,4 @@ configuración, no código. Ver `docs/03-configuracion.md`.
 | 2026-08-16 | Recibido el handoff de la aplicación del estudiante: 14 pantallas en web, tablet y móvil |
 | 2026-08-16 | Construidas las 13 pantallas tras iniciar sesión, con armazón, reproductor y simulador de pisadas. 302 pruebas, 93 % de cobertura ([proceso](procesos/frontend-app-del-estudiante.md)) |
 | 2026-08-16 | Doble tema claro/oscuro en todo el sitio sobre una capa semántica de tokens ([ADR 0012](adr/0012-doble-tema-en-todo-el-sitio.md)); rutas de la aplicación cerradas ([ADR 0013](adr/0013-rutas-de-la-aplicacion-del-estudiante.md)) |
+| 2026-08-16 | Las 13 pantallas publicadas en la demostración. Verificadas en `diegoromeroacademia.com`: enrutado, doble tema con persistencia, carrito, simulador y barra inferior en móvil. **No es producción** — producción sigue siendo Cloud Run y no existe todavía |

@@ -55,6 +55,80 @@ const ICONOS_USADOS = [
   'whatsapp-logo',
   'google-logo',
   'facebook-logo',
+
+  // ------------------------------------------------------------------------
+  // Aplicacion del estudiante (handoff docs/handoff-disenio/app-estudiante).
+  //
+  // El handoff dibuja iconos de trazo tipo Lucide de 13 a 20 px. Aqui van sus
+  // equivalentes Phosphor duotone: la regla 12 y el ADR 0005 mandan sobre la maqueta,
+  // y mezclar dos librerias se nota inmediatamente aunque nadie sepa decir por que.
+  // La tabla de equivalencias esta en docs/04 §2.
+  // ------------------------------------------------------------------------
+
+  // Navegacion principal y barra superior
+  'house',
+  'graduation-cap',
+  'barbell',
+  'storefront',
+  'gear',
+  'bell',
+  'sun',
+  'moon',
+  'sign-out',
+  'caret-left',
+  'caret-up',
+
+  // Reproductor
+  'play',
+  'pause',
+  'rewind',
+  'fast-forward',
+  'speaker-high',
+  'closed-captioning',
+  'corners-out',
+  'corners-in',
+  'sliders-horizontal',
+  'repeat',
+  'metronome',
+
+  // Aprendizaje y practica
+  'fire',
+  'target',
+  'list-checks',
+  'music-notes',
+  'book-open-text',
+  'file-pdf',
+  'image-square',
+  'note-pencil',
+  'broadcast',
+  'video-camera',
+  'chart-line',
+
+  // Comunidad
+  'chat-circle',
+  'users-three',
+  'paper-plane-tilt',
+  'thumbs-up',
+
+  // Comercio, cuenta y regalos
+  'gift',
+  'receipt',
+  'wallet',
+  'ticket',
+  'plus',
+  'minus',
+  'trash',
+  'camera',
+  'key',
+  'shield-check',
+  'translate',
+  'calendar-blank',
+  'crown-simple',
+  'link-simple',
+  'linkedin-logo',
+  'check',
+  'arrow-clockwise',
+  'sparkle',
 ];
 
 const faltantes = ICONOS_USADOS.filter(

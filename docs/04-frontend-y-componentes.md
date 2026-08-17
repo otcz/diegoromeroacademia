@@ -86,6 +86,12 @@ certificado y las superficies oscuras en ambos temas (el reproductor, la tarjeta
 | Texto 1–5 | `--adr-texto-1` … `--adr-texto-5` | `#0E1230` → `#5F6F86` | blanco 100 % → 50 % |
 | Enlace | `--adr-enlace`, `--adr-enlace-hover` | `#1D4FD7` | `#7FA9FF` |
 | Estado | `--adr-estado-{azul,verde,dorado,rojo,morado}-{fondo,borde,texto,icono}` | tintes claros | velos sobre oscuro |
+| Banda de ritmo | `--adr-fondo-banda`, `--adr-banda-filo` | noche azul, sin filo | degradado levantado + filo |
+
+**La banda de ritmo se invierte, no se traduce.** Es lo que parte la portada en capítulos
+(regla de color 4). En claro es una banda MÁS OSCURA que la página; en oscuro, MÁS CLARA. Lo
+que se conserva es el contraste, no el color — y la razón está en la corrección del
+[ADR 0012](adr/0012-doble-tema-en-todo-el-sitio.md), que documenta cómo llegó a cancelarse.
 
 **Cinco escalones de texto, no once.** El handoff trae once y siete de borde; se condensaron.
 Once niveles no son una jerarquía: nadie distingue `.72` de `.70` y el segundo acaba usándose por

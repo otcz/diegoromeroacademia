@@ -187,6 +187,67 @@ describe('Contraste de la capa semantica', () => {
     });
   }
 
+  /**
+   * El ritmo de la portada (regla de color 4).
+   *
+   * <p><b>El fallo que esta prueba impide repetir.</b> La banda usaba
+   * `--adr-color-noche-azul` directamente. El ADR 0011 dejo ese color en `#080614` y el
+   * ADR 0012 hizo que el fondo del tema oscuro fuera exactamente ese mismo color: las tres
+   * bandas —heroe, simulador y pie— desaparecieron dentro de la pagina. Medido entonces:
+   * ocho de once secciones en el mismo `rgb(8,6,20)`, luminancia 0,0023 en todas.
+   *
+   * <p>Nada fallaba. Compilaba, cumplia contraste de texto y ninguna prueba se quejaba —
+   * simplemente la portada dejaba de tener capitulos y pasaba a ser una losa continua. Es el
+   * tipo de defecto que solo se ve mirando, y por eso hay que medirlo.
+   *
+   * <p>El umbral es 1,08:1. No es un minimo de accesibilidad —una banda no es texto— sino el
+   * escalon por debajo del cual dos superficies contiguas dejan de distinguirse. El valor de
+   * hoy queda holgado por encima en los dos temas.
+   */
+  it('debe distinguirse la banda de ritmo del fondo de la pagina, en ambos temas', () => {
+    const MINIMO_BANDA = 1.08;
+
+    for (const { nombre, tema } of TEMAS) {
+      const pagina = aColor(resolver('--adr-fondo', tema));
+      const banda = resolver('--adr-fondo-banda', tema);
+
+      // En oscuro la banda es un degradado: se mide su parada mas oscura, que es el peor
+      // caso. Si hasta esa se distingue, la banda entera se distingue.
+      const paradas = banda.match(/#[0-9a-f]{6}/gi) ?? [];
+      const medidas = paradas.map((p) => razon(aColor(p), pagina));
+      const peor = Math.min(...medidas);
+
+      expect(paradas.length, `${nombre}: la banda no declara ningun color solido`).toBeGreaterThan(
+        0,
+      );
+      expect(peor, `${nombre}: la banda se confunde con el fondo`).toBeGreaterThanOrEqual(
+        MINIMO_BANDA,
+      );
+    }
+  });
+
+  it('debe seguir siendo legible el texto claro sobre la banda de ritmo', () => {
+    // La banda lleva texto blanco en los dos temas. Al levantarla en oscuro se acerca al
+    // blanco, asi que hay que comprobar que no se acerco demasiado.
+    for (const { nombre, tema } of TEMAS) {
+      const paradas = resolver('--adr-fondo-banda', tema).match(/#[0-9a-f]{6}/gi) ?? [];
+      const fuerte = aColor(resolver('--adr-oscuro-texto-fuerte', tema));
+      const suave = aColor(resolver('--adr-oscuro-texto-suave', tema));
+
+      for (const parada of paradas) {
+        const fondo = aColor(parada);
+        expect(
+          razon(sobre(fuerte, fondo), fondo),
+          `${nombre}: texto fuerte sobre ${parada}`,
+        ).toBeGreaterThanOrEqual(MINIMO_TEXTO);
+        expect(
+          razon(sobre(suave, fondo), fondo),
+          `${nombre}: texto suave sobre ${parada}`,
+        ).toBeGreaterThanOrEqual(MINIMO_TEXTO);
+      }
+    }
+  });
+
   it('debe conservar la jerarquia de los escalones de texto en ambos temas', () => {
     // Cinco escalones que no bajan de contraste en orden no son una jerarquia: son cinco
     // grises parecidos, y el cuarto acaba usandose por accidente donde iba el segundo.

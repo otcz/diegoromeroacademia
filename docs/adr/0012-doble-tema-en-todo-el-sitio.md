@@ -113,6 +113,50 @@ el valor del atributo para que el guion no pueda quedarse atrás en silencio.
 - `color-scheme` ya no se declara en `global.scss`: lo fija cada tema. Un tema nuevo que olvide
   declararlo dejaría los controles nativos del navegador con el esquema del anterior.
 
+---
+
+## Corrección del 2026-08-16 · la banda de ritmo
+
+**Al revisar la portada en oscuro apareció un defecto que esta misma decisión causó**, y se
+corrigió el mismo día. Queda aquí y no en un ADR aparte porque es una consecuencia directa de
+lo de arriba, no una decisión nueva.
+
+La regla de color 4 parte la portada alternando secciones. Esas bandas usaban
+`--adr-color-noche-azul`. Pero el [ADR 0011](0011-paleta-oscura-del-handoff-de-acceso.md) dejó
+ese color en `#080614`, y este ADR hizo que el fondo del tema oscuro fuera **exactamente ese
+mismo color**. Las tres bandas —héroe, simulador y pie— desaparecieron dentro de la página.
+
+Medido antes de corregir: **ocho de once secciones en el mismo `rgb(8,6,20)`**, luminancia
+0,0023 en todas. Las dos que se levantaban —la barra y la sección de acceso, con el velo del
+4 %— quedaban en 0,0059: una relación de 1,03:1, imperceptible. La portada dejaba de tener
+capítulos y pasaba a ser una losa continua de 5.800 px.
+
+Nada fallaba. Compilaba, cumplía contraste de texto y ninguna prueba se quejaba.
+
+**La lección: una alternancia no se invierte sola.** «Noche azul sobre niebla» no tiene
+contrario en oscuro, porque su contrario ES el fondo. Lo que hay que conservar al cambiar de
+tema no es el color de la banda sino **su contraste con la página**.
+
+La corrección es un token propio, `--adr-fondo-banda`:
+
+| Tema | Valor | Contra la página |
+|---|---|---|
+| Claro | `--adr-color-noche-azul` — idéntico a lo aprobado | 18,86:1 |
+| Oscuro | degradado `#14121f → #121a33` + el halo azul | 1,09:1 a 1,17:1 |
+
+Más `--adr-banda-filo`: transparente en claro, `--adr-borde` en oscuro. Va como sombra
+**interior** y no como `border` porque dos bordes de 1px sumarían alto a cada banda y moverían
+la portada aprobada aunque en claro el filo sea invisible.
+
+El texto claro sigue legible sobre la banda levantada: 12,6:1 en el peor caso.
+
+`contraste.spec.ts` gana dos comprobaciones — que la banda se distinga del fondo en ambos temas
+y que el texto encima siga cumpliendo AA. El umbral de 1,08:1 no es de accesibilidad (una banda
+no es texto) sino el escalón por debajo del cual dos superficies contiguas dejan de verse como
+dos.
+
+---
+
 **Qué obligaría a revisar esta decisión**
 
 - Que el propietario, al ver la portada en oscuro, prefiera dejarla fija en claro. Sería volver a

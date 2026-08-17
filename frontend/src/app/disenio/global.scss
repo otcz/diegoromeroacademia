@@ -206,16 +206,30 @@ a {
   padding-block: var(--adr-separacion-seccion);
 }
 
-// Sección deliberadamente oscura EN AMBOS TEMAS. Es el ritmo de la portada (regla de
-// color 4: alternar claro y oscuro), no una consecuencia del tema. En oscuro se apoya en
-// el degradado de contenido para que no quede un rectángulo plano contra el fondo.
+// Banda de ritmo. Es lo que parte la portada en capítulos (regla de color 4), y NO una
+// consecuencia del tema: existe en los dos, con el contraste invertido.
+//
+// El texto va claro en ambos casos, y no es descuido: en claro la banda es más oscura que
+// la página y en oscuro sigue siendo oscura, solo que levantada. La única que cambia de
+// lado es la banda; el texto de encima siempre cae sobre oscuro.
+//
+// El nombre se queda en `-oscura` aunque ya no describa el color en los dos temas. Cambiarlo
+// tocaría tres plantillas en el mismo diff que introduce la banda, y ese diff es justo el
+// que hay que poder leer de un vistazo. Pendiente de renombrar a `.adr-banda`.
 .adr-seccion-oscura {
-  background: var(--adr-color-noche-azul);
+  background: var(--adr-fondo-banda);
   color: var(--adr-oscuro-texto-fuerte);
 
-  [data-theme='oscuro'] & {
-    background: var(--adr-fondo-contenido);
-  }
+  // El filo. En claro es transparente y no dibuja nada; en oscuro hace la mitad del trabajo
+  // de separar la banda, porque un salto de tono del 10% se lee mucho mejor con una línea
+  // que lo remate.
+  //
+  // Va como sombra INTERIOR y no como `border`: un borde de 1px arriba y otro abajo suman
+  // dos píxeles de alto a cada banda, y eso movería la portada aprobada aunque en claro el
+  // filo sea invisible. Una sombra no ocupa espacio.
+  box-shadow:
+    inset 0 1px 0 var(--adr-banda-filo),
+    inset 0 -1px 0 var(--adr-banda-filo);
 }
 
 @media (width < 768px) {

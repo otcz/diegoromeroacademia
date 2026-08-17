@@ -359,6 +359,27 @@
   --adr-anillo-logotipo: rgb(16 24 64 / 14%);
   --adr-anillo-punto: var(--adr-color-blanco);
 
+  // ---------- Banda de ritmo ----------
+  // La regla de color 4 parte la portada alternando secciones: heroe, simulador y pie
+  // oscuros, el resto claro. Eso es lo que la convierte en capitulos y no en una losa de
+  // 5.800 px de alto.
+  //
+  // <b>La alternancia NO se invierte sola.</b> «Noche azul sobre niebla» no tiene contrario
+  // en oscuro, porque su contrario ES el fondo: el ADR 0011 dejo el noche azul en #080614 y
+  // el ADR 0012 hizo que el fondo del tema oscuro fuera ese mismo color. Resultado medido
+  // antes de este token: ocho de once secciones en el mismo rgb(8,6,20), luminancia 0,0023
+  // en todas. El ritmo no se degradaba, se cancelaba.
+  //
+  // Por eso la banda es un token propio y no `--adr-color-noche-azul` a secas: en claro es
+  // una banda MAS OSCURA que la pagina, en oscuro una MAS CLARA. Lo que se conserva no es el
+  // color sino el contraste, que es lo que hacia el trabajo.
+  //
+  // En claro vale exactamente lo aprobado: la portada no cambia ni un pixel.
+  --adr-fondo-banda: var(--adr-color-noche-azul);
+  // Filo de la banda. En claro sobra —el salto de tono ya la separa— y en oscuro es la mitad
+  // del efecto: en una interfaz oscura una banda se lee por su linea tanto como por su tono.
+  --adr-banda-filo: transparent;
+
   color-scheme: light;
 }
 
@@ -470,6 +491,18 @@
 
   --adr-anillo-logotipo: rgb(255 255 255 / 16%);
   --adr-anillo-punto: #0b0a1c;
+
+  // La banda, levantada sobre la pagina en vez de hundida. Los dos extremos del degradado
+  // estan elegidos por su LUMINANCIA, no a ojo: dan entre 1,10:1 y 1,17:1 contra el fondo,
+  // que es un escalon que se ve y sigue siendo lo bastante oscuro para el texto blanco —
+  // #121a33 da 17:1 con blanco encima, muy por encima del minimo.
+  //
+  // Se conserva el halo azul del handoff: es lo que evita que la banda parezca un rectangulo
+  // gris pegado, y es el mismo gesto que ya usan el area de contenido y la pantalla de acceso.
+  --adr-fondo-banda:
+    radial-gradient(900px 620px at 82% -8%, var(--adr-halo-azul), transparent 62%),
+    linear-gradient(170deg, #14121f, #121a33);
+  --adr-banda-filo: var(--adr-borde);
 
   // Le dice al navegador de que color son las barras de desplazamiento, los campos
   // nativos y el fondo del lienzo. Sin esto un `<select>` sale blanco en medio de una

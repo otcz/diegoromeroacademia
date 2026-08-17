@@ -15,7 +15,7 @@
   display: block;
   font-size: var(--adr-texto-ui);
   font-weight: 600;
-  color: var(--adr-campo-rotulo, var(--adr-color-tinta));
+  color: var(--adr-campo-rotulo, var(--adr-texto-1));
 }
 
 .adr-campo__control {
@@ -29,10 +29,10 @@
   // pantalla oscura no podia usar el campo sin quedarse con un bloque blanco: al invertir la
   // tinta salia texto blanco sobre fondo blanco, invisible. Los valores por defecto no
   // cambian, asi que ninguna pantalla existente se mueve.
-  color: var(--adr-campo-texto, var(--adr-color-tinta));
+  color: var(--adr-campo-texto, var(--adr-texto-1));
 
-  background: var(--adr-campo-fondo, var(--adr-color-blanco));
-  border: 1px solid var(--adr-campo-borde, var(--adr-color-borde-suave));
+  background: var(--adr-campo-fondo, var(--adr-superficie));
+  border: 1px solid var(--adr-campo-borde, var(--adr-borde-fuerte));
   border-radius: 12px;
 
   transition:
@@ -40,22 +40,22 @@
     box-shadow 0.15s ease;
 
   &::placeholder {
-    color: var(--adr-campo-marcador, var(--adr-color-texto-atenuado));
+    color: var(--adr-campo-marcador, var(--adr-texto-5));
   }
 
   &:hover:not(:disabled) {
-    border-color: var(--adr-color-texto-atenuado);
+    border-color: var(--adr-texto-5);
   }
 
   &:focus {
-    border-color: var(--adr-color-azul-rey);
+    border-color: var(--adr-color-foco);
     outline: none;
-    box-shadow: 0 0 0 3px rgb(29 107 243 / 15%);
+    box-shadow: var(--adr-anillo-foco);
   }
 
   &:disabled {
     cursor: not-allowed;
-    background: var(--adr-color-niebla);
+    background: var(--adr-relleno-1);
     opacity: 0.7;
   }
 }
@@ -82,7 +82,7 @@
 }
 
 .adr-campo__ayuda {
-  color: var(--adr-color-texto-atenuado);
+  color: var(--adr-texto-5);
 }
 
 // Envoltorio del control, para poder colgar el ojo dentro del campo.
@@ -111,7 +111,7 @@
   height: 44px;
   padding: 0;
 
-  color: var(--adr-color-texto-atenuado);
+  color: var(--adr-texto-5);
   cursor: pointer;
   background: transparent;
   border: 0;
@@ -119,7 +119,7 @@
   transform: translateY(-50%);
 
   &:hover {
-    color: var(--adr-color-tinta);
+    color: var(--adr-texto-1);
   }
 
   &:focus-visible {

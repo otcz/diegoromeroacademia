@@ -19,11 +19,40 @@
     <link rel="apple-touch-icon" href="apple-touch-icon.png" />
     <link rel="canonical" href="https://diegoromeroacademia.com/" />
     <!--
-      Único color literal admitido del proyecto: una etiqueta meta no puede leer una variable
-      CSS. Es el espejo de `--adr-color-noche-azul` de disenio/_tokens.scss — si allí cambia,
-      aquí también. Pinta la barra del navegador en Android para que no corte el héroe.
+      Únicos colores literales admitidos del proyecto: una etiqueta meta no puede leer una
+      variable CSS. Son el espejo de `--adr-fondo` en cada tema (disenio/_tokens.scss) — si
+      allí cambian, aquí también. Pintan la barra del navegador en Android para que no corte
+      la pantalla.
     -->
-    <meta name="theme-color" content="#0e1b2e" />
+    <meta name="theme-color" media="(prefers-color-scheme: light)" content="#f6f8fb" />
+    <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#080614" />
+
+    <!--
+      Tema antes del primer pintado (ADR 0012).
+
+      Tiene que ir INLINE y en el `head`: `TemaServicio` no corre hasta que Angular arranca, y
+      para entonces la página ya se pintó. Quien tiene el sistema en oscuro vería un fogonazo
+      blanco en cada carga — y la portada va prerenderizada, así que el fogonazo sería el
+      100% de las visitas, no un caso raro.
+
+      Es una copia de la lógica del servicio, y eso se acepta a sabiendas: son cuatro líneas
+      y la alternativa —cargar un módulo antes del pintado— cuesta más de lo que ahorra. El
+      servicio es la fuente de verdad; si allí cambia el orden de resolución, cambia aquí.
+      La prueba `tema-servicio.spec.ts` fija la clave y el valor del atributo para que este
+      guion no pueda quedarse atrás en silencio.
+    -->
+    <script>
+      (function () {
+        try {
+          var g = localStorage.getItem('adr-tema');
+          var oscuro =
+            g === 'oscuro' || (g !== 'claro' && matchMedia('(prefers-color-scheme: dark)').matches);
+          if (oscuro) document.documentElement.setAttribute('data-theme', 'oscuro');
+        } catch (e) {
+          /* Sin almacén se queda en el tema claro, que es el valor por defecto de :root. */
+        }
+      })();
+    </script>
 
     <!--
       Vista previa al compartir el enlace. NO es un extra de posicionamiento: el tráfico llega

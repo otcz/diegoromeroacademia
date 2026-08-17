@@ -2,6 +2,9 @@
 // utilidades de disposicion. Todo lo demas vive en su componente.
 @use 'tokens';
 @use 'mixins' as m;
+// Piezas repetidas de la aplicacion del estudiante: panel, pastilla de estado, tabla,
+// cabecera de pantalla, tira de filtros y rejilla. Ver el encabezado de ese archivo.
+@use 'paneles';
 
 // ---------------------------------------------------------------- reinicio
 *,
@@ -17,22 +20,22 @@
 html {
   -webkit-text-size-adjust: 100%;
 
-  // Chrome trae «tema oscuro automático»: si el sistema está en oscuro y la página no dice
-  // nada, el navegador le INVIERTE los colores por su cuenta. Eso repinta la paleta entera
-  // —el panel niebla sale azul noche, la tinta sale blanca— y se lleva por delante el
-  // trabajo de contraste del ADR 0009, que se midió sobre los colores reales.
+  // Aqui vivia `color-scheme: only light`, que renunciaba al «tema oscuro automático» de
+  // Chrome —el que INVIERTE la paleta por su cuenta cuando el sistema está en oscuro y la
+  // página no dice nada—. Se puso porque ese repintado se llevaba por delante las medidas
+  // de contraste del ADR 0009, y con la nota de que la línea cambiaría el día que
+  // existiera un modo oscuro nuestro. Ese día es el ADR 0012.
   //
-  // Y sobre el logotipo de Google es peor: sus cuatro colores son de otro y no se tocan.
-  //
-  // `only light` es la única forma de renunciar a ese repintado. No cierra la puerta a un
-  // modo oscuro nuestro: el día que exista, se diseña, se mide y se cambia esta línea.
-  color-scheme: only light;
+  // Ya no hace falta declararlo aquí: `color-scheme` lo fija cada tema en `_tokens.scss`
+  // —`light` en `:root`, `dark` en `[data-theme='oscuro']`—, así que el navegador siempre
+  // recibe un esquema explícito y nunca se inventa uno. Y como el nuestro está diseñado y
+  // medido, el resultado ya no es una inversión ciega.
 }
 
 body {
   min-height: 100vh;
-  background: var(--adr-color-niebla);
-  color: var(--adr-color-tinta);
+  background: var(--adr-fondo);
+  color: var(--adr-texto-1);
   font-family: var(--adr-fuente-cuerpo);
   font-size: var(--adr-texto-cuerpo);
   line-height: var(--adr-interlineado-cuerpo);
@@ -81,14 +84,15 @@ h3 {
   font-weight: 700;
 }
 
-// El azul rey es la unica tinta de accion: los enlaces tambien.
+// El azul rey es la unica tinta de accion: los enlaces tambien. Sobre oscuro no sirve
+// —se confunde con el fondo violeta—, y por eso el enlace es semantico y no la paleta.
 a {
-  color: var(--adr-color-azul-profundo);
+  color: var(--adr-enlace);
   text-decoration-thickness: 1px;
   text-underline-offset: 2px;
 
   &:hover {
-    color: var(--adr-color-azul-rey);
+    color: var(--adr-enlace-hover);
   }
 }
 
@@ -167,9 +171,11 @@ a {
 }
 
 .adr-texto-secundario {
-  color: var(--adr-color-texto-secundario);
+  color: var(--adr-texto-3);
 }
 
+// Texto sobre una superficie que es oscura EN LOS DOS TEMAS: una foto con velo, el
+// reproductor, el pie del héroe. No es lo mismo que `--adr-texto-*`, que sigue al tema.
 .adr-texto-claro {
   color: var(--adr-oscuro-texto-suave);
 }
@@ -177,7 +183,7 @@ a {
 .adr-nota {
   margin-top: var(--adr-espacio-5);
   font-size: var(--adr-texto-caption);
-  color: var(--adr-color-texto-atenuado);
+  color: var(--adr-texto-5);
 }
 
 .adr-superficie {
@@ -200,9 +206,16 @@ a {
   padding-block: var(--adr-separacion-seccion);
 }
 
+// Sección deliberadamente oscura EN AMBOS TEMAS. Es el ritmo de la portada (regla de
+// color 4: alternar claro y oscuro), no una consecuencia del tema. En oscuro se apoya en
+// el degradado de contenido para que no quede un rectángulo plano contra el fondo.
 .adr-seccion-oscura {
   background: var(--adr-color-noche-azul);
   color: var(--adr-oscuro-texto-fuerte);
+
+  [data-theme='oscuro'] & {
+    background: var(--adr-fondo-contenido);
+  }
 }
 
 @media (width < 768px) {

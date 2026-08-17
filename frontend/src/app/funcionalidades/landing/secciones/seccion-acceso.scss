@@ -3,7 +3,7 @@
 // Fondo blanco a proposito: catalogo hereda el del body y planes declara niebla, asi que sin
 // esto son 176 px de gris identico seguidos y las dos secciones se leen como una sola.
 .acceso {
-  background: var(--adr-color-blanco);
+  background: var(--adr-superficie);
 }
 
 .acceso__encabezado {
@@ -68,7 +68,7 @@
 
 .acceso__marca--franja {
   margin-bottom: 0;
-  background: var(--adr-color-blanco);
+  background: var(--adr-superficie);
 }
 
 @include m.desde-tableta {

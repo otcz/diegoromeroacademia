@@ -4,7 +4,7 @@
   position: sticky;
   top: 0;
   z-index: 80;
-  background: var(--adr-color-blanco);
+  background: var(--adr-superficie);
   border-bottom: 1px solid var(--adr-color-borde-divisor);
 }
 
@@ -20,7 +20,7 @@
   display: flex;
   gap: var(--adr-espacio-3);
   align-items: center;
-  color: var(--adr-color-tinta);
+  color: var(--adr-texto-1);
   text-decoration: none;
 }
 
@@ -58,7 +58,7 @@
   a {
     font-size: var(--adr-texto-ui);
     font-weight: 500;
-    color: var(--adr-color-tinta);
+    color: var(--adr-texto-1);
     text-decoration: none;
 
     &:hover {
@@ -132,7 +132,7 @@
     gap: var(--adr-espacio-4);
     align-items: stretch;
     padding: var(--adr-espacio-5);
-    background: var(--adr-color-blanco);
+    background: var(--adr-superficie);
     border-bottom: 1px solid var(--adr-color-borde-divisor);
 
     &--abierto {
@@ -150,7 +150,7 @@
 .adr-nav__cuenta {
   font-size: var(--adr-texto-ui);
   font-weight: 600;
-  color: var(--adr-color-tinta);
+  color: var(--adr-texto-1);
   text-decoration: none;
   white-space: nowrap;
 

@@ -63,13 +63,17 @@
   }
 }
 
+// Contorno que se rellena al pasar el ratón. Usa los escalones semánticos y no la tinta
+// literal: con `--adr-color-tinta` el botón salía #16212e sobre #080614 en tema oscuro, o
+// sea un borde invisible con texto invisible dentro. El relleno es el color del TEXTO y la
+// letra el color del FONDO, así que la inversión funciona igual en los dos temas.
 .adr-boton--secundario {
-  color: var(--adr-color-tinta);
-  border-color: var(--adr-color-tinta);
+  color: var(--adr-texto-1);
+  border-color: var(--adr-texto-1);
 
   &:hover:not(:disabled) {
-    color: var(--adr-color-blanco);
-    background: var(--adr-color-tinta);
+    color: var(--adr-fondo);
+    background: var(--adr-texto-1);
   }
 }
 
@@ -77,25 +81,31 @@
 // negra, nunca teñida—, su logotipo sin recolorear y el texto legible sobre ella. Por eso
 // esta variante no invierte al pasar el ratón como `secundario`: eso dejaría la «G» de
 // cuatro colores sobre fondo oscuro, que es de lo poco que su marca no admite.
+//
+// Es la ÚNICA variante que no sigue al tema, y a propósito: sus colores son de Google, no
+// nuestros (ADR 0010). Con tokens semánticos, en oscuro la superficie se habría vuelto un
+// velo del 4% y la «G» de cuatro colores habría quedado sobre negro — de lo poco que su
+// norma de marca no admite. Por eso aquí van la tinta y el blanco literales.
 .adr-boton--proveedor {
   font-weight: 500; // menos peso que una acción nuestra: aquí manda la marca, no el botón
   color: var(--adr-color-tinta);
   background: var(--adr-color-blanco);
-  border-color: var(--adr-color-borde-suave);
-  box-shadow: var(--adr-sombra-tarjeta);
+  border-color: #c0cbd9;
+  box-shadow: 0 2px 12px rgb(14 27 46 / 6%);
 
   &:hover:not(:disabled) {
     background: var(--adr-color-blanco);
-    border-color: var(--adr-color-texto-atenuado);
-    box-shadow: var(--adr-sombra-tarjeta-alta);
+    border-color: #5f6f86;
+    box-shadow: 0 2px 12px rgb(14 27 46 / 8%);
   }
 }
 
 .adr-boton--fantasma {
-  color: var(--adr-color-azul-profundo);
+  // El enlace semántico y no el azul profundo: sobre #080614 ese azul da 3,1:1.
+  color: var(--adr-enlace);
 
   &:hover:not(:disabled) {
-    background: var(--adr-tinte-azul-fondo);
+    background: var(--adr-estado-azul-fondo);
   }
 }
 

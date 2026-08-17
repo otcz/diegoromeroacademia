@@ -19,7 +19,7 @@
   width: 100%;
   max-height: calc(100vh - var(--adr-espacio-8));
 
-  background: var(--adr-color-blanco);
+  background: var(--adr-superficie);
   border-radius: var(--adr-radio-tarjeta);
   box-shadow: var(--adr-sombra-flotante);
 
@@ -71,8 +71,8 @@
   @include m.foco-visible;
 
   &:hover {
-    color: var(--adr-color-tinta);
-    background: var(--adr-color-niebla);
+    color: var(--adr-texto-1);
+    background: var(--adr-relleno-1);
   }
 }
 

@@ -30,6 +30,44 @@ describe('Rejillas del sistema visual', () => {
   /** `1fr`, `2fr`, `repeat(3, 1fr)`… pero NO `minmax(0, 1fr)`, que es la forma correcta. */
   const FRACCION_DESNUDA = /(^|[\s,(])[\d.]*fr\b/;
 
+  /**
+   * Sustituye cada `minmax(...)` completo por `OK`, respetando los parentesis anidados.
+   *
+   * <p>Antes esto era `valor.replace(/minmax\([^)]*\)/g, 'OK')`, y esa expresion se para en el
+   * PRIMER parentesis de cierre. Con `minmax(min(240px, 100%), 1fr)` —el patron responsive
+   * que pide el handoff— dejaba el resto `OK, 1fr)` y el `1fr` sobrevivia, asi que la guarda
+   * marcaba siete rejillas correctas como infractoras.
+   *
+   * <p>Y ese caso es SEGURO: `min(240px, 100%)` ya limita el minimo al ancho del contenedor,
+   * que es justo lo que impide el desborde que esta prueba vigila. El fallo era de la
+   * expresion regular, no de las rejillas.
+   */
+  function sinMinmax(valor: string): string {
+    let salida = '';
+    let profundidad = 0;
+
+    for (let i = 0; i < valor.length; i++) {
+      const resto = valor.slice(i);
+      if (profundidad === 0 && resto.startsWith('minmax(')) {
+        salida += 'OK';
+        profundidad = 1;
+        i += 'minmax('.length - 1;
+        continue;
+      }
+      if (profundidad > 0) {
+        if (valor[i] === '(') {
+          profundidad++;
+        } else if (valor[i] === ')') {
+          profundidad--;
+        }
+        continue;
+      }
+      salida += valor[i];
+    }
+
+    return salida;
+  }
+
   function hojasDeEstilo(carpeta: string): string[] {
     return readdirSync(carpeta, { withFileTypes: true }).flatMap((entrada) => {
       const ruta = join(carpeta, entrada.name);
@@ -47,8 +85,7 @@ describe('Rejillas del sistema visual', () => {
       const contenido = readFileSync(hoja, 'utf8');
       for (const [, propiedad, valor] of contenido.matchAll(PROPIEDADES)) {
         // Se quitan los minmax() completos antes de buscar: lo que sobreviva es fr desnudo.
-        const sinMinmax = valor.replace(/minmax\([^)]*\)/g, 'OK');
-        if (FRACCION_DESNUDA.test(sinMinmax)) {
+        if (FRACCION_DESNUDA.test(sinMinmax(valor))) {
           infractoras.push(`${hoja.replace(RAIZ, '')} → ${propiedad}: ${valor.trim()}`);
         }
       }

@@ -7,6 +7,23 @@
 // es un defecto de revision, porque es lo que hace que la interfaz derive.
 //
 // Proponer un valor nuevo requiere un ADR.
+//
+// ----------------------------------------------------------------------------
+// EL ARCHIVO TIENE DOS CAPAS. La distincion es la regla mas importante de aqui.
+//
+//   1. PALETA (`--adr-color-*`, `--adr-tinte-*`)  — nombres de COLOR: niebla, tinta,
+//      azul rey, mango. Valores fijos. No cambian con el tema. Son la materia prima.
+//
+//   2. SEMANTICA (`--adr-fondo`, `--adr-superficie`, `--adr-texto-N`, `--adr-borde-N`…)
+//      — nombres de PAPEL: el fondo de la pagina, la superficie de una tarjeta, el
+//      primer escalon de texto. CONMUTAN con `data-theme` (ADR 0012).
+//
+// **Una pantalla consume la capa 2.** Escribir `--adr-color-niebla` en un componente
+// lo deja clavado en claro y es exactamente lo que hace que un tema oscuro salga a
+// medias: la mitad de la interfaz obedece al interruptor y la otra mitad no.
+//
+// La capa 1 solo se usa donde el color ES el mensaje y no depende del tema: el mango
+// del subrayado de marca, el verde de WhatsApp, los cuatro colores de Google.
 // ============================================================================
 
 :root {
@@ -33,12 +50,13 @@
   --adr-scrim-inferior: rgb(8 6 20 / 92%);
 
   // ---------- Texto ----------
-  --adr-color-tinta: #16212e; // texto principal
-  --adr-color-texto-secundario: #4a5a6e; // parrafos sobre claro
-  // ADR 0009: era #6e7e92, que daba 4,15:1 sobre blanco y 3,90:1 sobre niebla — por debajo
-  // del 4,5:1 que exige docs/04 §5. Con #5f6f86 sube a 5,12 y 4,81, y sigue siendo mas claro
-  // que --adr-color-texto-secundario, asi que el escalon de jerarquia se conserva.
-  --adr-color-texto-atenuado: #5f6f86; // captions, metadatos
+  // Tinta de la marca. Sigue siendo un valor fijo porque no siempre es texto: tambien es el
+  // RELLENO del boton secundario al pasar el raton. Los escalones de texto que conmutan con
+  // el tema son `--adr-texto-1..5`, mas abajo.
+  --adr-color-tinta: #16212e;
+  // `--adr-color-texto-secundario` y `--adr-color-texto-atenuado` ya no se declaran aqui:
+  // son alias de la capa semantica y se definen al final del archivo. El valor #5f6f86 que
+  // midio el ADR 0009 sobrevive intacto como `--adr-texto-5` del tema claro.
 
   // ---------- Accion ----------
   // Regla de color 1: el azul rey es la UNICA tinta de accion.
@@ -77,18 +95,8 @@
   --adr-tinte-peligro-fondo: #fbe9e8;
   --adr-tinte-peligro-texto: #8c2f2b;
 
-  // ---------- Bordes ----------
-  --adr-color-borde-divisor: #dce3ec;
-  --adr-color-borde-suave: #c0cbd9;
-
-  // ---------- Tintes de etiqueta ----------
-  --adr-tinte-azul-fondo: #e3edfe;
-  --adr-tinte-azul-texto: #134bb8;
-  --adr-tinte-mango-fondo: #fff3d6;
-  --adr-tinte-mango-texto: #8a5f04;
-  --adr-tinte-verde-fondo: #dff0e8;
-  --adr-tinte-verde-texto: #17603f;
-  --adr-color-pista-barra: #e4eaf2;
+  // Los bordes, los tintes de etiqueta y la pista de la barra de progreso tampoco se
+  // declaran ya aqui: pasaron a la capa semantica y estos nombres quedaron como alias.
 
   // ---------- Sobre fondo oscuro ----------
   --adr-oscuro-texto-fuerte: rgb(255 255 255 / 85%);
@@ -138,8 +146,8 @@
   --adr-radio-pastilla: 999px;
 
   // ---------- Sombra ----------
-  --adr-sombra-tarjeta: 0 2px 12px rgb(14 27 46 / 6%);
-  --adr-sombra-tarjeta-alta: 0 2px 12px rgb(14 27 46 / 8%);
+  // `--adr-sombra-tarjeta` y `--adr-sombra-tarjeta-alta` son alias de
+  // `--adr-sombra-superficie`, al final del archivo: en oscuro no hay sombra que dar.
   --adr-sombra-destacado: 0 8px 28px rgb(29 107 243 / 18%);
   --adr-sombra-flotante: 0 6px 20px rgb(14 27 46 / 25%);
   --adr-velo-modal: rgb(14 27 46 / 50%);
@@ -163,7 +171,11 @@
   --adr-cristal-fondo-claro: rgb(255 255 255 / 72%);
   --adr-cristal-desenfoque: 16px;
   --adr-cristal-desenfoque-movil: 8px;
-  --adr-cristal-respaldo-oscuro: color-mix(in srgb, var(--adr-color-blanco) 10%, var(--adr-color-noche-azul));
+  --adr-cristal-respaldo-oscuro: color-mix(
+    in srgb,
+    var(--adr-color-blanco) 10%,
+    var(--adr-color-noche-azul)
+  );
   --adr-cristal-respaldo-claro: var(--adr-color-blanco);
 
   // ---------- Marcadores de imagen ausente (ADR 0008) ----------
@@ -205,4 +217,262 @@
   --adr-modal-md: 560px;
   --adr-modal-lg: 760px;
   --adr-panel-lateral: 420px;
+
+  // ---------- Disposicion de la aplicacion del estudiante ----------
+  // Del handoff de la app (docs/handoff-disenio/app-estudiante). Son medidas de
+  // estructura, no de color: no cambian con el tema.
+  --adr-barra-lateral: 246px;
+  --adr-riel-iconos: 84px;
+  --adr-nav-inferior: 76px;
+  --adr-carrito-ancho: 384px;
+  --adr-simulador-ancho: 236px;
+
+  // ---------- Degradado de llamada a la accion ----------
+  // El tratamiento del boton que manda en una pantalla. Se arma aqui y no en cada
+  // componente para que los dos extremos no se separen nunca.
+  --adr-degradado-cta: linear-gradient(
+    120deg,
+    var(--adr-color-azul-cta-a),
+    var(--adr-color-azul-cta-b)
+  );
+  --adr-sombra-cta: 0 8px 18px rgb(18 115 212 / 30%);
+  --adr-sombra-cta-alta: 0 10px 26px rgb(18 115 212 / 38%);
+}
+
+// ============================================================================
+// CAPA SEMANTICA — conmuta con el tema (ADR 0012)
+//
+// Cada token nombra un PAPEL, no un color. `--adr-superficie` es «la cara de una
+// tarjeta»: en claro es blanca y en oscuro es un velo del 4% sobre el fondo. El
+// componente pide el papel y se despreocupa del tema.
+//
+// El bloque de abajo es el tema CLARO y vive en `:root` a proposito, no dentro de
+// una consulta de medios: es el que hereda cualquier cosa que se renderice antes de
+// que el servicio de tema escriba `data-theme`, y prerenderizamos la portada. Si el
+// valor por defecto fuera el oscuro, la portada parpadearia en negro en cada carga.
+//
+// El oscuro se aplica por `[data-theme='oscuro']`, que escribe TemaServicio. La
+// preferencia del sistema se lee UNA vez, en la primera visita, y se materializa
+// como atributo — no como `@media (prefers-color-scheme)`. Con la consulta de medios
+// el interruptor no podria ganarle a la preferencia del sistema sin duplicar cada
+// regla, que es el error clasico de los temas a medias.
+//
+// De la escala del handoff se condensan los escalones: once niveles de texto y siete
+// de borde no son una jerarquia, son ruido — nadie distingue `.72` de `.70` y el
+// segundo acaba usandose por accidente. Quedan cinco de texto y tres de borde, y la
+// tabla de equivalencias esta en docs/04 §1.
+// ============================================================================
+
+:root {
+  // ---------- Superficies ----------
+  --adr-fondo: var(--adr-color-niebla);
+  --adr-fondo-panel: linear-gradient(180deg, #ffffff, #f8f9fe);
+  --adr-fondo-contenido:
+    radial-gradient(900px 620px at 82% -8%, rgb(47 102 245 / 10%), transparent 62%),
+    linear-gradient(170deg, #f8f9fe, #eef1fb);
+  --adr-fondo-barra: rgb(255 255 255 / 88%);
+  --adr-superficie: var(--adr-color-blanco);
+  --adr-superficie-2: #fafbff;
+  --adr-sombra-superficie: 0 1px 3px rgb(16 24 64 / 5%);
+
+  // Rellenos: elevaciones sutiles sobre la superficie (botones fantasma, celdas,
+  // hombreras de icono). En claro son grises frios; en oscuro, velos de blanco.
+  --adr-relleno-1: #f1f3fb;
+  --adr-relleno-2: #edeff8;
+  --adr-relleno-3: #e7eaf5;
+  --adr-relleno-hover: #e2e5f1;
+  --adr-pista: #e2e5f1;
+
+  // ---------- Bordes ----------
+  --adr-linea: #e4e7f2; // divisores y separadores de una sola linea
+  --adr-borde-tenue: #eceef7;
+  --adr-borde: #e4e7f2;
+  --adr-borde-fuerte: #d9dded;
+
+  // ---------- Texto ----------
+  // Cinco escalones. Mas alla del quinto no hay jerarquia percibible, solo texto que
+  // no cumple contraste.
+  --adr-texto-1: #0e1230; // titulares
+  --adr-texto-2: #2c3157; // cuerpo destacado
+  --adr-texto-3: #3a4066; // cuerpo
+  --adr-texto-4: #5b6180; // secundario
+  // El handoff da #8b90ad para el quinto escalon: 3,1:1 sobre el fondo claro, que no
+  // llega al 4,5:1 de docs/04 §5. Se usa el valor que el ADR 0009 ya midio para este
+  // mismo papel — 4,81:1 — en vez de repetir el fallo que ese ADR corrigio.
+  //
+  // Va el literal y no `var(--adr-color-texto-atenuado)`: ese token es ahora un alias de
+  // ESTE, y apuntarse el uno al otro es una referencia circular. CSS la resuelve dejando
+  // la propiedad sin valor, o sea texto heredado del padre y sin aviso de ningun tipo.
+  --adr-texto-5: #5f6f86;
+
+  // ---------- Enlace ----------
+  --adr-enlace: #1d4fd7;
+  --adr-enlace-hover: #12379f;
+
+  // ---------- Estados ----------
+  // Cuatro familias. Cada una trae fondo suave, fondo fuerte, borde y tinta; el icono
+  // solo cuando el handoff lo separa del texto (un icono es una forma, aguanta mas
+  // saturacion que una letra).
+  --adr-estado-azul-fondo: rgb(47 102 245 / 10%);
+  --adr-estado-azul-fondo-fuerte: rgb(47 102 245 / 16%);
+  --adr-estado-azul-borde: rgb(47 102 245 / 28%);
+  --adr-estado-azul-texto: #1d4fd7;
+
+  // #0b8f5a del handoff da 4,12:1 sobre blanco. Se oscurece a #0a7d4f — 5,17:1 —
+  // por la misma razon que el quinto escalon de texto: es tinta de chip, se lee.
+  --adr-estado-verde-fondo: rgb(16 185 129 / 10%);
+  --adr-estado-verde-fondo-fuerte: rgb(16 185 129 / 16%);
+  --adr-estado-verde-borde: rgb(16 185 129 / 32%);
+  --adr-estado-verde-texto: #0a7d4f;
+  --adr-estado-verde-icono: #0a7d4f;
+
+  --adr-estado-dorado-fondo: rgb(240 168 60 / 18%);
+  --adr-estado-dorado-fondo-fuerte: rgb(240 168 60 / 30%);
+  --adr-estado-dorado-borde: rgb(240 168 60 / 42%);
+  --adr-estado-dorado-texto: #96600f;
+  --adr-estado-dorado-icono: #c98a1e;
+
+  --adr-estado-rojo-fondo: rgb(220 38 38 / 10%);
+  --adr-estado-rojo-borde: rgb(220 38 38 / 28%);
+  --adr-estado-rojo-texto: #c23a3a;
+
+  --adr-estado-morado-fondo: rgb(109 63 212 / 12%);
+  --adr-estado-morado-texto: #6d3fd4;
+
+  // ---------- Piezas compuestas ----------
+  // Fondos de una sola pieza que se repiten en varias pantallas. Viven aqui porque
+  // son degradados: reconstruirlos a mano en cada componente es como se separan.
+  --adr-nav-activo-fondo: linear-gradient(100deg, rgb(47 102 245 / 15%), rgb(47 102 245 / 5%));
+  --adr-nav-activo-borde: rgb(47 102 245 / 30%);
+  --adr-tarjeta-heroe: linear-gradient(120deg, rgb(18 115 212 / 10%), #ffffff 62%);
+  --adr-tarjeta-heroe-borde: rgb(47 102 245 / 24%);
+  --adr-tarjeta-azul: linear-gradient(160deg, rgb(18 115 212 / 9%), #ffffff);
+  --adr-tarjeta-dorada: linear-gradient(150deg, rgb(240 168 60 / 16%), #fffdf7);
+  --adr-tarjeta-dorada-lateral: linear-gradient(
+    150deg,
+    rgb(240 168 60 / 20%),
+    rgb(240 168 60 / 7%)
+  );
+
+  // Anillo del logotipo y de los puntos de estado: tiene que separarlos del fondo, asi
+  // que su color es el contrario al del tema.
+  --adr-anillo-logotipo: rgb(16 24 64 / 14%);
+  --adr-anillo-punto: var(--adr-color-blanco);
+
+  color-scheme: light;
+}
+
+// ----------------------------------------------------------------------------
+// ALIAS HEREDADOS
+//
+// Estos nombres son anteriores al ADR 0012 y ya nombraban un papel, no un color:
+// «tinta» es el texto principal, «borde-divisor» es un divisor. Pasan a ser alias
+// de la capa semantica —apuntan a ella, no copian su valor— y con eso la portada y
+// el catalogo entero siguen el tema sin tocar doscientas declaraciones.
+//
+// **No usar en codigo nuevo.** Existen para no mezclar en un mismo cambio la
+// introduccion del tema oscuro con un renombrado masivo: el diff resultante habria
+// sido irrevisable, y un renombrado a ciegas es justo como se cuela un color en el
+// sitio equivocado. La prueba `tokens.spec.ts` fija que sean alias y no valores.
+// ----------------------------------------------------------------------------
+:root {
+  --adr-color-texto-secundario: var(--adr-texto-3);
+  --adr-color-texto-atenuado: var(--adr-texto-5);
+  --adr-color-borde-divisor: var(--adr-borde);
+  --adr-color-borde-suave: var(--adr-borde-fuerte);
+  --adr-color-pista-barra: var(--adr-pista);
+  --adr-sombra-tarjeta: var(--adr-sombra-superficie);
+  --adr-sombra-tarjeta-alta: var(--adr-sombra-superficie);
+  --adr-tinte-azul-fondo: var(--adr-estado-azul-fondo);
+  --adr-tinte-azul-texto: var(--adr-estado-azul-texto);
+  --adr-tinte-verde-fondo: var(--adr-estado-verde-fondo);
+  --adr-tinte-verde-texto: var(--adr-estado-verde-texto);
+  --adr-tinte-mango-fondo: var(--adr-estado-dorado-fondo);
+  --adr-tinte-mango-texto: var(--adr-estado-dorado-texto);
+}
+
+[data-theme='oscuro'] {
+  // ---------- Superficies ----------
+  --adr-fondo: var(--adr-color-noche-azul);
+  --adr-fondo-panel: linear-gradient(180deg, #0a0818, #090a1c);
+  --adr-fondo-contenido:
+    radial-gradient(900px 620px at 82% -8%, var(--adr-halo-azul), transparent 62%),
+    linear-gradient(170deg, var(--adr-color-noche-azul), var(--adr-color-noche-panel-b));
+  --adr-fondo-barra: rgb(8 6 20 / 72%);
+  --adr-superficie: rgb(255 255 255 / 4%);
+  --adr-superficie-2: rgb(255 255 255 / 3%);
+  // Sobre oscuro una sombra no eleva nada: no hay luz que bloquear. Lo que separa una
+  // tarjeta del fondo es su borde. Poner una sombra igualmente solo ensucia el negro.
+  --adr-sombra-superficie: none;
+
+  --adr-relleno-1: rgb(255 255 255 / 5%);
+  --adr-relleno-2: rgb(255 255 255 / 7%);
+  --adr-relleno-3: rgb(255 255 255 / 8%);
+  --adr-relleno-hover: rgb(255 255 255 / 12%);
+  --adr-pista: rgb(255 255 255 / 12%);
+
+  // ---------- Bordes ----------
+  --adr-linea: rgb(255 255 255 / 7%);
+  --adr-borde-tenue: rgb(255 255 255 / 6%);
+  --adr-borde: rgb(255 255 255 / 9%);
+  --adr-borde-fuerte: rgb(255 255 255 / 16%);
+
+  // ---------- Texto ----------
+  --adr-texto-1: var(--adr-color-blanco);
+  --adr-texto-2: var(--adr-oscuro-texto-fuerte);
+  --adr-texto-3: rgb(255 255 255 / 72%);
+  --adr-texto-4: rgb(255 255 255 / 60%);
+  // El handoff baja hasta el 45% y el 38%. Al 45% sobre #080614 salen 4,40:1: falla
+  // por cuatro centesimas. Al 50% son 5,27:1. El escalon respecto al 60% se conserva.
+  --adr-texto-5: rgb(255 255 255 / 50%);
+
+  // ---------- Enlace ----------
+  --adr-enlace: var(--adr-color-enlace-oscuro);
+  --adr-enlace-hover: #a9c4ff;
+
+  // ---------- Estados ----------
+  --adr-estado-azul-fondo: rgb(47 102 245 / 16%);
+  --adr-estado-azul-fondo-fuerte: rgb(47 102 245 / 28%);
+  --adr-estado-azul-borde: rgb(130 165 255 / 30%);
+  --adr-estado-azul-texto: #9fc0ff;
+
+  --adr-estado-verde-fondo: rgb(52 211 153 / 12%);
+  --adr-estado-verde-fondo-fuerte: rgb(52 211 153 / 20%);
+  --adr-estado-verde-borde: rgb(52 211 153 / 30%);
+  --adr-estado-verde-texto: #6ee7b7;
+  --adr-estado-verde-icono: #34d399;
+
+  --adr-estado-dorado-fondo: rgb(240 168 60 / 16%);
+  --adr-estado-dorado-fondo-fuerte: rgb(240 168 60 / 28%);
+  --adr-estado-dorado-borde: rgb(240 168 60 / 32%);
+  --adr-estado-dorado-texto: #f4c37a;
+  --adr-estado-dorado-icono: var(--adr-color-mango);
+
+  --adr-estado-rojo-fondo: rgb(248 113 113 / 14%);
+  --adr-estado-rojo-borde: rgb(248 113 113 / 34%);
+  --adr-estado-rojo-texto: var(--adr-color-peligro-oscuro-texto);
+
+  --adr-estado-morado-fondo: rgb(123 63 242 / 18%);
+  --adr-estado-morado-texto: #b593ff;
+
+  // ---------- Piezas compuestas ----------
+  --adr-nav-activo-fondo: linear-gradient(100deg, rgb(47 102 245 / 26%), rgb(47 102 245 / 8%));
+  --adr-nav-activo-borde: rgb(130 165 255 / 30%);
+  --adr-tarjeta-heroe: linear-gradient(120deg, rgb(18 115 212 / 20%), rgb(255 255 255 / 4%) 62%);
+  --adr-tarjeta-heroe-borde: rgb(130 165 255 / 24%);
+  --adr-tarjeta-azul: linear-gradient(160deg, rgb(18 115 212 / 16%), rgb(255 255 255 / 4%));
+  --adr-tarjeta-dorada: linear-gradient(150deg, rgb(240 168 60 / 13%), rgb(255 255 255 / 3%));
+  --adr-tarjeta-dorada-lateral: linear-gradient(
+    150deg,
+    rgb(240 168 60 / 14%),
+    rgb(240 168 60 / 4%)
+  );
+
+  --adr-anillo-logotipo: rgb(255 255 255 / 16%);
+  --adr-anillo-punto: #0b0a1c;
+
+  // Le dice al navegador de que color son las barras de desplazamiento, los campos
+  // nativos y el fondo del lienzo. Sin esto un `<select>` sale blanco en medio de una
+  // pantalla negra.
+  color-scheme: dark;
 }

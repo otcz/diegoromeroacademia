@@ -74,9 +74,8 @@ describe('RutaNiveles', () => {
   it('debe conservar el orden de las estaciones tal y como se le entregan', async () => {
     const fixture = await crear();
 
-    const titulos = Array.from(
-      fixture.nativeElement.querySelectorAll('.adr-nivel__titulo'),
-      (n) => (n as HTMLElement).textContent?.trim(),
+    const titulos = Array.from(fixture.nativeElement.querySelectorAll('.adr-nivel__titulo'), (n) =>
+      (n as HTMLElement).textContent?.trim(),
     );
     expect(titulos).toEqual(['Nivel 1', 'Nivel 2', 'Nivel 3', 'Nivel 4', 'Certificado']);
   });

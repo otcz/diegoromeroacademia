@@ -35,7 +35,8 @@ describe('Alerta', () => {
 
   it('debe mostrar el titulo solo cuando se indica', async () => {
     expect((await crear()).querySelector('.adr-alerta__titulo')).toBeNull();
-    expect((await crear({ titulo: 'Revisa esto' })).querySelector('.adr-alerta__titulo')?.textContent)
-      .toContain('Revisa esto');
+    expect(
+      (await crear({ titulo: 'Revisa esto' })).querySelector('.adr-alerta__titulo')?.textContent,
+    ).toContain('Revisa esto');
   });
 });

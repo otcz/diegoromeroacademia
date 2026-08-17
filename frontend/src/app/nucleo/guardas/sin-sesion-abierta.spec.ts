@@ -4,6 +4,7 @@ import { TestBed } from '@angular/core/testing';
 import { ActivatedRouteSnapshot, Router, RouterStateSnapshot, UrlTree } from '@angular/router';
 import { Observable, firstValueFrom } from 'rxjs';
 import { beforeEach, describe, expect, it } from 'vitest';
+import { DESTINO_TRAS_INGRESAR } from '../../app.routes';
 import { entorno } from '../../../entornos/entorno';
 import { sinSesionAbierta } from './sin-sesion-abierta';
 
@@ -57,13 +58,15 @@ describe('sinSesionAbierta', () => {
     expect(await ejecutar(null, 401)).toBe(true);
   });
 
-  it('debe desviar a la portada a quien YA entro', async () => {
+  it('debe desviar al panel del alumno a quien YA entro', async () => {
     const veredicto = await ejecutar(USUARIO);
 
     // Un UrlTree y no un `false`: devolver `false` deja al visitante donde estaba y sin
     // decir nada, que pulsando «atras» significa quedarse mirando el formulario.
     expect(veredicto).toBeInstanceOf(UrlTree);
-    expect(TestBed.inject(Router).serializeUrl(veredicto as UrlTree)).toBe('/');
+    // El destino sale de DESTINO_TRAS_INGRESAR y no se escribe aqui a mano: si se copiara,
+    // el dia que cambie la prueba seguiria verde comprobando el destino viejo.
+    expect(TestBed.inject(Router).serializeUrl(veredicto as UrlTree)).toBe(DESTINO_TRAS_INGRESAR);
   });
 
   it('debe PREGUNTAR al backend y no fiarse de lo que el frontend recuerde', async () => {

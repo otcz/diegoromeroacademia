@@ -3,6 +3,7 @@ import { HttpTestingController, provideHttpClientTesting } from '@angular/common
 import { TestBed } from '@angular/core/testing';
 import { Router } from '@angular/router';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { DESTINO_TRAS_INGRESAR } from '../../app.routes';
 import { Acceso } from './acceso';
 
 describe('Acceso', () => {
@@ -143,7 +144,9 @@ describe('Acceso', () => {
     expect(boton.disabled).toBe(true);
     expect(boton.textContent).toContain('Entrando');
 
-    http.expectOne((r) => r.url.endsWith('/acceso/sesion')).flush({}, { status: 500, statusText: 'x' });
+    http
+      .expectOne((r) => r.url.endsWith('/acceso/sesion'))
+      .flush({}, { status: 500, statusText: 'x' });
   });
 
   it('debe mostrar una alerta cuando el acceso falla', async () => {
@@ -183,7 +186,7 @@ describe('Acceso', () => {
     // `replaceUrl` porque, si no, «atras» devuelve al formulario de ingreso a alguien que
     // acaba de ingresar. Es la mitad del arreglo — la otra es la guarda de la ruta, que es
     // la que cubre el ingreso con Google, donde la redireccion la hace el servidor.
-    expect(navegar).toHaveBeenCalledWith(['/'], { replaceUrl: true });
+    expect(navegar).toHaveBeenCalledWith([DESTINO_TRAS_INGRESAR], { replaceUrl: true });
   });
 
   it('debe volver al estado normal tras un acceso correcto', async () => {
@@ -194,11 +197,13 @@ describe('Acceso', () => {
     fixture.nativeElement.querySelector('form').dispatchEvent(new Event('submit'));
     await refrescar(fixture);
 
-    http.expectOne((r) => r.url.endsWith('/acceso/sesion')).flush({
-      tokenAcceso: 't',
-      expiraEn: '2026-08-15T06:00:00Z',
-      usuario: { id: '1', nombre: 'Alumno', correo: 'alumno@correo.com', rol: 'estudiante' },
-    });
+    http
+      .expectOne((r) => r.url.endsWith('/acceso/sesion'))
+      .flush({
+        tokenAcceso: 't',
+        expiraEn: '2026-08-15T06:00:00Z',
+        usuario: { id: '1', nombre: 'Alumno', correo: 'alumno@correo.com', rol: 'estudiante' },
+      });
     await refrescar(fixture);
 
     expect(fixture.nativeElement.querySelector('.adr-alerta--error')).toBeNull();

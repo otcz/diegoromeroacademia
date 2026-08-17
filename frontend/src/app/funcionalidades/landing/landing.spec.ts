@@ -259,9 +259,7 @@ describe('Landing', () => {
   it('debe cargar con prioridad solo el fondo del heroe, que es el LCP', async () => {
     const fixture = await crear();
 
-    const imagenes: HTMLImageElement[] = Array.from(
-      fixture.nativeElement.querySelectorAll('img'),
-    );
+    const imagenes: HTMLImageElement[] = Array.from(fixture.nativeElement.querySelectorAll('img'));
     const prioritarias = imagenes.filter((i) => i.getAttribute('loading') === 'eager');
 
     expect(prioritarias.length).toBe(1);

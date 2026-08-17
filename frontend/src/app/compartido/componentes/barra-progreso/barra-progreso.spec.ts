@@ -26,9 +26,7 @@ describe('BarraProgreso', () => {
     const fixture = await crear({ valor: 180 });
 
     expect(
-      fixture.nativeElement
-        .querySelector('[role="progressbar"]')
-        .getAttribute('aria-valuenow'),
+      fixture.nativeElement.querySelector('[role="progressbar"]').getAttribute('aria-valuenow'),
     ).toBe('100');
   });
 
@@ -36,9 +34,7 @@ describe('BarraProgreso', () => {
     const fixture = await crear({ valor: -20 });
 
     expect(
-      fixture.nativeElement
-        .querySelector('[role="progressbar"]')
-        .getAttribute('aria-valuenow'),
+      fixture.nativeElement.querySelector('[role="progressbar"]').getAttribute('aria-valuenow'),
     ).toBe('0');
   });
 
@@ -46,9 +42,7 @@ describe('BarraProgreso', () => {
     const fixture = await crear({ valor: Number.NaN });
 
     expect(
-      fixture.nativeElement
-        .querySelector('[role="progressbar"]')
-        .getAttribute('aria-valuenow'),
+      fixture.nativeElement.querySelector('[role="progressbar"]').getAttribute('aria-valuenow'),
     ).toBe('0');
   });
 
@@ -56,9 +50,7 @@ describe('BarraProgreso', () => {
     const fixture = await crear({ valor: 33.6 });
 
     expect(
-      fixture.nativeElement
-        .querySelector('[role="progressbar"]')
-        .getAttribute('aria-valuenow'),
+      fixture.nativeElement.querySelector('[role="progressbar"]').getAttribute('aria-valuenow'),
     ).toBe('34');
   });
 

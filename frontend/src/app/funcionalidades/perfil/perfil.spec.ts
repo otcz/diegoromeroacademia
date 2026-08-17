@@ -43,17 +43,24 @@ describe('Perfil', () => {
     expect(fixture.nativeElement.querySelector('form')).not.toBeNull();
   });
 
-  it('debe llevar a la pantalla de acceso cuando no hay sesion', async () => {
+  it('debe dibujarse entera sin sesion y ofrecer entrar, en vez de desviar', async () => {
     const { fixture, http } = await crear();
     const router = TestBed.inject(Router);
     const navegar = vi.spyOn(router, 'navigate').mockResolvedValue(true);
 
-    // Un 401 no es un error a mostrar: significa «no has entrado». Dejar la pantalla en
-    // blanco haria creer al alumno que se rompio.
+    // Un 401 no es un error a mostrar: significa «no has entrado».
     http.expectOne(`${entorno.urlApi}/acceso/sesion`).flush(null, { status: 401, statusText: '' });
     fixture.detectChanges();
+    await fixture.whenStable();
 
-    expect(navegar).toHaveBeenCalledWith(['/acceso']);
+    // Antes se desviaba a /acceso, y tenia sentido cuando el perfil era solo el formulario
+    // de contrasena. Ahora es una de las trece pantallas de la aplicacion: desviar la hacia
+    // IMPOSIBLE de revisar. Se dibuja entera y el bloque de seguridad explica que falta.
+    expect(navegar).not.toHaveBeenCalled();
+    expect(fixture.nativeElement.textContent).toContain('Mi perfil');
+    expect(fixture.nativeElement.textContent).toContain('hace falta haber iniciado sesión');
+    // Y sin formulario: no hay a quien cambiarle la contrasena.
+    expect(fixture.nativeElement.querySelector('form')).toBeNull();
   });
 
   it('NO debe enviar una contrasena mas corta que la que exige el backend', async () => {
@@ -93,6 +100,6 @@ describe('Perfil', () => {
 
     // No tiene por que seguir en pantalla ni en memoria despues de guardarse.
     expect(componente.formulario.controls.contrasena.value).toBe('');
-    expect(fixture.nativeElement.textContent).toContain('Contraseña guardada');
+    expect(fixture.nativeElement.textContent).toContain('Tu contraseña quedó guardada');
   });
 });
